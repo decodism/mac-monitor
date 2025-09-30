@@ -1,1 +1,17 @@
+# macOS system files
 *.DS_Store
+
+# Xcode build files
+build/
+DerivedData/
+*.ipa
+*.dSYM.zip
+*.dSYM
+*.xcbuilddata
+
+# Xcode user data
+xcuserdata/
+*.xcuserstate
+
+# Distribution
+/ProjectSutro/Distribution
