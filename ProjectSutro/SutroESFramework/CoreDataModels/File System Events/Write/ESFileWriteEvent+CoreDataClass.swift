@@ -13,26 +13,27 @@ import CoreData
 @objc(ESFileWriteEvent)
 public class ESFileWriteEvent: NSManagedObject, Decodable {
     enum CodingKeys: CodingKey {
-        case id, file_name, file_path
+        case id
+        case target
     }
     
     
     convenience init(from message: Message) {
-        let fileEvent: FileWriteEvent = message.event.write!
+        let event: FileWriteEvent = message.event.write!
         self.init()
-        self.id = fileEvent.id
-        self.file_name = fileEvent.file_name!
-        self.file_path = fileEvent.file_path!
+        self.id = event.id
+        
+        self.target = ESFile(from: event.target)
     }
     
     // MARK: - Custom Core Data initilizer for ESFileWriteEvent
     convenience init(from message: Message, insertIntoManagedObjectContext context: NSManagedObjectContext!) {
-        let fileEvent: FileWriteEvent = message.event.write!
+        let event: FileWriteEvent = message.event.write!
         let description = NSEntityDescription.entity(forEntityName: "ESFileWriteEvent", in: context)!
         self.init(entity: description, insertInto: context)
-        self.id = fileEvent.id
-        self.file_name = fileEvent.file_name!
-        self.file_path = fileEvent.file_path!
+        self.id = event.id
+        
+        self.target = ESFile(from: event.target, insertIntoManagedObjectContext: context)
     }
     
     // MARK: - Decodable conformance
@@ -41,8 +42,8 @@ public class ESFileWriteEvent: NSManagedObject, Decodable {
         self.init()
         
         try id = container.decode(UUID.self, forKey: .id)
-        try file_path = container.decode(String.self, forKey: .file_path)
-        try file_name = container.decode(String.self, forKey: .file_name)
+        
+        try target = container.decode(ESFile.self, forKey: .target)
     }
 }
 
@@ -50,7 +51,6 @@ public class ESFileWriteEvent: NSManagedObject, Decodable {
 extension ESFileWriteEvent: Encodable {
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(file_path, forKey: .file_path)
-        try container.encode(file_name, forKey: .file_name)
+        try container.encode(target, forKey: .target)
     }
 }

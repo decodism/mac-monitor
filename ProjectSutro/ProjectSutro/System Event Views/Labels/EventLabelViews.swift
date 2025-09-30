@@ -292,10 +292,10 @@ struct FileRenameEventLabelView: View {
     }
     
     private func configuration(for event: ESFileRenameEvent) -> (icon: Image?, iconStyle: Color, iconHelp: String, labelStyle: Color, labelIcon: String) {
-         if event.is_quarantined == 1 {
+        if event.is_quarantined == 1 {
             // MARK: Quarantined inflated file
             return (Image(systemName: "lock.shield"), .primary, "File is quarantined", .primary, "filemenu.and.cursorarrow")
-         } else if event.is_quarantined == 0 && event.destination_path.hasSuffix(".app") {
+        } else if event.is_quarantined == 0 && event.destination_path.hasSuffix(".app") {
             // MARK: Unquarantined app bundle
             return (Image(systemName: "hand.raised.app"), .red, "Unquarantined application bundle", .red, "filemenu.and.cursorarrow")
         } else if event.destination_path.contains("com.apple.backgroundtaskmanagement") {
@@ -338,14 +338,20 @@ struct FileWriteEventLabelView: View {
     
     var body: some View {
         HStack {
-            if event.file_path!.contains("backgroundtaskmanagementd") {
+            if let path = event.target.path,
+               path.contains("backgroundtaskmanagementd") {
                 // MARK: Login Item
-                Image(systemName: "exclamationmark.triangle.fill").symbolRenderingMode(.palette).foregroundStyle(.black, .yellow).help("A Login Item was potentially added")
-                Label("**`\(eventType)`**", systemImage: eventStringToImage(from: eventType)).foregroundStyle(.orange)
+                Image(systemName: "exclamationmark.triangle.fill")
+                    .symbolRenderingMode(.palette)
+                    .foregroundStyle(.black, .yellow)
+                    .help("A Login Item was potentially added")
+                Label("**`\(eventType)`**", systemImage: eventStringToImage(from: eventType))
+                    .foregroundStyle(.orange)
             } else {
                 Label("**`\(eventType)`**", systemImage: eventStringToImage(from: eventType))
             }
         }
+        
     }
 }
 
@@ -592,7 +598,7 @@ struct IntelligentEventLabelView: View {
 // MARK: Hard coded labels
 struct SystemEventTypeLabel: View {
     var message: ESMessage
-
+    
     @ViewBuilder
     var body: some View {
         switch message {
@@ -699,16 +705,16 @@ struct SystemEventTypeLabel: View {
             OpenDirectoryModifyPasswordEventLabelView(message: message)
             
         case _ where message.event.od_group_add != nil ||
-                          message.event.od_group_remove != nil ||
-                          message.event.od_create_group != nil ||
-                          message.event.od_attribute_value_add != nil ||
-                          message.event.authorization_petition != nil ||
-                          message.event.authorization_judgement != nil:
+            message.event.od_group_remove != nil ||
+            message.event.od_create_group != nil ||
+            message.event.od_attribute_value_add != nil ||
+            message.event.authorization_petition != nil ||
+            message.event.authorization_judgement != nil:
             IntelligentEventLabelView(message: message, criticality: .medium)
             
         case _ where message.event.tcc_modify != nil:
             IntelligentEventLabelView(message: message, criticality: .medium)
-        
+            
         case _ where message.event.gatekeeper_user_override != nil:
             IntelligentEventLabelView(message: message, criticality: .medium)
             
