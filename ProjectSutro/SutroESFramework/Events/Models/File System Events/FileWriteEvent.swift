@@ -12,26 +12,19 @@ import EndpointSecurity
 public struct FileWriteEvent: Identifiable, Codable, Hashable {
     public var id: UUID = UUID()
     
-    public var file_name, file_path: String?
+    public var target: File
     
     public func hash(into hasher: inout Hasher) {
-        hasher.combine(file_path)
-        hasher.combine(file_name)
         hasher.combine(id)
     }
     
     public static func == (lhs: FileWriteEvent, rhs: FileWriteEvent) -> Bool {
-        if lhs.file_path == rhs.file_path && lhs.id == rhs.id {
-            return true
-        }
-        
-        return false
+        return lhs.id == rhs.id
     }
     
     init(from rawMessage: UnsafePointer<es_message_t>) {
         // Getting the file write event
-        let fileWriteEvent: es_event_write_t = rawMessage.pointee.event.write
-        self.file_path = String(cString: fileWriteEvent.target.pointee.path.data)
-        self.file_name = (String(cString: fileWriteEvent.target.pointee.path.data) as NSString).lastPathComponent
+        let event: es_event_write_t = rawMessage.pointee.event.write
+        target = File(from: event.target.pointee)
     }
 }

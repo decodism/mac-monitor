@@ -16,9 +16,8 @@ extension ESFileWriteEvent {
         return NSFetchRequest<ESFileWriteEvent>(entityName: "ESFileWriteEvent")
     }
 
-    @NSManaged public var id: UUID?
-    @NSManaged public var file_path: String?
-    @NSManaged public var file_name: String?
+    @NSManaged public var id: UUID
+    @NSManaged public var target: ESFile
 
 }
 

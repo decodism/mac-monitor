@@ -175,8 +175,8 @@ extension EventType {
             return (
                 .rename(event),
                 "ES_EVENT_TYPE_NOTIFY_RENAME",
-                context,      // Context
-                targetPath // Target path
+                context,        // Context
+                targetPath      // Target path
             )
         case ES_EVENT_TYPE_NOTIFY_OPEN:
             let event = FileOpenEvent(from: rawMessage)
@@ -189,11 +189,12 @@ extension EventType {
 
         case ES_EVENT_TYPE_NOTIFY_WRITE:
             let event = FileWriteEvent(from: rawMessage)
+            let tgtPath: String = event.target.path
             return (
                 .write(event),
                 "ES_EVENT_TYPE_NOTIFY_WRITE",
-                event.file_path,
-                event.file_path
+                tgtPath,       // Context
+                tgtPath        // Target path
             )
         case ES_EVENT_TYPE_NOTIFY_CLOSE:
             let event = FileCloseEvent(from: rawMessage)
