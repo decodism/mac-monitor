@@ -214,11 +214,12 @@ extension EventType {
             )
         case ES_EVENT_TYPE_NOTIFY_DUP:
             let event = FDDuplicateEvent(from: rawMessage)
+            let tgtPath: String = event.target.path
             return (
                 .dup(event),
                 "ES_EVENT_TYPE_NOTIFY_DUP",
-                event.file_path,
-                event.file_path
+                tgtPath,       // Context
+                tgtPath        // Target path
             )
         
             

@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import EndpointSecurity
 
 
 // MARK: - Process Execution event https://developer.apple.com/documentation/endpointsecurity/es_event_exec_t
@@ -30,16 +29,11 @@ public struct ProcessExecEvent: Identifiable, Codable, Hashable {
     
     // MARK: - Protocol conformance
     public func hash(into hasher: inout Hasher) {
-        hasher.combine(target.audit_token_string)
-        hasher.combine(target.executable?.path)
+        hasher.combine(id)
     }
     
     public static func == (lhs: ProcessExecEvent, rhs: ProcessExecEvent) -> Bool {
-        if lhs.target.executable?.path == rhs.target.executable?.path && lhs.target.audit_token_string == rhs.target.audit_token_string && lhs.target.start_time == rhs.target.start_time {
-            return true
-        }
-        
-        return false
+        return lhs.id == rhs.id
     }
     
     // @note construct a new process_exec

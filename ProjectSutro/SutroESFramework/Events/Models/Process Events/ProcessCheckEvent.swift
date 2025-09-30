@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import EndpointSecurity
 
 
 /**
@@ -27,28 +26,11 @@ public struct ProcessCheckEvent: Identifiable, Codable, Hashable {
     public var flavor: Int
     
     public func hash(into hasher: inout Hasher) {
-        hasher.combine(type_string)
-        hasher.combine(flavor)
         hasher.combine(id)
-        
-        if let target = target {
-            hasher.combine(target.audit_token_string)
-        }
     }
     
     public static func == (lhs: ProcessCheckEvent, rhs: ProcessCheckEvent) -> Bool {
-        if let lhs_audit_token = lhs.target?.audit_token_string,
-           let rhs_audit_token = rhs.target?.audit_token_string {
-            if lhs_audit_token != rhs_audit_token {
-                return false
-            }
-        }
-        
-        if lhs.type_string != rhs.type_string && lhs.flavor != rhs.flavor {
-            return false
-        }
-        
-        return true
+        return lhs.id == rhs.id
     }
     
     init(from rawMessage: UnsafePointer<es_message_t>) {

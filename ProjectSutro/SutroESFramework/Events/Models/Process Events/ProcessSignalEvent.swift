@@ -6,10 +6,7 @@
 //
 
 import Foundation
-import EndpointSecurity
-import OSLog
 
-import Darwin
 
 func signalName(from signalNumber: Int32) -> String {
     switch signalNumber {
@@ -120,24 +117,11 @@ public struct ProcessSignalEvent: Identifiable, Codable, Hashable {
     public var target: Process
     
     public func hash(into hasher: inout Hasher) {
-        hasher.combine(target.audit_token)
-        hasher.combine(sig)
+        hasher.combine(id)
     }
     
     public static func == (lhs: ProcessSignalEvent, rhs: ProcessSignalEvent) -> Bool {
-        guard lhs.target.audit_token_string == rhs.target.audit_token_string &&
-              lhs.sig == rhs.sig else {
-            return false
-        }
-        
-        switch (lhs.instigator, rhs.instigator) {
-        case (.none, .none):
-            return true
-        case (.some(let leftInstigator), .some(let rightInstigator)):
-            return leftInstigator.audit_token_string == rightInstigator.audit_token_string
-        default:
-            return false
-        }
+        return lhs.id == rhs.id
     }
     
     init(from rawMessage: UnsafePointer<es_message_t>) {

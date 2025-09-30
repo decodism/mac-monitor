@@ -6,8 +6,6 @@
 //
 
 import Foundation
-import EndpointSecurity
-import OSLog
 
 
 // https://developer.apple.com/documentation/endpointsecurity/es_event_mmap_t
@@ -19,23 +17,11 @@ public struct MMapEvent: Identifiable, Codable, Hashable {
     public var source: File
     
     public func hash(into hasher: inout Hasher) {
-        hasher.combine(source)
-        hasher.combine(file_pos)
+        hasher.combine(id)
     }
     
     public static func == (lhs: MMapEvent, rhs: MMapEvent) -> Bool {
-        let lhs_path = lhs.source.path
-        let rhs_path = rhs.source.path
-        
-        if lhs_path != rhs_path {
-            return false
-        }
-        
-        if lhs.file_pos != rhs.file_pos {
-            return false
-        }
-        
-        return true
+        return lhs.id == rhs.id
     }
     
     init(from rawMessage: UnsafePointer<es_message_t>) {

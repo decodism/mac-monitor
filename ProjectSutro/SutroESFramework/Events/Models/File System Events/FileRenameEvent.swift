@@ -6,8 +6,6 @@
 //
 
 import Foundation
-import EndpointSecurity
-import OSLog
 
 
 // https://developer.apple.com/documentation/endpointsecurity/es_event_rename_t
@@ -29,11 +27,7 @@ public struct FileRenameEvent: Identifiable, Codable, Hashable {
     }
     
     public static func == (lhs: FileRenameEvent, rhs: FileRenameEvent) -> Bool {
-        if lhs.id == rhs.id {
-            return true
-        }
-        
-        return false
+        return lhs.id == rhs.id
     }
     
     // @note files_not_quarantined should be a list of sub paths

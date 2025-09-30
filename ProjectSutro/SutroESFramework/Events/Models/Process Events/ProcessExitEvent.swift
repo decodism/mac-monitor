@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import EndpointSecurity
 
 
 // MARK: - Process Exit event: https://developer.apple.com/documentation/endpointsecurity/es_event_exit_t
@@ -21,11 +20,7 @@ public struct ProcessExitEvent: Identifiable, Codable, Hashable {
     }
     
     public static func == (lhs: ProcessExitEvent, rhs: ProcessExitEvent) -> Bool {
-        if lhs.stat == rhs.stat {
-            return true
-        }
-        
-        return false
+        return lhs.id == rhs.id
     }
     
     init(from rawMessage: UnsafePointer<es_message_t>) {
