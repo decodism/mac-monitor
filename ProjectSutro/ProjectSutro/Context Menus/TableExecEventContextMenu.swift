@@ -21,6 +21,9 @@ struct TableExecEventContextMenu: View {
     @Binding var allFilters: Filters
     
     var message: ESMessage
+    private var exec: ESProcessExecEvent {
+        message.event.exec!
+    }
     
     var body: some View {
         // MARK: Event metadata
@@ -86,6 +89,35 @@ struct TableExecEventContextMenu: View {
                 }
             }
             
+        }
+        
+        Divider()
+        // MARK: - Select Process
+        
+        Text("**Select**")
+        if let tgtProcName = exec.target.executable?.name,
+           let tgtProcPath = exec.target.executable?.path {
+            Button(action: {
+                allFilters.rootIncludedTargetProcessPath = tgtProcPath
+                allFilters.shouldIncludeProcessSubTrees = false
+            }) {
+                HStack {
+                    Text(
+                        "Include: \"`\(tgtProcName)`\""
+                    )
+                }
+            }
+            
+            Button(action: {
+                allFilters.rootIncludedTargetProcessPath = tgtProcPath
+                allFilters.shouldIncludeProcessSubTrees = true
+            }) {
+                HStack {
+                    Text(
+                        "Include: \"`\(tgtProcName)`\" and subtrees"
+                    )
+                }
+            }
         }
         
         

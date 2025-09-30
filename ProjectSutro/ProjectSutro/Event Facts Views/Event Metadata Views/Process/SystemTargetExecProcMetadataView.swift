@@ -322,6 +322,9 @@ struct SystemTargetExecProcMetadataView: View {
                             Table(event.fds) {
                                 TableColumn("FD", value: \.fd.description)
                                 TableColumn("Type", value: \.type)
+                                TableColumn("Pipe ID") { fd in
+                                    Text(fd.pipe?.pipe_id.description ?? "")
+                                }
                             }
                             .frame(height: CGFloat(150))
                         }

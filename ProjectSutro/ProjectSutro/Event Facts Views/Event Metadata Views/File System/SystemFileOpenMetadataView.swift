@@ -28,7 +28,7 @@ struct SystemFileOpenMetadataView: View {
                         Text("\u{2022} **File name:**")
                             .padding([.leading], 5.0)
                         GroupBox {
-                            Text("`\(event.file_name!)`")
+                            Text("`\(event.file.name)`")
                                 .frame(alignment: .leading)
                         }
                     }.frame(maxWidth: .infinity, alignment: .leading)
@@ -37,7 +37,7 @@ struct SystemFileOpenMetadataView: View {
                         Text("\u{2022} **File path:**")
                             .padding([.leading], 5.0)
                         GroupBox {
-                            Text("`\(event.file_path!)`")
+                            Text("`\(event.file.path ?? "")`")
                                 .frame(maxWidth: .infinity, alignment: .leading)
                         }
                     }.frame(maxWidth: .infinity, alignment: .leading)

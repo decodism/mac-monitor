@@ -28,6 +28,23 @@ public enum FileDestination: Hashable, Codable {
             fatalError("Unhandled destination type \(create.destination_type)")
         }
     }
+    
+    static func from(rename: es_event_rename_t) -> FileDestination {
+        switch rename.destination_type {
+        case ES_DESTINATION_TYPE_EXISTING_FILE:
+            return .existing_file(
+                File(from: rename.destination.existing_file.pointee)
+            )
+            
+        case ES_DESTINATION_TYPE_NEW_PATH:
+            return .new_path(
+                NewPath(from: rename)
+            )
+            
+        default:
+            fatalError("Unhandled destination type \(rename.destination_type)")
+        }
+    }
 }
 
 

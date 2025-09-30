@@ -119,6 +119,16 @@ struct EventSpecificViewsProvider {
             self.labelView = AnyView(DeleteXattrEventLabelView(message: message))
             self.metadataView = AnyView(SystemDeleteXattrMetadataView(esSystemEvent: message))
             
+        case _ where message.event.setmode != nil:
+            self.labelView = AnyView(SystemEventTypeLabel(message: message))
+            self.metadataView = AnyView(SystemSetModeMetadataView(esSystemEvent: message))
+        
+            
+        // MARK: - Pseudoterminal events
+        case _ where message.event.pty_grant != nil:
+            self.labelView = AnyView(SystemEventTypeLabel(message: message))
+            self.metadataView = AnyView(SystemPTYGrantMetadataView(esSystemEvent: message))
+            
             
         // MARK: - Service Management events
         case _ where message.event.btm_launch_item_add != nil:

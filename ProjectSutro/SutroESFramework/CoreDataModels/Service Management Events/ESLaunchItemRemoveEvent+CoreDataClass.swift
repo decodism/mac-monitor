@@ -14,87 +14,108 @@ import CoreData
 @objc(ESLaunchItemRemoveEvent)
 public class ESLaunchItemRemoveEvent: NSManagedObject, Decodable  {
     enum CodingKeys: CodingKey {
-        case id, app_process_path, app_process_signing_id, app_process_team_id, instigating_process_path, instigating_process_signing_id, instigating_process_team_id, file_path, file_name, legacy, type, uid, uid_human, is_managed
+        case id
+        case instigator
+        case app
+        case item
+        case executable_path
+        case instigator_token, app_token
     }
     
     // MARK: - Custom initilizer for ESLaunchItemRemoveEvent during heavy flows
     convenience init(from message: Message) {
-        let launchItemRemoveEvent: LaunchItemRemoveEvent = message.event.btm_launch_item_remove!
+        let event: LaunchItemRemoveEvent = message.event.btm_launch_item_remove!
+        let version: Int = message.version
         self.init()
+        self.id = event.id
         
-        self.id = launchItemRemoveEvent.id
-        self.app_process_path = launchItemRemoveEvent.app_process_path
-        self.app_process_team_id = launchItemRemoveEvent.app_process_team_id
-        self.app_process_signing_id = launchItemRemoveEvent.app_process_signing_id
-        self.instigating_process_path = launchItemRemoveEvent.instigating_process_path
-        self.instigating_process_signing_id = launchItemRemoveEvent.instigating_process_signing_id
-        self.instigating_process_team_id = launchItemRemoveEvent.instigating_process_team_id
-        self.file_path = launchItemRemoveEvent.file_path
-        self.file_name = launchItemRemoveEvent.file_name
-        self.type = launchItemRemoveEvent.type
+        if let instigator = event.instigator {
+            self.instigator = ESProcess(from: instigator, version: version)
+        }
         
-//        self.uid = launchItemRemoveEvent.uid
-//        self.uid_human = launchItemRemoveEvent.uid_human
+        if let app = event.app {
+            self.app = ESProcess(from: app, version: version)
+        }
+        
+        item = ESLaunchItem(from: event.item)
+        
+        if let instigator_token = event.instigator_token {
+            self.instigator_token = ESAuditToken(from: instigator_token)
+        }
+        
+        if let app_token = event.app_token {
+            self.app_token = ESAuditToken(from: app_token)
+        }
     }
     
     // MARK: - Custom Core Data initilizer for ESLaunchItemRemoveEvent
     convenience init(from message: Message, insertIntoManagedObjectContext context: NSManagedObjectContext!) {
-        let launchItemRemoveEvent: LaunchItemRemoveEvent = message.event.btm_launch_item_remove!
+        let event: LaunchItemRemoveEvent = message.event.btm_launch_item_remove!
         let description = NSEntityDescription.entity(forEntityName: "ESLaunchItemRemoveEvent", in: context)!
         self.init(entity: description, insertInto: context)
+        self.id = event.id
+        let version: Int = message.version
         
-        self.id = launchItemRemoveEvent.id
-        self.app_process_path = launchItemRemoveEvent.app_process_path
-        self.app_process_team_id = launchItemRemoveEvent.app_process_team_id
-        self.app_process_signing_id = launchItemRemoveEvent.app_process_signing_id
-        self.instigating_process_path = launchItemRemoveEvent.instigating_process_path
-        self.instigating_process_signing_id = launchItemRemoveEvent.instigating_process_signing_id
-        self.instigating_process_team_id = launchItemRemoveEvent.instigating_process_team_id
-        self.file_path = launchItemRemoveEvent.file_path
-        self.file_name = launchItemRemoveEvent.file_name
-        self.type = launchItemRemoveEvent.type
+        if let instigator = event.instigator {
+            self.instigator = ESProcess(
+                from: instigator,
+                version: version,
+                insertIntoManagedObjectContext: context
+            )
+        }
         
-//        self.uid = launchItemRemoveEvent.uid
-//        self.uid_human = launchItemRemoveEvent.uid_human
+        if let app = event.app {
+            self.app = ESProcess(
+                from: app,
+                version: version,
+                insertIntoManagedObjectContext: context
+            )
+        }
+        
+        item = ESLaunchItem(from: event.item, insertIntoManagedObjectContext: context)
+        
+        if let instigator_token = event.instigator_token {
+            self.instigator_token = ESAuditToken(from: instigator_token, insertIntoManagedObjectContext: context)
+        }
+        
+        if let app_token = event.app_token {
+            self.app_token = ESAuditToken(from: app_token, insertIntoManagedObjectContext: context)
+        }
     }
     
     // MARK: - Decodable conformance
     required convenience public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.init()
-        
         try id = container.decode(UUID.self, forKey: .id)
-        try app_process_path = container.decode(String.self, forKey: .app_process_path)
-        try app_process_team_id = container.decode(String.self, forKey: .app_process_team_id)
-        try app_process_signing_id = container.decode(String.self, forKey: .app_process_signing_id)
-        try instigating_process_path = container.decode(String.self, forKey: .instigating_process_path)
-        try instigating_process_signing_id = container.decode(String.self, forKey: .instigating_process_signing_id)
-        try instigating_process_team_id = container.decode(String.self, forKey: .instigating_process_team_id)
-        try file_path = container.decode(String.self, forKey: .file_path)
-        try file_name = container.decode(String.self, forKey: .file_name)
-        try type = container.decode(String.self, forKey: .type)
-//        try uid = container.decode(Int64.self, forKey: .uid)
-//        try uid_human = container.decode(String.self, forKey: .uid_human)
+        
+        try instigator = container.decodeIfPresent(ESProcess.self, forKey: .instigator)
+        try app = container.decodeIfPresent(ESProcess.self, forKey: .app)
+        try item = container.decode(ESLaunchItem.self, forKey: .item)
+        try instigator_token = container.decodeIfPresent(ESAuditToken.self, forKey: .instigator_token)
+        try app_token = container.decodeIfPresent(ESAuditToken.self, forKey: .app_token)
+        
     }
-
 }
 
 // MARK: - Encodable conformance
 extension ESLaunchItemRemoveEvent: Encodable {
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
-//        try container.encode(id, forKey: .id)
-        try container.encode(app_process_path, forKey: .app_process_path)
-        try container.encode(app_process_team_id, forKey: .app_process_team_id)
-        try container.encode(app_process_signing_id, forKey: .app_process_signing_id)
-        try container.encode(instigating_process_path, forKey: .instigating_process_path)
-        try container.encode(instigating_process_signing_id, forKey: .instigating_process_signing_id)
-        try container.encode(instigating_process_team_id, forKey: .instigating_process_team_id)
-        try container.encode(file_path, forKey: .file_path)
-        try container.encode(file_name, forKey: .file_name)
-        try container.encode(type, forKey: .type)
+        //        try container.encode(id, forKey: .id)
+        try container.encodeIfPresent(instigator, forKey: .instigator)
+        try container.encodeIfPresent(app, forKey: .app)
+        try container.encode(item, forKey: .item)
         
-//        try container.encode(uid, forKey: .uid)
-//        try container.encode(uid_human, forKey: .uid_human)
+        try container.encodeIfPresent(instigator_token, forKey: .instigator_token)
+        try container.encodeIfPresent(app_token, forKey: .app_token)
+        
+    }
+    
+    public var itemName: String? {
+        if let url = URL(string: item.item_url) {
+            return url.lastPathComponent
+        }
+        return nil
     }
 }

@@ -103,10 +103,10 @@ public struct Message: Identifiable, Codable, Hashable {
         /// Time
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
-        let ats = timespecToTimestamp(timespec: message.time)
+        let ats = ProcessHelpers.timespecToTimestamp(timespec: message.time)
         self.time = dateFormatter.string(from: ats)
         self.mach_time = Int(message.mach_time)
-        self.message_darwin_time = timespecToTimestamp(timespec: message.time)
+        self.message_darwin_time = ProcessHelpers.timespecToTimestamp(timespec: message.time)
         
         /// Platform -- Mac Monitor enrichment
         self.sensor_id = sensorID

@@ -76,7 +76,9 @@ public var supportedEvents: [es_event_type_t] {
         ES_EVENT_TYPE_NOTIFY_PROC_SUSPEND_RESUME,
         ES_EVENT_TYPE_NOTIFY_TRACE,
         ES_EVENT_TYPE_NOTIFY_GET_TASK,
-        ES_EVENT_TYPE_NOTIFY_PROC_CHECK
+        ES_EVENT_TYPE_NOTIFY_PROC_CHECK,
+        ES_EVENT_TYPE_NOTIFY_SETMODE,
+        ES_EVENT_TYPE_NOTIFY_PTY_GRANT
     ]
     
     var list = coreEvents
@@ -117,7 +119,9 @@ public var defaultEventSubscriptions: [es_event_type_t] {
         ES_EVENT_TYPE_NOTIFY_REMOTE_THREAD_CREATE,
         ES_EVENT_TYPE_NOTIFY_CS_INVALIDATED,
         ES_EVENT_TYPE_NOTIFY_TRACE,
-        ES_EVENT_TYPE_NOTIFY_IOKIT_OPEN
+        ES_EVENT_TYPE_NOTIFY_IOKIT_OPEN,
+        ES_EVENT_TYPE_NOTIFY_SETMODE,
+        ES_EVENT_TYPE_NOTIFY_PTY_GRANT
     ]
     
     var list = defaultEvents

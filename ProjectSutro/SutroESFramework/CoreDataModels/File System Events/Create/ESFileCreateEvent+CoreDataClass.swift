@@ -78,7 +78,10 @@ extension ESFileCreateEvent: Encodable {
            let path = existingFile.path {
             return path
         } else if let newPath = destination.new_path {
-            return newPath.path
+            if let dir = newPath.dir?.path,
+               let fileName = newPath.dir?.name {
+                return "\(dir)/\(fileName)"
+            }
         }
         
         return ""

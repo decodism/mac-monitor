@@ -43,9 +43,13 @@ public class ESEventType: NSManagedObject, Decodable {
         /// Symbolic link events
         case link
         
-        /// File metadata evebts
+        /// File metadata events
         case setextattr
         case deleteextattr
+        case setmode
+        
+        /// Pseudoterminal events
+        case pty_grant
         
         /// File system mounting events
         case mount
@@ -159,6 +163,12 @@ public class ESEventType: NSManagedObject, Decodable {
             self.setextattr = ESXattrSetEvent(from: message)
         case .deleteextattr(_):
             self.deleteextattr = ESXattrDeleteEvent(from: message)
+        case .setmode(_):
+            self.setmode = ESSetModeEvent(from: message)
+        
+        // MARK: File Metadata events
+        case .pty_grant(_):
+            self.pty_grant = ESPTYGrantEvent(from: message)
 
         // MARK: File System Mounting events
         case .mount(_):
@@ -369,6 +379,19 @@ public class ESEventType: NSManagedObject, Decodable {
                 from: message,
                 insertIntoManagedObjectContext: context
             )
+        case .setmode(_):
+            self.setmode = ESSetModeEvent(
+                from: message,
+                insertIntoManagedObjectContext: context
+            )
+        
+        
+        // MARK: Pseudoterminal Event
+        case .pty_grant(_):
+            self.pty_grant = ESPTYGrantEvent(
+                from: message,
+                insertIntoManagedObjectContext: context
+            )
 
             
         // MARK: File System Mounting events
@@ -575,6 +598,10 @@ public class ESEventType: NSManagedObject, Decodable {
         // MARK: File Metadata events
         try setextattr = container.decodeIfPresent(ESXattrSetEvent.self, forKey: .setextattr)
         try deleteextattr = container.decodeIfPresent(ESXattrDeleteEvent.self, forKey: .deleteextattr)
+        try setmode = container.decodeIfPresent(ESSetModeEvent.self, forKey: .setmode)
+        
+        // MARK: Pseudoterminal event
+        try pty_grant = container.decodeIfPresent(ESPTYGrantEvent.self, forKey: .pty_grant)
         
         // MARK: File System Mounting events
         try mount = container.decodeIfPresent(ESMountEvent.self, forKey: .mount)
@@ -667,6 +694,10 @@ extension ESEventType: Encodable {
         // MARK: File Metadata events
         try container.encodeIfPresent(setextattr, forKey: .setextattr)
         try container.encodeIfPresent(deleteextattr, forKey: .deleteextattr)
+        try container.encodeIfPresent(setmode, forKey: .setmode)
+        
+        // MARK: Pseudoterminal events
+        try container.encodeIfPresent(pty_grant, forKey: .pty_grant)
 
         // MARK: File System Mounting events
         try container.encodeIfPresent(mount, forKey: .mount)

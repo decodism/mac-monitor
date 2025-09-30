@@ -13,31 +13,35 @@ import EndpointSecurity
 public struct IOKitOpenEvent: Identifiable, Codable, Hashable {
     public var id: UUID = UUID()
     
-    public var user_client_class: String?
-    public var user_client_type: Int?
+    public var user_client_type: Int64
+    public var user_client_class: String
+    
+    /* fields available only if message version >= 10 */
+    public var parent_registry_id: Int64 = 0
+    public var parent_path: String?
+    
     
     public func hash(into hasher: inout Hasher) {
-        hasher.combine(user_client_class)
-        hasher.combine(user_client_type)
         hasher.combine(id)
     }
     
     public static func == (lhs: IOKitOpenEvent, rhs: IOKitOpenEvent) -> Bool {
-        if lhs.user_client_class == rhs.user_client_class && lhs.user_client_type == rhs.user_client_type && lhs.id == rhs.id {
-            return true
-        }
-        
-        return false
+        return lhs.id == rhs.id
     }
     
     init(from rawMessage: UnsafePointer<es_message_t>) {
-        // Getting the IOKit event
         let ioKitEvent: es_event_iokit_open_t = rawMessage.pointee.event.iokit_open
+        let version: Int = Int(rawMessage.pointee.version)
         
         self.user_client_class = ""
         if ioKitEvent.user_client_class.length > 0 {
             self.user_client_class = String(cString: ioKitEvent.user_client_class.data)
         }
-        self.user_client_type = Int(ioKitEvent.user_client_type)
+        self.user_client_type = Int64(ioKitEvent.user_client_type)
+        
+        if version >= 10 {
+            self.parent_registry_id = Int64(ioKitEvent.parent_registry_id)
+            self.parent_path = ioKitEvent.parent_path.toString()
+        }
     }
 }

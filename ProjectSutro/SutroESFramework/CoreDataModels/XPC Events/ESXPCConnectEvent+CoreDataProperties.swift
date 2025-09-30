@@ -17,9 +17,8 @@ extension ESXPCConnectEvent {
     }
 
     @NSManaged public var id: UUID?
-    @NSManaged public var service_name: String
-    @NSManaged public var service_domain_type: Int32
-    @NSManaged public var service_domain_type_string: String
+    @NSManaged public var service_name: String?
+    @NSManaged public var service_domain_type: String?
     
 }
 

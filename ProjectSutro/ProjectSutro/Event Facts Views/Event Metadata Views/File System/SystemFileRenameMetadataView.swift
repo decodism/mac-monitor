@@ -17,13 +17,6 @@ struct SystemFileRenameMetadataView: View {
         esSystemEvent.event.rename!
     }
     
-    private var filesNotQuarantined: [String] {
-        if !event.archive_files_not_quarantined!.isEmpty {
-            return event.archive_files_not_quarantined!.split(separator: "[::]").map({String($0)})
-        }
-        return []
-    }
-    
     var body: some View {
         VStack(alignment: .leading) {
             // MARK: Event label
@@ -31,38 +24,7 @@ struct SystemFileRenameMetadataView: View {
                 .font(.title2)
             
             GroupBox {
-                if !event.archive_files_not_quarantined!.isEmpty {
-                    VStack(alignment: .leading) {
-                        HStack {
-                            Image(systemName: "bolt.trianglebadge.exclamationmark.fill")
-                                .font(Font.system(size: 10, weight: .bold))
-                                .symbolRenderingMode(.palette)
-                                .foregroundStyle(.purple)
-                            Text("**Inflated files not quarantined:**")
-                        }.padding([.leading], 5.0)
-                        
-                        GroupBox {
-                            VStack(alignment: .leading) {
-                                HStack {
-                                    Image(systemName: "exclamationmark.triangle.fill")
-                                        .symbolRenderingMode(.palette)
-                                        .foregroundStyle(.black, .yellow)
-                                    Text("The files listed here should have been quarantined when an archive was inflated, but were **not**. Investigate how these files were created.")
-                                        .frame(maxWidth: .infinity, alignment: .leading)
-                                        .lineLimit(20)
-                                }
-                                Divider()
-                                ForEach(filesNotQuarantined, id: \.self) { item in
-                                    GroupBox {
-                                        Text("`\(String(item.trimmingPrefix("file://")))`")
-                                            .frame(maxWidth: .infinity, alignment: .leading)
-                                    }
-                                }
-                            }.frame(maxWidth: .infinity, alignment: .leading)
-                        }
-                    }.frame(maxWidth: .infinity, alignment: .leading)
-                    Divider()
-                } else if event.file_name!.hasSuffix(".app") {
+                if event.is_quarantined == 0 && event.destination_path.hasSuffix(".app") {
                     VStack(alignment: .leading) {
                         HStack {
                             Image(systemName: "hand.raised.app")
@@ -90,57 +52,66 @@ struct SystemFileRenameMetadataView: View {
                 }
                 
                 VStack(alignment: .leading) {
-                    HStack {
-                        Text("\u{2022} **Destination file name:**")
-                            .padding([.leading], 5.0)
-                        GroupBox {
-                            Text("`\(event.file_name!)`")
+                    GroupBox {
+                        HStack {
+                            Text("\u{2022} Destination type:")
+                                .bold()
+                            Text("\(event.destination_type_string.replacingOccurrences(of: "ES_DESTINATION_TYPE_", with: ""))")
+                                .monospaced()
                         }
+                    }
+                    
+                    HStack {
+                        Text("\u{2022} Destination file name:")
+                            .bold()
+                            .padding([.leading], 5.0)
+                        
+                        GroupBox {
+                            Text(event.destination_file_name)
+                                .monospaced()
+                        }
+                        
                         FileQuarantineStatusLabelView(isQuarantined: Int(event.is_quarantined))
                     }.frame(maxWidth: .infinity, alignment: .leading)
                     
-                    VStack(alignment: .leading) {
-                        Text("\u{2022} **Destination Path:**")
-                            .padding([.leading], 5.0)
-                        HStack {
-                            GroupBox {
-                                if event.type != "EXISTING_FILE" {
-                                    Text("`\(event.destination_path!.appending("/\(event.file_name!)"))`")
-                                } else {
-                                    Text("`\(event.destination_path!)`")
-                                }
-                            }
-                            Spacer()
-                            if event.type != "EXISTING_FILE" && FileManager.default.fileExists(atPath: event.destination_path!) {
-                                Image(systemName: "checkmark.square")
-                                    .help("This file exists")
-                                    .font(Font.system(size: 10, weight: .bold))
-                                    .padding(.trailing)
-                            } else if event.type == "EXISTING_FILE" && FileManager.default.fileExists(atPath: event.destination_path!.appending("/\(event.file_name!)")) {
-                                Image(systemName: "checkmark.square")
-                                    .help("This file exists")
-                                    .font(Font.system(size: 10, weight: .bold))
-                                    .padding(.trailing)
-                            } else {
-                                Image(systemName: "trash").help("This file no longer exists")
-                                    .padding(.trailing)
-                                    .font(Font.system(size: 10, weight: .bold))
-                            }
-                            
+                    HStack {
+                        if FileManager.default
+                            .fileExists(atPath: event.destination_path) {
+                            Label("**Destination Path:**", systemImage: "checkmark.circle")
+                                .labelStyle(.titleAndIcon)
+                                .help("This file exists.")
+                        } else {
+                            Label("**Destination Path:**", systemImage: "xmark.circle")
+                                .labelStyle(.titleAndIcon)
+                                .help("This file no longer exists.")
                         }
-                        
-                    }.frame(maxWidth: .infinity, alignment: .leading)
-                    
-                    
-                    VStack(alignment: .leading) {
-                        Text("\u{2022} **Source Path:**")
-                            .padding([.leading], 5.0)
                         GroupBox {
-                            VStack {
-                                Text("`\(event.source_path!)`")
-                            }.frame(maxWidth: .infinity, alignment: .leading)
+                            Text(event.destination_path)
+                                .monospaced()
+                                .lineLimit(10)
                         }
-                    }.frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                    
+                    if let sourcePath = event.source.path {
+                        HStack {
+                            if FileManager.default
+                                .fileExists(atPath: sourcePath) {
+                                Label("**Source path:**", systemImage: "checkmark.circle")
+                                    .labelStyle(.titleAndIcon)
+                                    .help("This file exists.")
+                            } else {
+                                Label("**Source path:**", systemImage: "xmark.circle")
+                                    .labelStyle(.titleAndIcon)
+                                    .help("This file no longer exists.")
+                            }
+                            GroupBox {
+                                Text(sourcePath)
+                                    .monospaced()
+                                    .lineLimit(10)
+                            }
+                        }
+                    }
+                    
 
                 }.frame(maxWidth: .infinity, alignment: .leading)
             }

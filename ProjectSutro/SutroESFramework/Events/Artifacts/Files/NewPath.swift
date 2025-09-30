@@ -16,7 +16,7 @@ public struct NewPath: Identifiable, Codable, Equatable, Hashable {
     public var filename: String
     
     /// `mode_t`
-    public var mode: Int
+    public var mode: Int?
     
     public init(from create: es_event_create_t) {
         self.dir = File(from: create.destination.new_path.dir.pointee)
@@ -26,5 +26,13 @@ public struct NewPath: Identifiable, Codable, Equatable, Hashable {
         )
         
         self.mode = Int(create.destination.new_path.mode)
+    }
+    
+    public init(from rename: es_event_rename_t) {
+        self.dir = File(from: rename.destination.new_path.dir.pointee)
+        
+        self.filename = String(
+            cString: rename.destination.new_path.filename.data
+        )
     }
 }

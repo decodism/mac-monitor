@@ -148,23 +148,27 @@ public func eventStringToImage(from eventString: String) -> String {
         return "creditcard.trianglebadge.exclamationmark"
     case "ES_EVENT_TYPE_NOTIFY_PROC_CHECK":
         return "barcode.viewfinder"
+    case "ES_EVENT_TYPE_NOTIFY_SETMODE":
+        return "plus.diamond"
+    case "ES_EVENT_TYPE_NOTIFY_PTY_GRANT":
+        return "apple.terminal"
     
     // MARK: - macOS 14+ events
-    case "ES_EVENT_TYPE_NOTIFY_PROFILE_ADD":  // Profile add
+    case "ES_EVENT_TYPE_NOTIFY_PROFILE_ADD":
         return "magazine"
-    case "ES_EVENT_TYPE_NOTIFY_OD_CREATE_USER":  // Open Directory Create User
+    case "ES_EVENT_TYPE_NOTIFY_OD_CREATE_USER":
         return "person.fill.badge.plus"
-    case "ES_EVENT_TYPE_NOTIFY_OD_MODIFY_PASSWORD":  // Open Directory Modify Password
+    case "ES_EVENT_TYPE_NOTIFY_OD_MODIFY_PASSWORD":
         return "rectangle.and.pencil.and.ellipsis"
-    case "ES_EVENT_TYPE_NOTIFY_OD_ATTRIBUTE_SET":   // Open Directory Attibute Set
+    case "ES_EVENT_TYPE_NOTIFY_OD_ATTRIBUTE_SET":
         return "slider.horizontal.2.square.on.square"
-    case "ES_EVENT_TYPE_NOTIFY_OD_DISABLE_USER":   // Open Directory Disable User
+    case "ES_EVENT_TYPE_NOTIFY_OD_DISABLE_USER":
         return "person.crop.circle.badge.minus"
-    case "ES_EVENT_TYPE_NOTIFY_OD_GROUP_ADD":  // Open Directory Group Add
+    case "ES_EVENT_TYPE_NOTIFY_OD_GROUP_ADD":
         return "person.3.fill"
-    case "ES_EVENT_TYPE_NOTIFY_OD_CREATE_GROUP":  // Open Directory Group Create
+    case "ES_EVENT_TYPE_NOTIFY_OD_CREATE_GROUP":
         return "person.3.fill"
-    case "ES_EVENT_TYPE_NOTIFY_OD_ATTRIBUTE_VALUE_ADD":  // Open Directory attribute value add
+    case "ES_EVENT_TYPE_NOTIFY_OD_ATTRIBUTE_VALUE_ADD":
         return "text.badge.plus"
     case "ES_EVENT_TYPE_NOTIFY_XPC_CONNECT":
         return "phone.connection.fill"

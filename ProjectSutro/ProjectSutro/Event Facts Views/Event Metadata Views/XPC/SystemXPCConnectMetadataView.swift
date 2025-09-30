@@ -28,14 +28,14 @@ struct SystemXPCConnectMetadataView: View {
                     HStack {
                         Text("\u{2022} **Service name:**")
                         GroupBox {
-                            Text("`\(event.service_name)`")
+                            Text("`\(event.service_name ?? "Unknown")`")
                         }
                     }
 
                     HStack {
                         Text("\u{2022} **Domain type:**")
                         GroupBox {
-                            Text("`\(event.service_domain_type_string)` (\(event.service_domain_type))")
+                            Text("`\(event.service_domain_type ?? "Unknown")`")
                         }
                     }
                 }.frame(maxWidth: .infinity, alignment: .leading)

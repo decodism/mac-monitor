@@ -13,16 +13,15 @@ import EndpointSecurity
 public struct FileOpenEvent: Identifiable, Codable, Hashable {
     public var id: UUID = UUID()
     
-    public var file_name, file_path: String?
+    public var file: File
+    public var fflag: Int32
     
     public func hash(into hasher: inout Hasher) {
-        hasher.combine(file_path)
-        hasher.combine(file_name)
         hasher.combine(id)
     }
     
     public static func == (lhs: FileOpenEvent, rhs: FileOpenEvent) -> Bool {
-        if lhs.file_path == rhs.file_path && lhs.id == rhs.id {
+        if lhs.id == rhs.id {
             return true
         }
         
@@ -32,7 +31,7 @@ public struct FileOpenEvent: Identifiable, Codable, Hashable {
     init(from rawMessage: UnsafePointer<es_message_t>) {
         // Getting the file open event
         let fileOpenEvent: es_event_open_t = rawMessage.pointee.event.open
-        self.file_path = String(cString: fileOpenEvent.file.pointee.path.data)
-        self.file_name = (String(cString: fileOpenEvent.file.pointee.path.data) as NSString).lastPathComponent
+        self.file = File(from: fileOpenEvent.file.pointee)
+        self.fflag = fileOpenEvent.fflag
     }
 }

@@ -12,7 +12,7 @@ import CoreData
 @objc(ESFileOpenEvent)
 public class ESFileOpenEvent: NSManagedObject, Decodable {
     enum CodingKeys: CodingKey {
-        case id, file_name, file_path
+        case id, file, fflag
     }
     
     
@@ -20,8 +20,9 @@ public class ESFileOpenEvent: NSManagedObject, Decodable {
         let fileEvent: FileOpenEvent = message.event.open!
         self.init()
         self.id = fileEvent.id
-        self.file_name = fileEvent.file_name!
-        self.file_path = fileEvent.file_path!
+        
+        self.file = ESFile(from: fileEvent.file)
+        self.fflag = fileEvent.fflag
     }
     
     // MARK: - Custom Core Data initilizer for ESFileOpenEvent
@@ -30,8 +31,9 @@ public class ESFileOpenEvent: NSManagedObject, Decodable {
         let description = NSEntityDescription.entity(forEntityName: "ESFileOpenEvent", in: context)!
         self.init(entity: description, insertInto: context)
         self.id = fileEvent.id
-        self.file_name = fileEvent.file_name!
-        self.file_path = fileEvent.file_path!
+        
+        self.file = ESFile(from: fileEvent.file, insertIntoManagedObjectContext: context)
+        self.fflag = fileEvent.fflag
     }
     
     // MARK: - Decodable conformance
@@ -40,8 +42,8 @@ public class ESFileOpenEvent: NSManagedObject, Decodable {
         self.init()
         
         try id = container.decode(UUID.self, forKey: .id)
-        try file_path = container.decode(String.self, forKey: .file_path)
-        try file_name = container.decode(String.self, forKey: .file_name)
+        try file = container.decode(ESFile.self, forKey: .file)
+        try fflag = container.decode(Int32.self, forKey: .fflag)
     }
 }
 
@@ -49,7 +51,8 @@ public class ESFileOpenEvent: NSManagedObject, Decodable {
 extension ESFileOpenEvent: Encodable {
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(file_path, forKey: .file_path)
-        try container.encode(file_name, forKey: .file_name)
+        
+        try container.encode(file, forKey: .file)
+        try container.encode(fflag, forKey: .fflag)
     }
 }

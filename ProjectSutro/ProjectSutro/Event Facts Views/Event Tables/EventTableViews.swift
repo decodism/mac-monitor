@@ -47,16 +47,22 @@ struct LaunchItemTableView: View {
     
     var body: some View {
         Section(header: Label("Background Task Management Items", systemImage: "lock.doc").font(.title2)) {
-            Table(of: ESMessage.self, selection: $eventSelection,
+            Table(
+of: ESMessage.self,
+ selection: $eventSelection,
                   columns: {
                       TableColumn("Process signing ID") { (message: ESMessage) in
                           Text(message.process.signing_id ?? "—")
                       }
                       TableColumn("Launch item path") { (message: ESMessage) in
-                          Text(message.event.btm_launch_item_add?.file_path ?? "—")
+                          Text(
+                            message.event.btm_launch_item_add?.item.item_path ?? "—"
+                          )
                       }
                       TableColumn("Persistence type") { (message: ESMessage) in
-                          Text(message.event.btm_launch_item_add?.type ?? "—")
+                          Text(
+                            message.event.btm_launch_item_add?.item.item_type_string ?? "—"
+                          )
                       }
                   },
                   rows: {

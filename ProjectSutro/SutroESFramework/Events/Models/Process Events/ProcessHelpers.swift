@@ -149,6 +149,13 @@ public class ProcessHelpers {
     //    }
     
     // MARK: - Process event helper functions
+    public static func timespecToTimestamp(timespec: timespec) -> Date {
+        let unixTimestamp = Double(timespec.tv_sec) + (Double(timespec.tv_nsec) / 1e9)
+        let date = Date(timeIntervalSince1970: unixTimestamp)
+        
+        return date
+    }
+    
     public static func timevalToTimestamp(timeval: timeval) -> String {
         let unixTimestamp = Double(timeval.tv_sec) + (Double(timeval.tv_usec) / 1000000)
         let date = Date(timeIntervalSince1970: unixTimestamp)
@@ -218,7 +225,7 @@ public class ProcessHelpers {
         // Check if the file exists
         guard FileManager.default.fileExists(atPath: fileURL.path) else {
             // Return nil if the file does not exist
-            return "`plist` file does not exist!"
+            return nil
         }
         
         // Read the contents of the file

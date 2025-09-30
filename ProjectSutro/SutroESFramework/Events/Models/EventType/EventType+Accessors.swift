@@ -121,6 +121,18 @@ extension EventType {
         return nil
     }
     
+    var setmode: SetModeEvent? {
+        if case .setmode(let e) = self { return e }
+        return nil
+    }
+    
+    
+    // MARK: Pseudoterminal events
+    var pty_grant: PTYGrantEvent? {
+        if case .pty_grant(let e) = self { return e }
+        return nil
+    }
+    
     
     // MARK: Service Management events
     var btm_launch_item_add: LaunchItemAddEvent? {

@@ -42,6 +42,10 @@ public enum EventType: Hashable, Codable {
     // MARK: File Metadata events
     case setextattr(XattrSetEvent)
     case deleteextattr(XattrDeleteEvent)
+    case setmode(SetModeEvent)
+    
+    // MARK: Pseudoterminal events
+    case pty_grant(PTYGrantEvent)
     
     // MARK: Service Management events
     case btm_launch_item_add(LaunchItemAddEvent)

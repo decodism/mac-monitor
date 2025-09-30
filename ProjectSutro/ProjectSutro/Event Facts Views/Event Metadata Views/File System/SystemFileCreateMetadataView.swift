@@ -135,8 +135,6 @@ struct SystemFileCreateMetadataView: View {
                             Text("`\(destinationPath)`")
                                 .lineLimit(10)
                         }
-                        
-                        
                     }
                     
                     if let acl = acl {

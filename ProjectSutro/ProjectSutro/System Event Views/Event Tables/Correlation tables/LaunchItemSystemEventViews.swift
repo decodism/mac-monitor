@@ -25,12 +25,12 @@ struct SystemLaunchItemEventTableView: View {
                 TableColumn("Persistance type") { (
                     message: ESMessage
                 ) in
-                    Text("`\(message.event.btm_launch_item_add!.type!)`")
+                    Text("`\(message.event.btm_launch_item_add!.item.item_type_string)`")
                 }
                 TableColumn("Launch item name") { (
                     message: ESMessage
                 ) in
-                    Text("`\(message.event.btm_launch_item_add!.file_path!)`")
+                    Text("`\(message.event.btm_launch_item_add!.itemName ?? "")`")
                 }
                 TableColumn("Launch item path") { (
                     message: ESMessage
@@ -40,7 +40,7 @@ struct SystemLaunchItemEventTableView: View {
                 TableColumn("Is legacy?") { (
                     message: ESMessage
                 ) in
-                    Text("`\(message.event.btm_launch_item_add!.is_legacy ? "Yes" : "No")`")
+                    Text("`\(message.event.btm_launch_item_add!.item.legacy ? "Yes" : "No")`")
                 }
             } rows: {
                 ForEach(launchItemEvents) { (

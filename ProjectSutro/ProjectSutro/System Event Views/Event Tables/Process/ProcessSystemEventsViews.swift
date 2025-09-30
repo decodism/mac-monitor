@@ -170,6 +170,7 @@ struct SystemProcessExecTableView: View {
             TableColumn("Process path",
                         value: \.sortProcessPath) { m in
                 Text("`\(m.sortProcessPath)`")
+                    .truncationMode(.middle)
                     .textSelection(.enabled)
             }.width(min: 50, ideal: 60, max: 300)
 
@@ -268,6 +269,7 @@ struct CustomizableSystemProcessExecTableView: View {
                         value: \.sortProcessPath) { m in
                 Text("`\(m.sortProcessPath)`")
                     .textSelection(.enabled)
+                    .truncationMode(.middle)
             }
             .width(min: 50, ideal: 60, max: 300)
             .customizationID("Process path")

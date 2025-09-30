@@ -25,7 +25,9 @@ public class ESNewPath: NSManagedObject, Decodable {
         
         self.dir = ESFile(from: newPath.dir)
         self.filename = newPath.filename
-        self.mode = Int32(newPath.mode)
+        if let mode = newPath.mode {
+            self.mode = Int32(mode)
+        }
     }
     
     // MARK: - Custom Core Data initilizer for ESNewPath
@@ -39,7 +41,9 @@ public class ESNewPath: NSManagedObject, Decodable {
         
         self.dir = ESFile(from: newPath.dir, insertIntoManagedObjectContext: context)
         self.filename = newPath.filename
-        self.mode = Int32(newPath.mode)
+        if let mode = newPath.mode {
+            self.mode = Int32(mode)
+        }
     }
     
     // MARK: - Decodable conformance
@@ -61,16 +65,16 @@ extension ESNewPath: Encodable {
         //        try container.encode(id, forKey: .id)
         try container.encode(dir, forKey: .dir)
         try container.encode(filename, forKey: .filename)
-        try container.encode(mode, forKey: .mode)
+        try container.encodeIfPresent(mode, forKey: .mode)
     }
     
-    public var path: String {
-        if let dir = dir,
-           let dirPath = dir.path,
-           let filename = filename {
-            let path = "\(dirPath)/\(filename)"
-            return path
-        }
-        return ""
-    }
+//    public var path: String {
+//        if let dir = self.dir,
+//           let dirPath = dir.path,
+//           let filename = self.filename {
+//            let path = "\(dirPath)/\(filename)"
+//            return path
+//        }
+//        return ""
+//    }
 }

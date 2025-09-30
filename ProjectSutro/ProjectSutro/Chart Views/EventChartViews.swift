@@ -57,7 +57,9 @@ struct SystemChartEventView: View {
         "AUTH_PETITION",
         "AUTH_JUDGEMENT",
         "TCC_MODIFY",
-        "GATEKEEPER_USER_OVERRIDE"
+        "GATEKEEPER_USER_OVERRIDE",
+        "SETMODE",
+        "PTY_GRANT"
     ]
 
     private func eventCounts() -> [String: Int] {
@@ -169,6 +171,14 @@ struct SystemChartEventView: View {
             
             if message.event.gatekeeper_user_override != nil {
                 counts["GATEKEEPER_USER_OVERRIDE", default: 0] += 1
+            }
+            
+            if message.event.setmode != nil {
+                counts["SETMODE", default: 0] += 1
+            }
+            
+            if message.event.pty_grant != nil {
+                counts["PTY_GRANT", default: 0] += 1
             }
         }
     }

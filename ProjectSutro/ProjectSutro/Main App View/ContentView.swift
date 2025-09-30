@@ -134,12 +134,15 @@ struct EventView: View {
     
     /// The filtered System Events to be made avalible to the primary app tables
     private var filteredCoreDataEvents: [ESMessage] {
+        let lineageResolver = ProcessLineageResolver(events: Array(coreDataEvents))
         return coreDataEvents.lazy.filter { event in
             return isEventFiltered(
                 event: event,
+                filteringLongRunningProcs: filteringLongRunningProcs,
                 filterText: filterText.lowercased(),
                 allFilters: allFilters,
-                systemExtensionManager: systemExtensionManager
+                systemExtensionManager: systemExtensionManager,
+                lineageResolver: lineageResolver
             )
         }
     }

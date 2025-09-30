@@ -28,21 +28,21 @@ struct SystemXProtectRemediateMetadataView: View {
                     HStack {
                         Text("\u{2022} **Malware Identifier:**")
                         GroupBox {
-                            Text("`\(event.malware_identifier!)`")
+                            Text("`\(event.malware_identifier)`")
                         }
                     }
                     
                     HStack {
                         Text("\u{2022} **Incident ID:**")
                         GroupBox {
-                            Text("`\(event.incident_identifier!)`")
+                            Text("`\(event.incident_identifier)`")
                         }
                     }
                     
                     HStack {
                         Text("\u{2022} **Action type:**")
                         GroupBox {
-                            Text("`\(event.action_type!)`")
+                            Text("`\(event.action_type)`")
                         }
                     }
                     
@@ -56,7 +56,7 @@ struct SystemXProtectRemediateMetadataView: View {
                     HStack {
                         Text("\u{2022} **Description:**")
                         GroupBox {
-                            Text("`\(event.result_description!)`")
+                            Text("`\(event.result_description)`")
                                 .lineLimit(15)
                         }
                     }
@@ -64,7 +64,7 @@ struct SystemXProtectRemediateMetadataView: View {
                     HStack {
                         Text("\u{2022} **Remediated path:**")
                         GroupBox {
-                            Text("`\(event.remediated_path!)`")
+                            Text("`\(event.remediated_path)`")
                                 .lineLimit(10)
                         }
                     }
@@ -73,7 +73,7 @@ struct SystemXProtectRemediateMetadataView: View {
                         Text("\u{2022} **XProtect version:**")
                         VStack(alignment: .leading) {
                             GroupBox {
-                                Text("`\(event.signature_version!)`")
+                                Text("`\(event.signature_version)`")
                             }
                         }
                         

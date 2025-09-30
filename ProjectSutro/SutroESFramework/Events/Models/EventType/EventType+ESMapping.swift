@@ -70,7 +70,7 @@ extension EventType {
         case ES_EVENT_TYPE_NOTIFY_PROC_CHECK:
             let event = ProcessCheckEvent(from: rawMessage)
             let targetProcPath: String = event.target?.executable?.path ?? ""
-            let type: String = event.type_string.replacing("ES_PROC_CHECK_TYPE_", with: "")
+            _ = event.type_string.replacing("ES_PROC_CHECK_TYPE_", with: "")
             let context = "[\(event.type_string)] \(targetProcPath)"
             return (
                 .proc_check(event),
@@ -153,20 +153,38 @@ extension EventType {
             )
         case ES_EVENT_TYPE_NOTIFY_RENAME:
             let event = FileRenameEvent(from: rawMessage)
-            let path = "\(event.destination_path ?? "")/\(event.file_name ?? "")"
+            
+            var targetPath: String = ""
+            var targetFileName: String = ""
+            var context: String = ""
+            
+            switch(event.destination_type) {
+            case Int(ES_DESTINATION_TYPE_EXISTING_FILE.rawValue):
+                targetPath = event.destination.existing_file!.path
+                targetFileName = URL(string: targetPath)?.lastPathComponent ?? ""
+            case Int(ES_DESTINATION_TYPE_NEW_PATH.rawValue):
+                let dir: String = event.destination.new_path!.dir.path
+                targetFileName = event.destination.new_path!.filename
+                targetPath = "\(dir)\\/\(targetFileName)"
+            default:
+                break
+            }
+            
+            context = "\(URL(fileURLWithPath: event.source.path).lastPathComponent) → \(targetFileName)"
+            
             return (
                 .rename(event),
                 "ES_EVENT_TYPE_NOTIFY_RENAME",
-                path,
-                path
+                context,      // Context
+                targetPath // Target path
             )
         case ES_EVENT_TYPE_NOTIFY_OPEN:
             let event = FileOpenEvent(from: rawMessage)
             return (
                 .open(event),
                 "ES_EVENT_TYPE_NOTIFY_OPEN",
-                event.file_path,
-                event.file_path
+                event.file.path,
+                event.file.path
             )
 
         case ES_EVENT_TYPE_NOTIFY_WRITE:
@@ -233,6 +251,32 @@ extension EventType {
                 context,
                 event.file_path
             )
+        case ES_EVENT_TYPE_NOTIFY_SETMODE:
+            let event = SetModeEvent(from: rawMessage)
+            let tgtPath: String = event.target.path
+            let mode: Int32 = event.mode
+            let context = "(\(mode)) → \(tgtPath)"
+            
+            return (
+                .setmode(event),
+                "ES_EVENT_TYPE_NOTIFY_SETMODE",
+                context, // Context
+                tgtPath  // Target path
+            )
+        
+            
+        // MARK: - Pseudoterminal events
+        case ES_EVENT_TYPE_NOTIFY_PTY_GRANT:
+            let event = PTYGrantEvent(from: rawMessage)
+            let tgtPath: String = rawMessage.pointee.process.pointee.executable.pointee.path.toString() ?? ""
+            
+            let context = "(\(String(event.dev))) → \(tgtPath)"
+            return (
+                .pty_grant(event),
+                "ES_EVENT_TYPE_NOTIFY_PTY_GRANT",
+                context,    // Context
+                tgtPath     // Target path
+            )
 
         
         // MARK: - Service Management events
@@ -241,16 +285,16 @@ extension EventType {
             return (
                 .btm_launch_item_add(event),
                 "ES_EVENT_TYPE_NOTIFY_BTM_LAUNCH_ITEM_ADD",
-                event.file_path,
-                event.file_path
+                event.item.item_path, // Context
+                nil // @note: `target_path` does not make sense in this context.
             )
         case ES_EVENT_TYPE_NOTIFY_BTM_LAUNCH_ITEM_REMOVE:
             let event = LaunchItemRemoveEvent(from: rawMessage)
             return (
                 .btm_launch_item_remove(event),
                 "ES_EVENT_TYPE_NOTIFY_BTM_LAUNCH_ITEM_REMOVE",
-                event.file_path,
-                event.file_path
+                event.item.item_path, // Context
+                nil // @note: `target_path` does not make sense in this context.
             )
         
             
@@ -403,7 +447,7 @@ extension EventType {
             )
             let requestorName = URL(fileURLWithPath: requestorPath).lastPathComponent
             let serviceLabel: String = event.service_name ?? ""
-            let serviceDomain: String = event.service_domain_type_string ?? ""
+            let serviceDomain: String = event.service_domain_type ?? ""
             
             let context = "\(requestorName) → \(serviceLabel) in \(serviceDomain)"
             return (

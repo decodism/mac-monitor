@@ -292,18 +292,15 @@ struct FileRenameEventLabelView: View {
     }
     
     private func configuration(for event: ESFileRenameEvent) -> (icon: Image?, iconStyle: Color, iconHelp: String, labelStyle: Color, labelIcon: String) {
-        // MARK: Inflated non-quarantined file
-        if !(event.archive_files_not_quarantined?.isEmpty ?? true) {
-            return (Image(systemName: "bolt.trianglebadge.exclamationmark.fill"), .purple, "Inflated files not quarantined!", .purple, "filemenu.and.cursorarrow")
-        } else if event.is_quarantined == 1 {
+         if event.is_quarantined == 1 {
             // MARK: Quarantined inflated file
             return (Image(systemName: "lock.shield"), .primary, "File is quarantined", .primary, "filemenu.and.cursorarrow")
-        } else if event.file_name?.hasSuffix(".app") ?? false {
+         } else if event.is_quarantined == 0 && event.destination_path.hasSuffix(".app") {
             // MARK: Unquarantined app bundle
             return (Image(systemName: "hand.raised.app"), .red, "Unquarantined application bundle", .red, "filemenu.and.cursorarrow")
-        } else if event.destination_path?.contains("com.apple.backgroundtaskmanagement") ?? false {
-            // MARK: Login Item Added
-            return (Image(systemName: "exclamationmark.triangle.fill"), .yellow, "Potential Login Item added", .orange, "lock.doc")
+        } else if event.destination_path.contains("com.apple.backgroundtaskmanagement") {
+            // MARK: BTM modification
+            return (Image(systemName: "exclamationmark.triangle.fill"), .yellow, "Service management database modified.", .orange, "lock.doc")
         } else {
             return (nil, .primary, "", .primary, "filemenu.and.cursorarrow")
         }
@@ -391,7 +388,7 @@ struct IOKitOpenEventLabelView: View {
     var body: some View {
         HStack {
             // MARK: HID Device
-            if event.user_client_class!.contains("IOHIDLibUserClient") {
+            if event.user_client_class.contains("IOHIDLibUserClient") {
                 Image(systemName: "exclamationmark.triangle.fill").symbolRenderingMode(.palette).foregroundStyle(.black, .yellow).help("Human Interface Device (HID) attached!")
                 Label("**`\(eventType)`**", systemImage: eventStringToImage(from: eventType)).foregroundStyle(.orange)
             } else {

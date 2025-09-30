@@ -66,6 +66,7 @@ struct CustomizableUnifiedSystemEventsTableView: View {
             TableColumn("Event type",
                         value: \.sortEventType) { event in
                 SystemEventTypeLabel(message: event)
+                    .truncationMode(.middle)
             }
             .width(min: 150, ideal: 200, max: 400)
             .customizationID("Event type")
@@ -74,6 +75,7 @@ struct CustomizableUnifiedSystemEventsTableView: View {
             TableColumn("Context",
                         value: \.sortContext) { event in
                 Text("`\(event.context ?? "")`")
+                    .truncationMode(.middle)
             }
             .width(min: 100, ideal: 150, max: 2_000)
             .customizationID("Context")
@@ -112,6 +114,7 @@ struct CustomizableUnifiedSystemEventsTableView: View {
             TableColumn("Source process path",
                         value: \.sortSourceProcessPath) { event in
                 Text("`\(event.process.executable?.path ?? "")`")
+                    .truncationMode(.middle)
             }
             .width(min: 50, ideal: 200, max: 500)
             .customizationID("Source process path")
@@ -174,11 +177,13 @@ struct UnifiedSystemEventsTableView: View {
             TableColumn("Event type",
                         value: \.sortEventType) { event in
                 SystemEventTypeLabel(message: event)
+                    .truncationMode(.middle)
             }.width(min: 150, ideal: 200, max: 400)
 
             TableColumn("Context",
                         value: \.sortContext) { event in
                 Text("`\(event.context ?? "")`")
+                    .truncationMode(.middle)
             }.width(min: 100, ideal: 150, max: 2_000)
 
             TableColumn("Effective user",

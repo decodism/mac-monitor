@@ -27,22 +27,33 @@ struct SystemXProtectDetectMetadataView: View {
                     HStack {
                         Text("\u{2022} **Malware Identifier:**")
                         GroupBox {
-                            Text("`\(event.malware_identifier!)`")
+                            Text("`\(event.malware_identifier)`")
                         }
                     }
                     
                     HStack {
                         Text("\u{2022} **Incident ID:**")
                         GroupBox {
-                            Text("`\(event.incident_identifier!)`")
+                            Text("`\(event.incident_identifier)`")
                         }
                     }
                     
                     HStack {
                         Text("\u{2022} **Detected path:**")
                         GroupBox {
-                            Text("`\(event.detected_path!)`")
+                            Text("`\(event.detected_path)`")
                                 .lineLimit(10)
+                        }
+                    }
+                    
+                    if let executable = event.detected_executable {
+                        HStack {
+                            Text("\u{2022} **Executable path:**")
+                            GroupBox {
+                                Text(executable)
+                                    .monospaced()
+                                    .lineLimit(10)
+                            }
                         }
                     }
                     
@@ -50,7 +61,7 @@ struct SystemXProtectDetectMetadataView: View {
                         Text("\u{2022} **XProtect version:**")
                         VStack(alignment: .leading) {
                             GroupBox {
-                                Text("`\(event.signature_version!)`")
+                                Text("`\(event.signature_version)`")
                             }
                         }
                         

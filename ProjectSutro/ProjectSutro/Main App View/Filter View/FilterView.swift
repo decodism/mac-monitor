@@ -16,48 +16,112 @@ public struct Filters {
     public var events: [String] = []
     public var userIDs: [String] = []
     
+    public var rootIncludedInitiatingProcessPath: String?
+    public var rootIncludedTargetProcessPath: String?
+    public var shouldIncludeProcessSubTrees: Bool = false
+    
+    
     public func totalFilters() -> Int {
-        return initiatingPaths.count + targetPaths.count + events.count + userIDs.count
+        if rootIncludedInitiatingProcessPath != nil || rootIncludedTargetProcessPath != nil {
+            return 1
+        } else {
+            return initiatingPaths.count + targetPaths.count + events.count + userIDs.count
+        }
     }
 }
 
 
-
-public func isEventFiltered(event: ESMessage, filteringLongRunningProcs: Bool = false, filterText: String, allFilters: Filters, systemExtensionManager: EndpointSecurityManager) -> Bool {
-    let shouldFilter: Bool = false
+public func isEventFiltered(
+    event: ESMessage,
+    filteringLongRunningProcs: Bool = false,
+    filterText: String,
+    allFilters: Filters,
+    systemExtensionManager: EndpointSecurityManager,
+    lineageResolver: ProcessLineageResolver
+) -> Bool {
+    // --- STAGE 1: INCLUSION FILTERING ---
     
+    let inclusionFilterActive = allFilters.rootIncludedInitiatingProcessPath != nil ||
+                                allFilters.rootIncludedTargetProcessPath != nil
+    
+    if inclusionFilterActive {
+        var matchesAnInclusionFilter = false
+        
+        // Check initiating process inclusion filter
+        if let includePath = allFilters.rootIncludedInitiatingProcessPath,
+           let eventProcessPath = event.process.executable?.path {
+            if eventProcessPath == includePath {
+                matchesAnInclusionFilter = true
+            }
+            // If it doesn't match directly, check its lineage IF the subtree option is enabled.
+            else if allFilters.shouldIncludeProcessSubTrees {
+                if lineageResolver.lineageMatches(event: event, includedPath: includePath) {
+                    matchesAnInclusionFilter = true
+                }
+            }
+        }
+        
+        // Check target process inclusion filter
+        if !matchesAnInclusionFilter {
+            if let includePath = allFilters.rootIncludedTargetProcessPath {
+               if let execEvent = event.event.exec,
+                  execEvent.target.executable?.path == includePath {
+                    matchesAnInclusionFilter = true
+               }
+                // If it doesn't match directly, check its lineage IF the subtree option is enabled.
+                else if allFilters.shouldIncludeProcessSubTrees {
+                    if lineageResolver.lineageMatches(event: event, includedPath: includePath) {
+                        matchesAnInclusionFilter = true
+                    }
+                } else {
+                    if let includePath = allFilters.rootIncludedTargetProcessPath,
+                       event.process.executable?.path == includePath {
+                        matchesAnInclusionFilter = true
+                    }
+                }
+            }
+        }
+        
+        // If no inclusion filter was matched, the event is filtered out immediately.
+        if !matchesAnInclusionFilter { return false }
+    }
+    
+    // --- STAGE 2: EXCLUSION FILTERING ---
+
     // Filter by event time
-    if filteringLongRunningProcs, let messageTime = event.message_darwin_time, messageTime.timeIntervalSince1970 < systemExtensionManager.clientConnectDT.timeIntervalSince1970 {
+    if filteringLongRunningProcs,
+       let messageTime = event.message_darwin_time,
+       messageTime.timeIntervalSince1970 < systemExtensionManager.clientConnectDT.timeIntervalSince1970 {
         return false
     }
     
     // By event type
-    if allFilters.events.contains(event.es_event_type ?? "") {
-        return false
-    }
+    if allFilters.events.contains(event.es_event_type ?? "") { return false }
     
     // By effective user ID
-    if allFilters.userIDs.contains(event.process.euid_human ?? "") {
-        return false
-    }
+    if allFilters.userIDs.contains(event.process.euid_human ?? "") { return false }
     
     // By initiating process path
-    if allFilters.initiatingPaths
-        .contains(event.process.executable?.path ?? "") {
-        return false
-    }
+    if allFilters.initiatingPaths.contains(event.process.executable?.path ?? "") { return false }
     
-    if allFilters.targetPaths.contains(event.target_path ?? "") || !(allFilters.targetPaths.filter { (event.target_path ?? "").contains($0) }.isEmpty) {
+    // By target path
+    let targetPath = event.target_path ?? ""
+    if allFilters.targetPaths.contains(targetPath) ||
+        !allFilters.targetPaths.filter({ targetPath.contains($0) }).isEmpty {
         return false
     }
     
     // Filter text on target / "context"
-    if !filterText.isEmpty, let target = event.context, !target.lowercased().contains(filterText) {
+    if !filterText.isEmpty,
+       let target = event.context,
+       !target.lowercased().contains(filterText) {
         return false
     }
     
-    return !shouldFilter
+    // If the event has survived all applicable filters, keep it.
+    return true
 }
+
 
 
 
@@ -124,21 +188,6 @@ struct FilterView: View {
                                 Text("These objects have been filtered from view, but have not been dropped by Endpoint Security.").frame(maxWidth: .infinity, alignment: .leading)
                             }
                             
-                            // MARK: Long running process filter
-                            //                            Divider()
-                            //                            GroupBox {
-                            //                                HStack {
-                            //                                    Image(systemName: "eye.slash.fill")
-                            //                                    Text("**\(!filteringLongRunningProcs ? "Filter" : "Stop filtering") long running processes**: Processes that were started before Project Sutro \(!filteringLongRunningProcs ? "will be" : "have been") filtered from view.")
-                            //                                    Spacer()
-                            //                                    Button(action: {
-                            //                                        filteringLongRunningProcs.toggle()
-                            //                                    }) {
-                            //                                        Text(filteringLongRunningProcs ? "**Stop**" : "Start")
-                            //                                    }.buttonStyle(.borderedProminent).tint(filteringLongRunningProcs ? .pink : .green).opacity(0.8).padding(.trailing)
-                            //                                }
-                            //                            }
-                            
                             // MARK: Event mask
                             GroupBox {
                                 HStack {
@@ -160,15 +209,112 @@ struct FilterView: View {
                                         eventMaskEnabled.toggle()
                                     }) {
                                         Text(!eventMaskEnabled ? "**Enable**" : "Disable")
-                                    }.buttonStyle(.borderedProminent).tint(eventMaskEnabled ? .pink : .green).opacity(0.8).padding(.trailing)
+                                    }
+                                    .buttonStyle(.borderedProminent)
+                                    .tint(eventMaskEnabled ? .pink : .green)
+                                    .opacity(0.8)
+                                    .padding(.trailing)
                                 }
                             }
                         }
                     }
                     
+                    
+                    // MARK: - Path includes
+                    if let procPath = allFilters.rootIncludedInitiatingProcessPath {
+                        Divider()
+                        Spacer(minLength: 10)
+                        Section {
+                            HStack {
+                                Text("Include initiating process path")
+                                    .font(.title2)
+                                    .frame(alignment: .leading)
+                                
+                                if allFilters.shouldIncludeProcessSubTrees {
+                                    Capsule()
+                                        .fill(Color.green)
+                                        .overlay(
+                                            Text("Including subtrees")
+                                                .bold()
+                                        )
+                                        .opacity(0.8)
+                                        .frame(maxWidth: 150)
+                                }
+                            }
+                            
+                            Spacer()
+                            GroupBox {
+                                VStack(alignment: .leading) {
+                                    GroupBox {
+                                        HStack {
+                                            Text(procPath)
+                                                .monospaced()
+                                            Spacer()
+                                            Button(action: {
+                                                allFilters.rootIncludedInitiatingProcessPath = nil
+                                                allFilters.shouldIncludeProcessSubTrees = false
+                                            }) {
+                                                Text("**Remove**")
+                                            }
+                                            .buttonStyle(.borderedProminent)
+                                            .tint(.pink)
+                                            .opacity(0.8)
+                                            .padding(.trailing)
+                                        }.frame(alignment: .leading)
+                                    }
+                                }.frame(maxWidth: .infinity, maxHeight: .infinity)
+                            }
+                        }
+                    }
+                    if let tgtProcPath = allFilters.rootIncludedTargetProcessPath {
+                        Divider()
+                        Spacer(minLength: 10)
+                        Section {
+                            HStack {
+                                Text("Include target process path")
+                                    .font(.title2)
+                                    .frame(alignment: .leading)
+                                
+                                if allFilters.shouldIncludeProcessSubTrees {
+                                    Capsule()
+                                        .fill(Color.green)
+                                        .overlay(
+                                            Text("Including subtrees")
+                                                .bold()
+                                        )
+                                        .frame(maxWidth: 150)
+                                }
+                            }
+                            
+                            Spacer()
+                            GroupBox {
+                                VStack(alignment: .leading) {
+                                    GroupBox {
+                                        HStack {
+                                            Text(tgtProcPath)
+                                                .monospaced()
+                                            Spacer()
+                                            Button(action: {
+                                                allFilters.rootIncludedTargetProcessPath = nil
+                                                allFilters.shouldIncludeProcessSubTrees = false
+                                            }) {
+                                                Text("**Remove**")
+                                            }
+                                            .buttonStyle(.borderedProminent)
+                                            .tint(.pink)
+                                            .opacity(0.8)
+                                            .padding(.trailing)
+                                        }.frame(alignment: .leading)
+                                    }
+                                }.frame(maxWidth: .infinity, maxHeight: .infinity)
+                            }
+                        }
+                    }
+                    
+                    
+                    
+                    
                     Divider()
-                    
-                    
                     // MARK: - Initating process paths
                     if !initiatingProcessPathFilters.isEmpty {
                         Spacer(minLength: 10)
@@ -291,7 +437,6 @@ struct FilterView: View {
         .frame(minWidth: 800, minHeight: 600, maxHeight: 800)
         .onAppear {
             systemExtensionManager.requestEventSubscriptions()
-            //            allFilters.events = selectableEvents.filter({eventSubs.contains($0.eventString)}).map({$0.eventString})
         }
         Button("Close", action: {
             filteredTelemetryShown.toggle()

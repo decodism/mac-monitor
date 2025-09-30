@@ -13,10 +13,11 @@ public struct FileDescriptor: Identifiable, Codable, Equatable, Hashable {
     
     public var fdtype, fd: Int
     public var type: String
+    public var pipe: FDPipe?
     
     // Ignore id from being decoded
     enum CodingKeys: String, CodingKey {
-        case fdtype, fd, type
+        case fdtype, fd, type, pipe
     }
     
     public init(from fd: es_fd_t) {
@@ -26,6 +27,7 @@ public struct FileDescriptor: Identifiable, Codable, Equatable, Hashable {
         switch Int32(fd.fdtype) {
         case PROX_FDTYPE_PIPE:
             self.type = "PROX_FDTYPE_PIPE"
+            self.pipe = FDPipe(from: fd)
         case PROX_FDTYPE_SOCKET:
             self.type = "PROX_FDTYPE_SOCKET"
         case PROX_FDTYPE_PSEM:

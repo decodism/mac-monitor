@@ -18,78 +18,74 @@ enum MuteMode: String, CaseIterable, Identifiable {
 
 struct PathUnmuteView: View {
     @EnvironmentObject var systemExtensionManager: EndpointSecurityManager
-    var jsonPath: String
-    
-    var decodedJSONPath: ESMutedPath { decodePathJSON(pathJSON: jsonPath)! }
-    
-    var humanType: String {
-        switch(decodedJSONPath.type) {
-        case "ES_MUTE_PATH_TYPE_PREFIX":
-            return "Initiating prefix"
-        case "ES_MUTE_PATH_TYPE_LITERAL":
-            return "Initiating literal"
-        case "ES_MUTE_PATH_TYPE_TARGET_PREFIX":
-            return "Target prefix"
-        case "ES_MUTE_PATH_TYPE_TARGET_LITERAL":
-            return "Target literal"
-        default:
-            return "Unknown"
-        }
-    }
-    
+    var mutedPath: ESMutedPath
+
     var body: some View {
         HStack {
-            switch(decodedJSONPath.type) {
-            case "ES_MUTE_PATH_TYPE_PREFIX":
-                Text(" **\(humanType)** ").background(RoundedRectangle(cornerRadius: 5).fill(.red.opacity(0.3))).frame(alignment: .leading)
-            case "ES_MUTE_PATH_TYPE_LITERAL":
-                Text(" **\(humanType)** ").background(RoundedRectangle(cornerRadius: 5).fill(.orange.opacity(0.3))).frame(alignment: .leading)
-            case "ES_MUTE_PATH_TYPE_TARGET_PREFIX":
-                Text(" **\(humanType)** ").background(RoundedRectangle(cornerRadius: 5).fill(.green.opacity(0.3))).frame(alignment: .leading)
-            case "ES_MUTE_PATH_TYPE_TARGET_LITERAL":
-                Text(" **\(humanType)** ").background(RoundedRectangle(cornerRadius: 5).fill(.blue.opacity(0.3))).frame(alignment: .leading)
-            default:
-                Text(" **Unknown** ").background(RoundedRectangle(cornerRadius: 5).fill(.black.opacity(0.3))).frame(alignment: .leading)
-            }
+            MuteTypeBadgeView(path: mutedPath)
+
+            Text("`\(mutedPath.path)`")
             
-            Text("`\(decodePathJSON(pathJSON: jsonPath)!.path)`")
             Spacer()
+            
             Button(action: {
-                // MARK: Step #1 in unmuting paths
-                systemExtensionManager.puntPathToUnmute(pathToUnmute: decodePathJSON(pathJSON: jsonPath)!.path, type: decodedJSONPath.type, events: decodePathJSON(pathJSON: jsonPath)!.events)
+                systemExtensionManager.puntPathToUnmute(
+                    pathToUnmute: mutedPath.path,
+                    type: mutedPath.type,
+                    events: mutedPath.events
+                )
                 systemExtensionManager.requestMutedPaths()
             }) {
                 Text("**Unmute**")
-            }.buttonStyle(.borderedProminent).tint(.pink).opacity(0.8).padding(.trailing)
+            }
+            .buttonStyle(.borderedProminent)
+            .tint(.pink)
+            .opacity(0.8)
+            .padding(.trailing)
         }
-        
     }
 }
 
 struct MutedPathsScrollView: View {
     @EnvironmentObject var systemExtensionManager: EndpointSecurityManager
-    var mutedPaths: [String] { systemExtensionManager.simpleGetMutedPaths() }
-    @State private var searchText: String = ""
+    var mutedPaths: [ESMutedPath]
+    @State private var pathSelected: ESMutedPath? = nil
     
     var body: some View {
-        if !mutedPaths.isEmpty {
-            ScrollView {
-                ForEach(mutedPaths, id: \.self) { jsonPath in
-                    // MARK: - Prefix path muting
-                    GroupBox {
-                        PathUnmuteView(jsonPath: jsonPath).environmentObject(systemExtensionManager)
-                        DisclosureGroup("Targeted events **(\(decodePathJSON(pathJSON: jsonPath)!.eventCount))**") {
-                            TargetedEventsView(path: decodePathJSON(pathJSON: jsonPath)!).environmentObject(systemExtensionManager)
+        Group {
+            if !mutedPaths.isEmpty {
+                ScrollView {
+                    ForEach(mutedPaths) { mutedPath in
+                        GroupBox {
+                            VStack(alignment: .leading) {
+                                PathUnmuteView(mutedPath: mutedPath)
+                                    .environmentObject(systemExtensionManager)
+                                
+                                Button("Targeted events **(\(mutedPath.eventCount))**") {
+                                    self.pathSelected = mutedPath
+                                }
+                            }
                         }
                     }
                 }
-                
-            }.frame(alignment: .leading).textSelection(.enabled)
-        } else {
-            HStack {
-                Image(systemName: "exclamationmark.triangle.fill").symbolRenderingMode(.palette).foregroundStyle(.black, .yellow)
-                Text("There are no paths muted at the Endpoint Security level! Expect high event volume / noise to signal ratio!").font(.title3)
+                .frame(alignment: .leading)
+                .textSelection(.enabled)
+            } else {
+                HStack {
+                    Image(systemName: "exclamationmark.triangle.fill").symbolRenderingMode(.palette).foregroundStyle(.black, .yellow)
+                    Text("There are no paths muted at the Endpoint Security level! Expect high event volume / noise to signal ratio!").font(.title3)
+                }
             }
+        }
+        .sheet(item: $pathSelected) { selectedPath in
+            TargetedEventsView(path: selectedPath)
+                .environmentObject(systemExtensionManager)
+                .frame(
+                    minWidth: 600,
+                    maxWidth: 600,
+                    minHeight: 600,
+                    maxHeight: 600
+                )
         }
     }
 }
@@ -221,6 +217,24 @@ struct ESMutingSheet: View {
     }
 }
 
+/// The search scope for the muted paths view.
+/// We can search across the path muted, the muting type (``es_mute_path_type_t``), and the events muted.
+enum SearchType: String, CaseIterable, Identifiable {
+    case path, muteType, events
+    
+    var id: Self { self }
+}
+
+/// The muting type (``es_mute_path_type_t``) to search against.
+enum MuteType: String, CaseIterable, Identifiable {
+    case ES_MUTE_PATH_TYPE_PREFIX
+    case ES_MUTE_PATH_TYPE_LITERAL
+    case ES_MUTE_PATH_TYPE_TARGET_PREFIX
+    case ES_MUTE_PATH_TYPE_TARGET_LITERAL
+    
+    var id: Self { self }
+}
+
 
 struct ESMutingTabView: View {
     @EnvironmentObject var systemExtensionManager: EndpointSecurityManager
@@ -229,11 +243,48 @@ struct ESMutingTabView: View {
     @State private var showPathMuteAddSheet: Bool = false
     @State private var unmuteAllAlert: Bool = false
     
+    @State private var searchText: String = ""
+    @State private var searchTypeScope: SearchType = .path
+    @State private var muteType: MuteType = .ES_MUTE_PATH_TYPE_LITERAL
     
     // MARK: Path muting settingss
     @Binding var pathToMute: String
     
-//    var mutedPaths: [String] { systemExtensionManager.simpleGetMutedPaths() }
+    var mutedPaths: [ESMutedPath] {
+        let decodedPaths = systemExtensionManager.simpleGetMutedPaths().compactMap {
+            decodePathJSON(pathJSON: $0)
+        }
+        
+        let filteredPaths = decodedPaths.filter { obj in
+            if !searchText.isEmpty || searchTypeScope == .muteType {
+                switch searchTypeScope {
+                case .path:
+                    return obj.path.lowercased().contains(searchText.lowercased())
+                /// The `muteType` here is one of ``es_mute_path_type_t``
+                case .muteType:
+                    return obj.type == muteType.rawValue
+                case .events:
+                    return obj.events.contains { $0.lowercased().contains(searchText.lowercased()) }
+                }
+            }
+            return true
+        }
+
+        return filteredPaths.sorted { lhs, rhs in
+            if lhs.type != rhs.type {
+                // Primary sort: by mute type.
+                return lhs.type < rhs.type
+            }
+            
+            if lhs.path.count != rhs.path.count {
+                // Secondary sort: by path length, shortest first.
+                return lhs.path.count < rhs.path.count
+            }
+            
+            // Tertiary sort: by path, alphabetically.
+            return lhs.path < rhs.path
+        }
+    }
     
     var body: some View {
         Form {
@@ -247,10 +298,62 @@ struct ESMutingTabView: View {
                                 Text("Paths added here will cause events matching the initiating executable image or target path to be muted at the endpoint security level. Additionally, paths can target a given emitted event (usually `AUTH` events). Muting is a powerful feature at the ES level that will help improve performance during heavy traces.").font(.callout)
                             }
                         }
+                        
+                        HStack {
+                            Picker("Field", selection: $searchTypeScope) {
+                                Text("Path").tag(SearchType.path)
+                                Text("Mute type").tag(SearchType.muteType)
+                                Text("Events").tag(SearchType.events)
+                            }
+                            .frame(minWidth: 150, maxWidth: 150)
+                            
+                            if searchTypeScope == .muteType {
+                                Picker("Mute type", selection: $muteType) {
+                                    Text("ES_MUTE_PATH_TYPE_PREFIX")
+                                        .tag(MuteType.ES_MUTE_PATH_TYPE_PREFIX)
+                                    Text("ES_MUTE_PATH_TYPE_LITERAL")
+                                        .tag(MuteType.ES_MUTE_PATH_TYPE_LITERAL)
+                                    Text("ES_MUTE_PATH_TYPE_TARGET_PREFIX")
+                                        .tag(
+                                            MuteType.ES_MUTE_PATH_TYPE_TARGET_PREFIX
+                                        )
+                                    Text("ES_MUTE_PATH_TYPE_TARGET_LITERAL")
+                                        .tag(
+                                            MuteType.ES_MUTE_PATH_TYPE_TARGET_LITERAL
+                                        )
+                                }
+                                .frame(maxWidth: .infinity)
+                            } else {
+                                TextField("**Search**", text: $searchText)
+                                    .frame(maxWidth: .infinity)
+                            }
+                                
+                            
+                            Menu("Export") {
+                                Button("Current mute set...") {
+                                    exportMuteList(
+                                        content: systemExtensionManager.simpleGetMutedPaths()
+                                    )
+                                }
+                                .help("Currently muted paths.")
+                                
+                                Button("Apple mute set...") {
+                                    systemExtensionManager.requestAppleMuteSet { snapshot in
+                                        exportMuteList(content: Array(snapshot))
+                                    }
+                                }
+                                .help("The default mute set from Apple.")
+                            }
+                            .frame(maxWidth: 100)
+                        }
+                        
                         Divider()
-                        MutedPathsScrollView().environmentObject(systemExtensionManager)
+                        
+                        MutedPathsScrollView(mutedPaths: mutedPaths)
+                            .environmentObject(systemExtensionManager)
                     }
-                }.sheet(isPresented: $showPathMuteAddSheet) {
+                }
+                .sheet(isPresented: $showPathMuteAddSheet) {
                     ESMutingSheet(showPathMuteAddSheet: $showPathMuteAddSheet, pathToMute: $pathToMute).frame(minWidth: 650, maxWidth: 650, minHeight: 500).padding(.all)
                 }
                 Divider()
@@ -265,11 +368,15 @@ struct ESMutingTabView: View {
                         unmuteAllAlert.toggle()
                     }) {
                         HStack {
-                            Image(systemName: "exclamationmark.triangle.fill").symbolRenderingMode(.palette).foregroundStyle(.black, .yellow)
+                            Image(systemName: "exclamationmark.triangle.fill")
+                                .symbolRenderingMode(.palette)
+                                .foregroundStyle(.black, .yellow)
                             Text("Unmute all paths")
                         }
                     }
-                    .buttonStyle(.borderedProminent).tint(.pink).opacity(0.8)
+                    .buttonStyle(.borderedProminent)
+                    .tint(.pink)
+                    .opacity(0.8)
                     .alert("Path mute warning!", isPresented: $unmuteAllAlert, actions: {
                         Button("Changed my mind!", role: nil, action: {
                             unmuteAllAlert.toggle()
@@ -289,25 +396,36 @@ struct ESMutingTabView: View {
                     })
                     .disabled(systemExtensionManager.simpleGetMutedPaths().isEmpty)
                     
-                    Button("Reset") {
-                        systemExtensionManager.resetMuteSetToDefaultRCSet()
-                        systemExtensionManager.requestMutedPaths()
-                    }.buttonStyle(.borderedProminent).tint(.green).opacity(0.8).disabled(!systemExtensionManager.simpleGetMutedPaths().isEmpty).help("When there are no paths muted you have the option to reset to our default mute set.")
-                    
-                    Button("Export") {
-                        let muteFileURL: URL? = showMuteSavePanel()
-                        if muteFileURL != nil {
-                            do {
-                                try systemExtensionManager.simpleGetMutedPaths().joined(separator: "\n").write(to: muteFileURL!, atomically: true, encoding: String.Encoding.utf8)
-                            } catch {
-                                os_log("Failed to write path mute file. \(error.localizedDescription)")
-                            }
+                    if systemExtensionManager.simpleGetMutedPaths().isEmpty {
+                        Button("Reset") {
+                            systemExtensionManager.resetMuteSetToDefault()
+                            systemExtensionManager.requestMutedPaths()
                         }
-                    }.disabled(systemExtensionManager.simpleGetMutedPaths().isEmpty).help("Export the paths muted to JSON.")
+                        .buttonStyle(.borderedProminent)
+                        .tint(.green)
+                        .opacity(0.8)
+                        .disabled(!systemExtensionManager.simpleGetMutedPaths().isEmpty)
+                        .help("When there are no paths muted you have the option to reset to our default mute set.")
+                    }
                 }
             }
         }.onAppear {
             systemExtensionManager.requestMutedPaths()
+        }
+    }
+    
+    private func exportMuteList(content: [String]) {
+        guard let muteFileURL = showMuteSavePanel() else {
+            os_log("User cancelled save panel.")
+            return
+        }
+        
+        do {
+            let fileContent = content.joined(separator: "\n")
+            try fileContent.write(to: muteFileURL, atomically: true, encoding: .utf8)
+            os_log("Successfully exported mute list to \(muteFileURL.path).")
+        } catch {
+            os_log("Failed to write path mute file: \(error.localizedDescription)")
         }
     }
 }

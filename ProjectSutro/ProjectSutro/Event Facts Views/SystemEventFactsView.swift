@@ -87,7 +87,7 @@ struct SystemEventFactsView : View {
             
             // MARK: Display full property list for BTM events
             if let btm_launch_item_add = selectedMessage.event.btm_launch_item_add,
-               let plist = btm_launch_item_add.plist_contents {
+               let plist = btm_launch_item_add.item.plist_contents {
                 if !plist.isEmpty {
                     VStack(alignment: .leading) {
                         PropertyListView(selectedRCEvent: selectedMessage)

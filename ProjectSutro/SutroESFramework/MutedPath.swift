@@ -11,7 +11,7 @@ import OSLog
 
 
 public struct ESMutedPath: Identifiable, Codable, Hashable {
-    public var id: UUID = UUID()
+    public var id: String { "\(path)-\(type)" }
     public var type: String
     public var events: [String] = []
     public var path: String = ""
@@ -33,18 +33,24 @@ public struct ESMutedPath: Identifiable, Codable, Hashable {
     init(fromRawESPath rawPath: es_muted_path_t) {
         // Set the path
         self.path = String(cString: rawPath.path.data)
-//        os_log("Security extension parsing raw path: \(String(cString: rawPath.path.data))")
         
         self.type = getMuteCaseString(muteType: rawPath.type)
         
         // Get the number of events
         self.eventCount = rawPath.event_count
         
-        //For each of those events...
+        // For each of those events...
         // Add the events the muting request was submitted for
         for index in 0..<eventCount {
             self.events.append(eventTypeToString(from: rawPath.events[index]))
         }
+    }
+    
+    public init(type: String, events: [String], path: String) {
+        self.type = type
+        self.events = events
+        self.path = path
+        self.eventCount = events.count
     }
     
 }
@@ -84,10 +90,13 @@ public struct ESMutedPaths: Identifiable, Codable, Hashable {
 
 public func pathToJSON(value: Encodable) -> String {
     let encoder = JSONEncoder()
-    encoder.outputFormatting = .withoutEscapingSlashes
+    encoder.outputFormatting = [.withoutEscapingSlashes, .sortedKeys]
     
     let encodedData = try? encoder.encode(value)
-    return String(data: encodedData!, encoding: .utf8)!
+    if let json = String(data: encodedData!, encoding: .utf8) {
+        return json
+    }
+    return ""
 }
 
 
@@ -100,5 +109,10 @@ public func decodePathJSON(pathJSON: String) -> ESMutedPath? {
         return nil
     }
     return esMutedPath
+}
+
+public func encodePathJSON(path: ESMutedPath) -> String? {
+    guard let data = try? JSONEncoder().encode(path) else { return nil }
+    return String(data: data, encoding: .utf8)
 }
 

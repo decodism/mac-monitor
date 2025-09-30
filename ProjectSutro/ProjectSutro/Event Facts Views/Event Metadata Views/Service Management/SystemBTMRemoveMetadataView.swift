@@ -8,151 +8,178 @@
 import SwiftUI
 import SutroESFramework
 
+
 struct SystemBTMRemoveMetadataView: View {
     var esSystemEvent: ESMessage
     @State private var showAuditTokens: Bool = false
-    
-    private var event: ESLaunchItemRemoveEvent {
+
+    var event: ESLaunchItemRemoveEvent {
         esSystemEvent.event.btm_launch_item_remove!
     }
-    
+
     var body: some View {
-        VStack(alignment: .leading) {
-            // MARK: Event label
-            BTMLaunchItemRemoveEventLabelView(message: esSystemEvent)
-                .font(.title2)
-            
-            GroupBox {
-                VStack(alignment: .leading) {
-                    HStack {
-                        Text("\u{2022} **Type:**")
-                        GroupBox {
-                            Text("`\(event.type!)`")
-                        }
-                    }
-                    
-                    HStack {
-                        Text("\u{2022} **Is legacy:**")
-                        GroupBox {
-                            Text("`\(event.is_legacy ? "Yes" : "No")`")
-                            
-                        }
-                        Text("\u{2022} **Is managed:**")
-                        GroupBox {
-                            Text("`\(event.is_managed ? "Yes" : "No")`")
-                            
-                        }
-                    }
-                    
-                    HStack {
-                        Text("\u{2022} **File name:**")
-                        GroupBox {
-                            Text("`\(event.file_name!)`")
-                            
-                        }
-                    }
-                    
-                    HStack {
-                        Text("\u{2022} **Path:**")
-                        GroupBox {
-                            Text("`\(String(event.file_path!.trimmingPrefix("file://")))`")
-                                .lineLimit(5)
-                            
-                        }
-                    }
-                    
-                    if event.app_process_path != nil && !event.app_process_path!.isEmpty {
-                        Divider()
+        ScrollView {
+            VStack(alignment: .leading) {
+                // MARK: Event label
+                BTMLaunchItemRemoveEventLabelView(message: esSystemEvent)
+                    .font(.title2)
+
+                GroupBox {
+                    VStack(alignment: .leading) {
                         HStack {
-                            Text("\u{2022} **App path:**")
+                            Text("\u{2022} **Type:**")
                             GroupBox {
-                                Text("`\(String(event.app_process_path!.trimmingPrefix("file://")))`")
-                                    .lineLimit(20)
-                                
+                                Text(event.item.item_type_string)
+                                    .monospaced()
                             }
                         }
-                        
-                        if event.app_process_team_id != nil && !event.app_process_team_id!.isEmpty {
-                            HStack {
-                                Text("\u{2022} **App team ID:**")
-                                GroupBox {
-                                    Text("`\(event.app_process_team_id!)`")
-                                        .lineLimit(20)
-                                    
-                                }
-                            }
-                        }
-                        
-                        if event.app_process_signing_id != nil && !event.app_process_signing_id!.isEmpty {
-                            HStack {
-                                Text("\u{2022} **App ID:**")
-                                GroupBox {
-                                    Text("`\(event.app_process_signing_id!)`")
-                                        .lineLimit(20)
-                                    
-                                }
-                            }
-                        }
-                    }
-                    
-                    if event.instigating_process_path != nil && !event.instigating_process_path!.isEmpty {
-                        Divider()
+
                         HStack {
-                            Text("\u{2022} **Instigating process path:**")
+                            Text("\u{2022} **Is legacy:**")
                             GroupBox {
-                                Text("`\(event.instigating_process_path!)`")
-                                    .lineLimit(20)
-                                
+                                Text("`\(String(event.item.legacy))`")
+                            }
+
+                            Text("\u{2022} **Is managed:**")
+                            GroupBox {
+                                Text(String(event.item.managed))
+                                    .monospaced()
                             }
                         }
-                        
-                        if event.instigating_process_team_id != nil && !event.instigating_process_team_id!.isEmpty {
+
+                        if let itemName = event.itemName {
                             HStack {
-                                Text("\u{2022} **Instigating team ID:**")
+                                Text("\u{2022} **Item name:**")
                                 GroupBox {
-                                    Text("`\(event.instigating_process_team_id!)`")
-                                        .lineLimit(20)
-                                    
+                                    Text(itemName)
+                                        .monospaced()
                                 }
                             }
                         }
-                        
-                        if event.instigating_process_signing_id != nil && !event.instigating_process_signing_id!.isEmpty {
+
+                        HStack {
+                            Text("\u{2022} **Item path:**")
+                            GroupBox {
+                                Text("`\(event.item.item_path)`")
+                                    .lineLimit(5)
+                            }
+                        }
+
+                        if let appPath = event.item.app_path, !appPath.isEmpty {
+                            Divider()
+                            
+                            Label("Registering application", systemImage: "plus.app")
+                                .bold()
+                                .font(.title3)
+                                .padding([.top, .leading], 5.0)
+
                             HStack {
-                                Text("\u{2022} **Instigating signing ID:**")
+                                Text("\u{2022} **App path:**")
                                 GroupBox {
-                                    Text("`\(event.app_process_signing_id!)`")
+                                    Text("`\(appPath)`")
                                         .lineLimit(20)
-                                    
+                                }
+                            }
+
+                            if let app = event.app, let teamId = app.team_id {
+                                HStack {
+                                    Text("\u{2022} **App Team ID:**")
+                                    GroupBox {
+                                        Text(teamId)
+                                            .monospaced()
+                                            .lineLimit(20)
+                                    }
+                                }
+                            }
+
+                            if let app = event.app, let signingId = app.signing_id {
+                                HStack {
+                                    Text("\u{2022} **App Signing ID:**")
+                                    GroupBox {
+                                        Text(signingId)
+                                            .monospaced()
+                                            .lineLimit(20)
+                                    }
                                 }
                             }
                         }
-                        
+
+                        if let instigator = event.instigator,
+                           let instigatingPath = instigator.executable?.path,
+                           !instigatingPath.isEmpty {
+
+                            Divider()
+                            
+                            Label("Instigator", systemImage: "app.connected.to.app.below.fill")
+                                .bold()
+                                .font(.title3)
+                                .padding([.top, .leading], 5.0)
+
+                            HStack {
+                                Text("\u{2022} **Instigator path:**")
+                                GroupBox {
+                                    Text("`\(instigatingPath)`")
+                                        .lineLimit(20)
+                                }
+                            }
+
+                            if let teamId = instigator.team_id {
+                                HStack {
+                                    Text("\u{2022} **Instigator Team ID:**")
+                                    GroupBox {
+                                        Text(teamId)
+                                            .monospaced()
+                                            .lineLimit(20)
+                                    }
+                                }
+                            }
+
+                            if let signingId = instigator.signing_id {
+                                HStack {
+                                    Text("\u{2022} **Instigator Signing ID:**")
+                                    GroupBox {
+                                        Text(signingId)
+                                            .monospaced()
+                                            .lineLimit(20)
+                                    }
+                                }
+                            }
+                        }
                     }
-                }.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
-                
-            }
-            
-            
-            Divider()
-            
-            Label("**Context items**", systemImage: "folder.badge.plus").font(.title2).padding([.leading], 5.0)
-            GroupBox {
-                HStack {
-                    Button("**Audit tokens**") {
-                        showAuditTokens.toggle()
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+
+                Divider()
+
+                Label("**Context items**", systemImage: "folder.badge.plus")
+                    .font(.title2)
+                    .padding(.leading, 5)
+
+                GroupBox {
+                    HStack {
+                        Button("**Audit tokens**") {
+                            showAuditTokens.toggle()
+                        }
                     }
-                }.frame(maxWidth: .infinity, alignment: .center).padding(.all)
+                    .frame(maxWidth: .infinity, alignment: .center)
+                    .padding()
+                }
             }
-        }.sheet(isPresented: $showAuditTokens) {
-            AuditTokenView(
-                audit_token: esSystemEvent.process.audit_token_string,
-                responsible_audit_token: esSystemEvent.process.responsible_audit_token_string,
-                parent_audit_token: esSystemEvent.process.parent_audit_token_string
-            )
-            Button("**Dismiss**") {
-                showAuditTokens.toggle()
-            }.padding(.bottom)
+            .frame(maxWidth: .infinity, alignment: .leading)
+        }
+        .sheet(isPresented: $showAuditTokens) {
+            VStack {
+                AuditTokenView(
+                    audit_token: esSystemEvent.process.audit_token_string,
+                    responsible_audit_token: esSystemEvent.process.responsible_audit_token_string,
+                    parent_audit_token: esSystemEvent.process.parent_audit_token_string
+                )
+                Button("**Dismiss**") {
+                    showAuditTokens.toggle()
+                }
+                .padding(.bottom)
+            }
+            .padding()
         }
     }
 }

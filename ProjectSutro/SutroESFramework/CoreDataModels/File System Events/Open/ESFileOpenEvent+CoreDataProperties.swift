@@ -17,8 +17,8 @@ extension ESFileOpenEvent {
     }
 
     @NSManaged public var id: UUID?
-    @NSManaged public var file_path: String?
-    @NSManaged public var file_name: String?
+    @NSManaged public var file: ESFile
+    @NSManaged public var fflag: Int32
 
 }
 

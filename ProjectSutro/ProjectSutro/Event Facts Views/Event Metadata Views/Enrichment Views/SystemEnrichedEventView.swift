@@ -252,17 +252,9 @@ struct SystemRCCorrelatedEventsView: View {
         
         // MARK: File modifications (NOTIFY_RENAME)
         if fileRenameEvents.count > 0 {
-            // MARK: Event introspection
-            let dangerousFiles: Int = fileRenameEvents.filter({ $0.event.rename != nil && $0.event.rename!.archive_files_not_quarantined!.isEmpty }).map({ $0.event.rename!.archive_files_not_quarantined!.split(separator: "[::]").count }).reduce(0, +)
-            let totalNonQuarantinedFiles: Int = dangerousFiles
-            
             Divider()
             Section {
                 HStack {
-                    if totalNonQuarantinedFiles > 0 {
-                        Image(systemName: "exclamationmark.triangle.fill").symbolRenderingMode(.palette).foregroundStyle(.black, .orange).help("\(totalNonQuarantinedFiles) files are not quarantined")
-                    }
-                    
                     Text("**File renames (\(fileRenameEvents.count))**")
                     Spacer()
                     Button(hideFileRename ? "Show" : "Hide") {

@@ -16,21 +16,38 @@ struct AddSubscriptionsView: View {
     @Binding var eventMaskEnabled: Bool
     
     @State private var selectableEvents: [SelectableEvent] = getSupportedEventTypesSelectable()
+    @State private var searchText: String = ""
     private var eventSubscriptions: [String] { systemExtensionManager.getSimpleEventSubscriptions() }
     
     var body: some View {
         Form {
             VStack(alignment: .leading) {
                 Section {
-                    Text("Select events to subscribe to").font(.title3)
-                    Text("The Security Extension will be notified when macOS generates these security events.").font(.headline)
+                    Text("Subscribe to events")
+                        .font(.title3)
+                    Text("The Security Extension will be notified when macOS generates these security events.")
+                        .font(.callout)
                 }
                 
                 Divider()
                 
                 Section("**Total events remaining: `\(selectableEvents.lazy.count - eventSubscriptions.lazy.count)`**") {
+                    
+                    TextField("**Search**", text: $searchText)
+                        .frame(maxWidth: .infinity)
+                    
                     List {
-                        ForEach(selectableEvents.lazy.filter({ !eventSubscriptions.contains($0.eventString) }), id: \.self) { selectableEvent in
+                        ForEach(selectableEvents.lazy.filter({
+                            if searchText.isEmpty {
+                                !eventSubscriptions.contains($0.eventString)
+                            } else {
+                                !eventSubscriptions
+                                    .contains($0.eventString) && $0.eventString
+                                    .lowercased()
+                                    .contains(searchText.lowercased())
+                            }
+                            
+                        }), id: \.self) { selectableEvent in
                             GroupBox {
                                 HStack {
                                     Toggle(isOn: $selectableEvents.first(where: { $0.eventString.wrappedValue == selectableEvent.eventString })!.selected) {
@@ -72,24 +89,51 @@ struct AddSubscriptionsView: View {
                     withAnimation {
                         showSubscriptionSheet.toggle()
                     }
-                }.disabled(selectableEvents.filter( { $0.selected } ).isEmpty)
+                }
+                .disabled(selectableEvents.filter( {
+                    $0.selected
+                } ).isEmpty)
                 
                 Button("**Cancel**") {
                     showSubscriptionSheet.toggle()
-                }.buttonStyle(.borderedProminent).tint(.pink).opacity(0.8)
-            }.frame(maxWidth: .infinity, alignment: .center)
-        }.frame(minWidth: 500, idealWidth: 600, maxWidth: 700, minHeight: 400, maxHeight: 2000, alignment: .topLeading).padding(.all)
+                }
+                .buttonStyle(.borderedProminent)
+                .tint(.pink)
+                .opacity(0.8)
+            }
+            .frame(maxWidth: .infinity, alignment: .center)
+        }
+        .frame(
+            minWidth: 600,
+            maxWidth: 600,
+            minHeight: 600,
+            maxHeight: 600,
+            alignment: .topLeading
+        )
+        .padding(.all)
     }
 }
 
 
 struct ESSubscriptionsView: View {
     @EnvironmentObject var systemExtensionManager: EndpointSecurityManager
-    @State private var showSubscriptionSheet: Bool = false
     @Binding var allFilters: Filters
     @Binding var eventMaskEnabled: Bool
     
-    var eventSubscriptions: [String] { systemExtensionManager.getSimpleEventSubscriptions() }
+    @State private var showSubscriptionSheet: Bool = false
+    @State var searchText: String = ""
+    
+    
+    var eventSubscriptions: [String] {
+        systemExtensionManager.getSimpleEventSubscriptions()
+            .filter({
+                if searchText.isEmpty {
+                    return true
+                } else {
+                    return $0.lowercased().contains(searchText.lowercased())
+                }
+            })
+    }
     
     var body: some View {
         Form {
@@ -107,11 +151,14 @@ struct ESSubscriptionsView: View {
                     }
                 }
                 
+                TextField("**Search**", text: $searchText)
+                    .frame(maxWidth: .infinity)
+                
                 Divider()
                 
                 Section {
                     ScrollView {
-                        if eventSubscriptions.isEmpty {
+                        if eventSubscriptions.isEmpty && searchText.isEmpty {
                             GroupBox {
                                 VStack(alignment: .leading) {
                                     Text("You're not subscribed to any events!").font(.title3)
@@ -122,7 +169,9 @@ struct ESSubscriptionsView: View {
                                 GroupBox {
                                     HStack {
                                         Image(systemName: eventStringToImage(from: event))
-                                        Text("**`\(event)`**")
+                                        Text(event)
+                                            .bold()
+                                            .monospaced()
                                         Spacer()
                                         Button {
                                             NSWorkspace.shared.open(URL(string:"https://developer.apple.com/documentation/endpointsecurity/es_event_type_t/\(event)")!)
@@ -131,16 +180,11 @@ struct ESSubscriptionsView: View {
                                         }
                                         Button(action: {
                                             // MARK: Step #1 in unsubscribing from events
-//                                            if eventMaskEnabled {
-//                                                allFilters.events = allFilters.events.filter({
-//                                                    $0 != event
-//                                                })
-//                                            }
-                                            
                                             systemExtensionManager.puntEventToUnsubscribe(eventString: event)
                                             systemExtensionManager.requestEventSubscriptions()
                                         }) {
-                                            Text("**Unsubscribe**")
+                                            Text("Unsubscribe")
+                                                .bold()
                                         }.buttonStyle(.borderedProminent).tint(.pink).opacity(0.8).padding(.trailing)
                                     }
                                 }
@@ -189,27 +233,58 @@ struct ESSubscriptionsView: View {
 
 
 struct TargetedEventsView: View {
+    @Environment(\.dismiss) var dismiss
+    
     @EnvironmentObject var systemExtensionManager: EndpointSecurityManager
     var path: ESMutedPath
     
     var body: some View {
-        VStack(alignment: .leading) {
-            ForEach(path.events, id: \.self) { event in
-                GroupBox {
-                    HStack {
-                        Text("\t\u{2022} **`\(event)`**").frame(alignment: .leading)
-                        Spacer()
-                        Button(action: {
-                            // MARK: Step #1 in unmuting path per event
-                            systemExtensionManager.puntPathToUnmute(pathToUnmute: path.path, type: path.type, events: [event])
-                            systemExtensionManager.requestMutedPaths()
-                        }) {
-                            Text("**Unmute**")
-                        }.buttonStyle(.borderedProminent).tint(.orange).opacity(0.8).padding(.trailing)
-                    }
-                }.padding([.leading, .trailing])
+        VStack {
+            HStack {
+                MuteTypeBadgeView(path: path)
+                Text(path.path)
+                    .monospaced()
+                    .lineLimit(1)
+                    .truncationMode(.middle)
             }
-        }.frame(maxWidth: .infinity, alignment: .leading)
+
+            Divider()
+
+            ScrollView {
+                ForEach(path.events, id: \.self) { event in
+                    GroupBox {
+                        HStack {
+                            Text(event)
+                                .monospaced()
+                                .bold()
+                                .frame(alignment: .leading)
+                            Spacer()
+                            Button(action: {
+                                // MARK: Step #1 in unmuting path per event
+                                systemExtensionManager.puntPathToUnmute(pathToUnmute: path.path, type: path.type, events: [event])
+                                systemExtensionManager.requestMutedPaths()
+                            }) {
+                                Text("Unmute")
+                                    .bold()
+                            }
+                            .buttonStyle(.borderedProminent)
+                            .tint(.orange)
+                            .opacity(0.8)
+                            .padding(.trailing)
+                        }
+                    }.padding([.leading, .trailing])
+                }
+            }
+            
+            Divider()
+
+            Button("Close") {
+                dismiss()
+            }
+            .buttonStyle(.borderedProminent)
+            .keyboardShortcut(.cancelAction)
+        }
+        .padding()
     }
 }
 
