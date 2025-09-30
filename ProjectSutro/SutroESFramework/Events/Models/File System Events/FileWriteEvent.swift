@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import EndpointSecurity
+
 
 // https://developer.apple.com/documentation/endpointsecurity/es_event_write_t
 public struct FileWriteEvent: Identifiable, Codable, Hashable {

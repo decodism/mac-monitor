@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import EndpointSecurity
 
 
 // https://developer.apple.com/documentation/endpointsecurity/es_event_open_t
@@ -21,11 +20,7 @@ public struct FileOpenEvent: Identifiable, Codable, Hashable {
     }
     
     public static func == (lhs: FileOpenEvent, rhs: FileOpenEvent) -> Bool {
-        if lhs.id == rhs.id {
-            return true
-        }
-        
-        return false
+        return lhs.id == rhs.id
     }
     
     init(from rawMessage: UnsafePointer<es_message_t>) {

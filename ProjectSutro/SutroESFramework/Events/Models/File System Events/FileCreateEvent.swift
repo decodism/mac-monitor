@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import EndpointSecurity
 
 
 // https://developer.apple.com/documentation/endpointsecurity/es_event_create_t
@@ -28,11 +27,7 @@ public struct FileCreateEvent: Identifiable, Codable, Hashable {
     }
     
     public static func == (lhs: FileCreateEvent, rhs: FileCreateEvent) -> Bool {
-        if lhs.id == rhs.id {
-            return true
-        }
-        
-        return false
+        return lhs.id == rhs.id
     }
     
     init(from rawMessage: UnsafePointer<es_message_t>, shouldCheckQuarantine: Bool = false) {

@@ -104,9 +104,8 @@
         <relationship name="xpc_connect" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ESXPCConnectEvent"/>
     </entity>
     <entity name="ESFDDuplicateEvent" representedClassName="ESFDDuplicateEvent" syncable="YES">
-        <attribute name="file_name" optional="YES" attributeType="String"/>
-        <attribute name="file_path" optional="YES" attributeType="String"/>
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <relationship name="target" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ESFile"/>
     </entity>
     <entity name="ESFile" representedClassName="ESFile" syncable="YES">
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>

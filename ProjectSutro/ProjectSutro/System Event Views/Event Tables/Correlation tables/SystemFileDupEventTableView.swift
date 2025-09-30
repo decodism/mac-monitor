@@ -22,9 +22,9 @@ struct SystemFileDupEventTableView: View {
     
     
     var body: some View {
-        Section(header: Label("File duplicates", systemImage: eventStringToImage(from: "ES_EVENT_TYPE_NOTIFY_DUP")).font(.title2)) {
+        Section(header: Label("FD duplication", systemImage: eventStringToImage(from: "ES_EVENT_TYPE_NOTIFY_DUP")).font(.title2)) {
             Table(of: ESMessage.self, selection: $eventSelection) {
-                TableColumn("File path", value: \.event.dup!.file_path!)
+                TableColumn("File path", value: \.event.dup!.target.path!)
             } rows: {
                 ForEach(fileEvents) { message in
                     TableRow(message).contextMenu {

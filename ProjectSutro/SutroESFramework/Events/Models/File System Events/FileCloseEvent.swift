@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import EndpointSecurity
+
 
 // https://developer.apple.com/documentation/endpointsecurity/es_event_close_t
 public struct FileCloseEvent: Identifiable, Codable, Hashable {
@@ -20,11 +20,7 @@ public struct FileCloseEvent: Identifiable, Codable, Hashable {
     }
     
     public static func == (lhs: FileCloseEvent, rhs: FileCloseEvent) -> Bool {
-        if lhs.file_path == rhs.file_path && lhs.id == rhs.id {
-            return true
-        }
-        
-        return false
+        return lhs.id == rhs.id
     }
     
     init(from rawMessage: UnsafePointer<es_message_t>) {
