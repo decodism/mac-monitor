@@ -41,39 +41,51 @@ struct SystemRemoteThreadCreateMetadataView: View {
             
             GroupBox {
                 VStack(alignment: .leading) {
-                    HStack {
-                        Text("\u{2022} **Thread state:**")
-                            .padding([.leading], 5.0)
-                        GroupBox {
-                            Text("`\(event.thread_state)`")
-                                .frame(alignment: .leading)
-                        }
-                    }.frame(maxWidth: .infinity, alignment: .leading)
+                    
+                    if let state = event.thread_state {
+                        HStack {
+                            Text("\u{2022} Thread state:")
+                                .bold()
+                                .padding([.leading], 5.0)
+                            GroupBox {
+                                Text(state)
+                                    .monospaced()
+                                    .frame(alignment: .leading)
+                            }
+                        }.frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                    
                     
                     HStack {
-                        Text("\u{2022} **Target process name:**")
+                        Text("\u{2022} Target process name:")
+                            .bold()
                             .padding([.leading], 5.0)
                         GroupBox {
-                            Text("`\(targetName)`")
+                            Text(targetName)
+                                .monospaced()
                                 .frame(alignment: .leading)
                         }
                     }.frame(maxWidth: .infinity, alignment: .leading)
                     
                     VStack(alignment: .leading) {
-                        Text("\u{2022} **Target process path:**")
+                        Text("\u{2022} Target process path:")
+                            .bold()
                             .padding([.leading], 5.0)
                         GroupBox {
-                            Text("`\(targetPath)`")
+                            Text(targetPath)
+                                .monospaced()
                                 .frame(maxWidth: .infinity, alignment: .leading)
                         }
                     }.frame(maxWidth: .infinity, alignment: .leading)
                     
                     if let signingId = targetSigningId, !signingId.isEmpty {
                         HStack {
-                            Text("\u{2022} **Signing ID:**")
+                            Text("\u{2022} Signing ID:")
+                                .bold()
                                 .padding([.leading], 5.0)
                             GroupBox {
-                                Text("`\(signingId)`")
+                                Text(signingId)
+                                    .monospaced()
                                     .frame(alignment: .leading)
                             }
                         }.frame(maxWidth: .infinity, alignment: .leading)

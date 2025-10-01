@@ -42,7 +42,8 @@ public class ESRemoteThreadCreateEvent: NSManagedObject, Decodable {
         self.init()
         
         try id = container.decode(UUID.self, forKey: .id)
-        try thread_state = container.decode(String.self, forKey: .thread_state)
+        try thread_state = container
+            .decodeIfPresent(String.self, forKey: .thread_state)
         try target = container.decode(ESProcess.self, forKey: .target)
     }
 }

@@ -896,6 +896,184 @@
 			path = bind;
 			sourceTree = "<group>";
 		};
+		280C78DD2E8DEB1100B172E5 /* judgement */ = {
+			isa = PBXGroup;
+			children = (
+				284BAEC82A4CB803007F1193 /* SystemAuthorizationJudementMetadataView.swift */,
+			);
+			path = judgement;
+			sourceTree = "<group>";
+		};
+		280C78DE2E8DEB1C00B172E5 /* petition */ = {
+			isa = PBXGroup;
+			children = (
+				284409622A4BA07E009D6753 /* SystemAuthorizationPetitionMetadataView.swift */,
+			);
+			path = petition;
+			sourceTree = "<group>";
+		};
+		280C78DF2E8DEB3200B172E5 /* exec */ = {
+			isa = PBXGroup;
+			children = (
+				28CEF0DE29776B51003057D2 /* SystemTargetExecProcMetadataView.swift */,
+			);
+			path = exec;
+			sourceTree = "<group>";
+		};
+		280C78E02E8DEB3800B172E5 /* fork */ = {
+			isa = PBXGroup;
+			children = (
+				28CEF0FE29776D64003057D2 /* SystemForkProcMetadataView.swift */,
+			);
+			path = fork;
+			sourceTree = "<group>";
+		};
+		280C78E12E8DEB4000B172E5 /* exit */ = {
+			isa = PBXGroup;
+			children = (
+				28CEF0FC29776D31003057D2 /* SystemProcExitMetadataView.swift */,
+			);
+			path = exit;
+			sourceTree = "<group>";
+		};
+		280C78E22E8DEB4600B172E5 /* signal */ = {
+			isa = PBXGroup;
+			children = (
+				28B9A93A29DC8B3A006619FF /* SystemProcessSignalMetadataView.swift */,
+			);
+			path = signal;
+			sourceTree = "<group>";
+		};
+		280C78E42E8DEB7100B172E5 /* suspend_resume */ = {
+			isa = PBXGroup;
+			children = (
+				28B9A94229DC9A74006619FF /* SystemProcessSocketMetadataView.swift */,
+			);
+			path = suspend_resume;
+			sourceTree = "<group>";
+		};
+		280C78E52E8DEB7900B172E5 /* check */ = {
+			isa = PBXGroup;
+			children = (
+				28B49C5329DCA3E800ADDABA /* SystemProcessCheckMetadataView.swift */,
+			);
+			path = check;
+			sourceTree = "<group>";
+		};
+		280C78E62E8DEB8A00B172E5 /* remote_thread_create */ = {
+			isa = PBXGroup;
+			children = (
+				28B9A93C29DC8EC4006619FF /* SystemRemoteThreadCreateMetadataView.swift */,
+			);
+			path = remote_thread_create;
+			sourceTree = "<group>";
+		};
+		280C78E72E8DEB8E00B172E5 /* trace */ = {
+			isa = PBXGroup;
+			children = (
+				28B9A94429DC9DE0006619FF /* SystemProcessTraceMetadataView.swift */,
+			);
+			path = trace;
+			sourceTree = "<group>";
+		};
+		280C78E82E8DEBB300B172E5 /* launch_item_add */ = {
+			isa = PBXGroup;
+			children = (
+				28CEF0F629776CEF003057D2 /* SystemBTMAddMetadataView.swift */,
+			);
+			path = launch_item_add;
+			sourceTree = "<group>";
+		};
+		280C78E92E8DEBC100B172E5 /* launch_item_remove */ = {
+			isa = PBXGroup;
+			children = (
+				28CEF0F429776CE0003057D2 /* SystemBTMRemoveMetadataView.swift */,
+			);
+			path = launch_item_remove;
+			sourceTree = "<group>";
+		};
+		280C78EA2E8DEBE000B172E5 /* exec */ = {
+			isa = PBXGroup;
+			children = (
+				2820DD00297224990053CB48 /* ProcessExecEvent.swift */,
+			);
+			path = exec;
+			sourceTree = "<group>";
+		};
+		280C78EB2E8DEBE500B172E5 /* fork */ = {
+			isa = PBXGroup;
+			children = (
+				2820DD02297224D40053CB48 /* ProcessForkEvent.swift */,
+			);
+			path = fork;
+			sourceTree = "<group>";
+		};
+		280C78EC2E8DEBE800B172E5 /* exit */ = {
+			isa = PBXGroup;
+			children = (
+				2820DD04297224EC0053CB48 /* ProcessExitEvent.swift */,
+			);
+			path = exit;
+			sourceTree = "<group>";
+		};
+		280C78ED2E8DEBED00B172E5 /* signal */ = {
+			isa = PBXGroup;
+			children = (
+				2852BBA029D982B800AA833C /* ProcessSignalEvent.swift */,
+			);
+			path = signal;
+			sourceTree = "<group>";
+		};
+		280C78EE2E8DEBF200B172E5 /* suspend_resume */ = {
+			isa = PBXGroup;
+			children = (
+				2852BBBE29DB8B6F00AA833C /* ProcessSocketEvent.swift */,
+			);
+			path = suspend_resume;
+			sourceTree = "<group>";
+		};
+		280C78EF2E8DEBFB00B172E5 /* check */ = {
+			isa = PBXGroup;
+			children = (
+				28B9A92629DBDADF006619FF /* ProcessCheckEvent.swift */,
+			);
+			path = check;
+			sourceTree = "<group>";
+		};
+		280C78F02E8DEC1E00B172E5 /* remote_thread_create */ = {
+			isa = PBXGroup;
+			children = (
+				2852BBA629D9EF7C00AA833C /* RemoteThreadCreateEvent.swift */,
+			);
+			path = remote_thread_create;
+			sourceTree = "<group>";
+		};
+		280C78F12E8DEC2200B172E5 /* trace */ = {
+			isa = PBXGroup;
+			children = (
+				2852BBC429DB9E3700AA833C /* ProcessTraceEvent.swift */,
+			);
+			path = trace;
+			sourceTree = "<group>";
+		};
+		280C78F22E8DED8100B172E5 /* remote_thread_create */ = {
+			isa = PBXGroup;
+			children = (
+				2852BBA829DA8B3F00AA833C /* ESRemoteThreadCreateEvent+CoreDataClass.swift */,
+				2852BBA929DA8B3F00AA833C /* ESRemoteThreadCreateEvent+CoreDataProperties.swift */,
+			);
+			path = remote_thread_create;
+			sourceTree = "<group>";
+		};
+		280C78F32E8DED8D00B172E5 /* trace */ = {
+			isa = PBXGroup;
+			children = (
+				2852BBC629DBA05500AA833C /* ESProcessTraceEvent+CoreDataClass.swift */,
+				2852BBC729DBA05500AA833C /* ESProcessTraceEvent+CoreDataProperties.swift */,
+			);
+			path = trace;
+			sourceTree = "<group>";
+		};
 		2820DCFF2972245F0053CB48 /* Events */ = {
 			isa = PBXGroup;
 			children = (
@@ -1140,10 +1318,8 @@
 		28B3436D2D862CFA004127E8 /* Interprocess Events */ = {
 			isa = PBXGroup;
 			children = (
-				2852BBA829DA8B3F00AA833C /* ESRemoteThreadCreateEvent+CoreDataClass.swift */,
-				2852BBA929DA8B3F00AA833C /* ESRemoteThreadCreateEvent+CoreDataProperties.swift */,
-				2852BBC629DBA05500AA833C /* ESProcessTraceEvent+CoreDataClass.swift */,
-				2852BBC729DBA05500AA833C /* ESProcessTraceEvent+CoreDataProperties.swift */,
+				280C78F32E8DED8D00B172E5 /* trace */,
+				280C78F22E8DED8100B172E5 /* remote_thread_create */,
 			);
 			path = "Interprocess Events";
 			sourceTree = "<group>";
@@ -1458,12 +1634,12 @@
 		28B3438F2D863B45004127E8 /* Process Events */ = {
 			isa = PBXGroup;
 			children = (
-				2820DD00297224990053CB48 /* ProcessExecEvent.swift */,
-				2820DD02297224D40053CB48 /* ProcessForkEvent.swift */,
-				2820DD04297224EC0053CB48 /* ProcessExitEvent.swift */,
-				2852BBA029D982B800AA833C /* ProcessSignalEvent.swift */,
-				2852BBBE29DB8B6F00AA833C /* ProcessSocketEvent.swift */,
-				28B9A92629DBDADF006619FF /* ProcessCheckEvent.swift */,
+				280C78EF2E8DEBFB00B172E5 /* check */,
+				280C78EE2E8DEBF200B172E5 /* suspend_resume */,
+				280C78ED2E8DEBED00B172E5 /* signal */,
+				280C78EC2E8DEBE800B172E5 /* exit */,
+				280C78EB2E8DEBE500B172E5 /* fork */,
+				280C78EA2E8DEBE000B172E5 /* exec */,
 			);
 			path = "Process Events";
 			sourceTree = "<group>";
@@ -1471,8 +1647,8 @@
 		28B343902D863B60004127E8 /* Interprocess Events */ = {
 			isa = PBXGroup;
 			children = (
-				2852BBA629D9EF7C00AA833C /* RemoteThreadCreateEvent.swift */,
-				2852BBC429DB9E3700AA833C /* ProcessTraceEvent.swift */,
+				280C78F12E8DEC2200B172E5 /* trace */,
+				280C78F02E8DEC1E00B172E5 /* remote_thread_create */,
 			);
 			path = "Interprocess Events";
 			sourceTree = "<group>";
@@ -2089,12 +2265,12 @@
 		CAC48AF22E2471B900260C5F /* Process */ = {
 			isa = PBXGroup;
 			children = (
-				28CEF0DE29776B51003057D2 /* SystemTargetExecProcMetadataView.swift */,
-				28CEF0FE29776D64003057D2 /* SystemForkProcMetadataView.swift */,
-				28CEF0FC29776D31003057D2 /* SystemProcExitMetadataView.swift */,
-				28B9A93A29DC8B3A006619FF /* SystemProcessSignalMetadataView.swift */,
-				28B9A94229DC9A74006619FF /* SystemProcessSocketMetadataView.swift */,
-				28B49C5329DCA3E800ADDABA /* SystemProcessCheckMetadataView.swift */,
+				280C78E52E8DEB7900B172E5 /* check */,
+				280C78E42E8DEB7100B172E5 /* suspend_resume */,
+				280C78E22E8DEB4600B172E5 /* signal */,
+				280C78E12E8DEB4000B172E5 /* exit */,
+				280C78E02E8DEB3800B172E5 /* fork */,
+				280C78DF2E8DEB3200B172E5 /* exec */,
 				CAC48AF32E24720700260C5F /* ProcessView.swift */,
 			);
 			path = Process;
@@ -2103,8 +2279,8 @@
 		CAC48AF52E247B6100260C5F /* Interprocess */ = {
 			isa = PBXGroup;
 			children = (
-				28B9A93C29DC8EC4006619FF /* SystemRemoteThreadCreateMetadataView.swift */,
-				28B9A94429DC9DE0006619FF /* SystemProcessTraceMetadataView.swift */,
+				280C78E72E8DEB8E00B172E5 /* trace */,
+				280C78E62E8DEB8A00B172E5 /* remote_thread_create */,
 			);
 			path = Interprocess;
 			sourceTree = "<group>";
@@ -2159,8 +2335,8 @@
 		CAC48AFB2E25DC5000260C5F /* Service Management */ = {
 			isa = PBXGroup;
 			children = (
-				28CEF0F629776CEF003057D2 /* SystemBTMAddMetadataView.swift */,
-				28CEF0F429776CE0003057D2 /* SystemBTMRemoveMetadataView.swift */,
+				280C78E92E8DEBC100B172E5 /* launch_item_remove */,
+				280C78E82E8DEBB300B172E5 /* launch_item_add */,
 			);
 			path = "Service Management";
 			sourceTree = "<group>";
@@ -2210,8 +2386,8 @@
 		CAC48B012E284FDD00260C5F /* Security Authorization */ = {
 			isa = PBXGroup;
 			children = (
-				284BAEC82A4CB803007F1193 /* SystemAuthorizationJudementMetadataView.swift */,
-				284409622A4BA07E009D6753 /* SystemAuthorizationPetitionMetadataView.swift */,
+				280C78DE2E8DEB1C00B172E5 /* petition */,
+				280C78DD2E8DEB1100B172E5 /* judgement */,
 			);
 			path = "Security Authorization";
 			sourceTree = "<group>";
