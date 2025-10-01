@@ -32,6 +32,12 @@ public struct MuteSet {
                 "/System/Library/PrivateFrameworks/PackageKit.framework/Versions/A/Resources/system_installd",
                 "/System/Library/Frameworks/AddressBook.framework/Versions/A/Helpers/AddressBookManager.app/Contents/MacOS/AddressBookManager"
             ]),
+            (eventType: ES_EVENT_TYPE_NOTIFY_CLOSE, muteType: ES_MUTE_PATH_TYPE_LITERAL, paths: [
+                "/usr/libexec/runningboardd",
+                "/usr/libexec/biomesyncd",
+                "/System/Library/Frameworks/Metal.framework/Versions/A/XPCServices/MTLCompilerService.xpc/Contents/MacOS/MTLCompilerService",
+                "/usr/libexec/containermanagerd"
+            ]),
             
             (eventType: ES_EVENT_TYPE_NOTIFY_CREATE, muteType: ES_MUTE_PATH_TYPE_TARGET_PREFIX, paths: [
                 caches_dir,

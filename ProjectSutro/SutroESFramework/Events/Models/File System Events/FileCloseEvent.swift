@@ -12,10 +12,11 @@ import Foundation
 public struct FileCloseEvent: Identifiable, Codable, Hashable {
     public var id: UUID = UUID()
     
-    public var file_name, file_path: String?
+    public var target: File
+    public var modified: Bool
+    public var was_mapped_writable: Bool?
     
     public func hash(into hasher: inout Hasher) {
-        hasher.combine(file_path)
         hasher.combine(id)
     }
     
@@ -25,13 +26,14 @@ public struct FileCloseEvent: Identifiable, Codable, Hashable {
     
     init(from rawMessage: UnsafePointer<es_message_t>) {
         // Getting the file write event
-        let closeEvent: es_event_close_t = rawMessage.pointee.event.close
+        let event: es_event_close_t = rawMessage.pointee.event.close
+        let version: Int = Int(rawMessage.pointee.version)
         
-        self.file_path = ""
-        self.file_name = ""
-        if closeEvent.target.pointee.path.length > 0 {
-            self.file_path = String(cString: closeEvent.target.pointee.path.data)
-            self.file_name = (String(cString: closeEvent.target.pointee.path.data) as NSString).lastPathComponent
+        target = File(from: event.target.pointee)
+        modified = event.modified
+        
+        if version >= 6 {
+            was_mapped_writable = event.was_mapped_writable
         }
     }
 }

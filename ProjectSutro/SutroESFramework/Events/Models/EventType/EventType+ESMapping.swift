@@ -198,11 +198,12 @@ extension EventType {
             )
         case ES_EVENT_TYPE_NOTIFY_CLOSE:
             let event = FileCloseEvent(from: rawMessage)
+            let tgtPath: String = event.target.path
             return (
                 .close(event),
                 "ES_EVENT_TYPE_NOTIFY_CLOSE",
-                event.file_path,
-                event.file_path
+                tgtPath,       // Context
+                tgtPath        // Target path
             )
         case ES_EVENT_TYPE_NOTIFY_UNLINK:
             let event = FileDeleteEvent(from: rawMessage)

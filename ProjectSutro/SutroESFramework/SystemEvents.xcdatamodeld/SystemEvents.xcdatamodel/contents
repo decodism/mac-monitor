@@ -115,9 +115,10 @@
         <relationship name="stat" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ESStat"/>
     </entity>
     <entity name="ESFileCloseEvent" representedClassName="ESFileCloseEvent" syncable="YES">
-        <attribute name="file_name" optional="YES" attributeType="String"/>
-        <attribute name="file_path" optional="YES" attributeType="String"/>
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="modified" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="was_mapped_writable" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <relationship name="target" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ESFile"/>
     </entity>
     <entity name="ESFileCreateEvent" representedClassName="ESFileCreateEvent" syncable="YES">
         <attribute name="acl" optional="YES" attributeType="String"/>
