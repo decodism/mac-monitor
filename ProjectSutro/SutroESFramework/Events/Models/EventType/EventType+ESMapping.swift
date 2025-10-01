@@ -12,7 +12,7 @@ extension EventType {
     static func from(rawMessage: UnsafePointer<es_message_t>,
                      forcedQuarantineSigningIDs: [String]) -> (event: EventType, eventType: String, context: String?, targetPath: String?) {
         switch rawMessage.pointee.event_type {
-        // MARK: - Process events
+            // MARK: - Process events
         case ES_EVENT_TYPE_NOTIFY_EXEC:
             let event = ProcessExecEvent(from: rawMessage, forcedQuarantineSigningIDs: forcedQuarantineSigningIDs)
             return (
@@ -79,8 +79,8 @@ extension EventType {
                 targetProcPath
             )
             
-
-        // MARK: - Interprocess events
+            
+            // MARK: - Interprocess events
         case ES_EVENT_TYPE_NOTIFY_REMOTE_THREAD_CREATE:
             let event = RemoteThreadCreateEvent(from: rawMessage)
             let targetPath = event.target.executable?.path ?? "Unknown"
@@ -101,9 +101,9 @@ extension EventType {
                 context,
                 targetPath
             )
-        
-        
-        // MARK: - Code Signing events
+            
+            
+            // MARK: - Code Signing events
         case ES_EVENT_TYPE_NOTIFY_CS_INVALIDATED:
             let event = CodeSignatureInvalidatedEvent(from: rawMessage)
             let pathPointer = rawMessage.pointee.process.pointee.executable.pointee.path
@@ -116,9 +116,9 @@ extension EventType {
                 initiatingProcPath,
                 nil // @note: `target_path` does not make sense in this context.
             )
-        
-        
-        // MARK: - Memory mapping events
+            
+            
+            // MARK: - Memory mapping events
         case ES_EVENT_TYPE_NOTIFY_MMAP:
             let event = MMapEvent(from: rawMessage)
             let context = event.source.path
@@ -130,7 +130,7 @@ extension EventType {
             )
             
             
-        // MARK: - File System events
+            // MARK: - File System events
         case ES_EVENT_TYPE_NOTIFY_CREATE:
             let event = FileCreateEvent(from: rawMessage, shouldCheckQuarantine: true)
             var targetPath: String = ""
@@ -186,7 +186,7 @@ extension EventType {
                 event.file.path,
                 event.file.path
             )
-
+            
         case ES_EVENT_TYPE_NOTIFY_WRITE:
             let event = FileWriteEvent(from: rawMessage)
             let tgtPath: String = event.target.path
@@ -223,9 +223,9 @@ extension EventType {
                 tgtPath,       // Context
                 tgtPath        // Target path
             )
-        
             
-        // MARK: - Symbolic Link events
+            
+            // MARK: - Symbolic Link events
         case ES_EVENT_TYPE_NOTIFY_LINK:
             let event = LinkEvent(from: rawMessage)
             return (
@@ -234,9 +234,9 @@ extension EventType {
                 event.target_file_path,
                 event.target_file_path
             )
-
-        
-        // MARK: - File Metadata events
+            
+            
+            // MARK: - File Metadata events
         case ES_EVENT_TYPE_NOTIFY_SETEXTATTR:
             let event = XattrSetEvent(from: rawMessage)
             let tgtPath: String = event.target.path
@@ -269,9 +269,9 @@ extension EventType {
                 context, // Context
                 tgtPath  // Target path
             )
-        
             
-        // MARK: - Pseudoterminal events
+            
+            // MARK: - Pseudoterminal events
         case ES_EVENT_TYPE_NOTIFY_PTY_GRANT:
             let event = PTYGrantEvent(from: rawMessage)
             let tgtPath: String = rawMessage.pointee.process.pointee.executable.pointee.path.toString() ?? ""
@@ -283,9 +283,9 @@ extension EventType {
                 context,    // Context
                 tgtPath     // Target path
             )
-
-        
-        // MARK: - Service Management events
+            
+            
+            // MARK: - Service Management events
         case ES_EVENT_TYPE_NOTIFY_BTM_LAUNCH_ITEM_ADD:
             let event = LaunchItemAddEvent(from: rawMessage)
             return (
@@ -302,9 +302,9 @@ extension EventType {
                 event.item.item_path, // Context
                 nil // @note: `target_path` does not make sense in this context.
             )
-        
             
-        // MARK: OpenSSH events
+            
+            // MARK: OpenSSH events
         case ES_EVENT_TYPE_NOTIFY_OPENSSH_LOGIN:
             let event = SSHLoginEvent(from: rawMessage)
             return (
@@ -321,9 +321,9 @@ extension EventType {
                 event.source_address,
                 nil // @note: `target_path` does not make sense in this context.
             )
-        
             
-        // MARK: - XProtect events
+            
+            // MARK: - XProtect events
         case ES_EVENT_TYPE_NOTIFY_XP_MALWARE_DETECTED:
             let event = XProtectDetectEvent(from: rawMessage)
             return (
@@ -340,9 +340,9 @@ extension EventType {
                 event.remediated_path,
                 event.remediated_path
             )
-        
             
-        // MARK: - File System Mounting events
+            
+            // MARK: - File System Mounting events
         case ES_EVENT_TYPE_NOTIFY_MOUNT:
             let event = MountEvent(from: rawMessage)
             let tgtPath: String = event.statfs.f_mntonname
@@ -353,9 +353,9 @@ extension EventType {
                 context,
                 tgtPath
             )
-
             
-        // MARK: Login events
+            
+            // MARK: Login events
         case ES_EVENT_TYPE_NOTIFY_LOGIN_LOGIN:
             let event = LoginLoginEvent(from: rawMessage)
             return (
@@ -380,9 +380,9 @@ extension EventType {
                 event.username,
                 nil // @note: `target_path` does not make sense in this context.
             )
-
-        
-        // MARK: Kernel events
+            
+            
+            // MARK: Kernel events
         case ES_EVENT_TYPE_NOTIFY_IOKIT_OPEN:
             let event = IOKitOpenEvent(from: rawMessage)
             return (
@@ -391,9 +391,9 @@ extension EventType {
                 event.user_client_class,
                 nil // @note: `target_path` does not make sense in this context.
             )
-
-        
-        // MARK: - Task Port events
+            
+            
+            // MARK: - Task Port events
         case ES_EVENT_TYPE_NOTIFY_GET_TASK:
             let event = GetTaskEvent(from: rawMessage)
             let context = "[\(event.type ?? "")] \(event.process_path ?? "")"
@@ -405,7 +405,7 @@ extension EventType {
             )
             
             
-        // MARK: MDM events
+            // MARK: MDM events
         case ES_EVENT_TYPE_NOTIFY_PROFILE_ADD:
             let event = ProfileAddEvent(from: rawMessage)
             let scope: String = event.profile_scope ?? ""
@@ -420,7 +420,7 @@ extension EventType {
             )
             
             
-        // MARK: - Security Authorization events
+            // MARK: - Security Authorization events
         case ES_EVENT_TYPE_NOTIFY_AUTHORIZATION_JUDGEMENT:
             let event = AuthorizationJudgementEvent(from: rawMessage)
             let petitionerName: String = event.petitioner_process_name ?? ""
@@ -445,9 +445,9 @@ extension EventType {
                 context,
                 event.petitioner_process_path
             )
-        
             
-        // MARK: - XPC events
+            
+            // MARK: - XPC events
         case ES_EVENT_TYPE_NOTIFY_XPC_CONNECT:
             let event = XPCConnectEvent(from: rawMessage)
             let requestorPath: String = String(
@@ -466,7 +466,7 @@ extension EventType {
             )
             
             
-        // MARK: - Open Directory events
+            // MARK: - Open Directory events
         case ES_EVENT_TYPE_NOTIFY_OD_CREATE_USER:
             let event = OpenDirectoryCreateUserEvent(from: rawMessage)
             let node: String = event.node_name ?? ""
@@ -494,7 +494,7 @@ extension EventType {
                 context,
                 nil // @note: `target_path` does not make sense in this context.
             )
-        
+            
         case ES_EVENT_TYPE_NOTIFY_OD_GROUP_ADD:
             let event = OpenDirectoryGroupAddEvent(from: rawMessage)
             let node: String = event.node_name ?? ""
@@ -524,7 +524,7 @@ extension EventType {
                 context,
                 nil // @note: `target_path` does not make sense in this context.
             )
-        
+            
         case ES_EVENT_TYPE_NOTIFY_OD_CREATE_GROUP:
             let event = OpenDirectoryCreateGroupEvent(from: rawMessage)
             let node: String = event.node_name ?? ""
@@ -553,8 +553,8 @@ extension EventType {
                 context,
                 nil // @note: `target_path` does not make sense in this context.
             )
-        
-        // MARK: - Socket events
+            
+            // MARK: - Socket events
         case ES_EVENT_TYPE_NOTIFY_UIPC_CONNECT:
             let event = UIPCConnectEvent(from: rawMessage)
             let tgtPath = event.file.path
@@ -571,8 +571,22 @@ extension EventType {
                 context,
                 tgtPath
             )
-        
-        // MARK: - TCC events
+        case ES_EVENT_TYPE_NOTIFY_UIPC_BIND:
+            let event = UIPCBindEvent(from: rawMessage)
+            let tgtPath = URL(
+                fileURLWithPath: event.dir.path
+            )
+                .appendingPathComponent(event.filename)
+                .path()
+            
+            return (
+                .uipc_bind(event),
+                "ES_EVENT_TYPE_NOTIFY_UIPC_BIND",
+                tgtPath,
+                tgtPath
+            )
+            
+            // MARK: - TCC events
         case ES_EVENT_TYPE_NOTIFY_TCC_MODIFY:
             let event = TCCModifyEvent(from: rawMessage)
             
@@ -589,8 +603,8 @@ extension EventType {
                 context,
                 nil // @note: `target_path` does not make sense in this context.
             )
-        
-        // MARK: - Gatekeeper events
+            
+            // MARK: - Gatekeeper events
         case ES_EVENT_TYPE_NOTIFY_GATEKEEPER_USER_OVERRIDE:
             let event = GatekeeperUserOverrideEvent(from: rawMessage)
             var context = ""
@@ -608,7 +622,7 @@ extension EventType {
                 context // Override path is the target path
             )
             
-
+            
         default:
             return (.unknown, "NOT MAPPED", nil, nil)
         }

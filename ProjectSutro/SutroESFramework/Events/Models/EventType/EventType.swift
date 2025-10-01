@@ -93,6 +93,7 @@ public enum EventType: Hashable, Codable {
     
     // MARK: Socket events
     case uipc_connect(UIPCConnectEvent)
+    case uipc_bind(UIPCBindEvent)
     
     // MARK: TCC events
     case tcc_modify(TCCModifyEvent)

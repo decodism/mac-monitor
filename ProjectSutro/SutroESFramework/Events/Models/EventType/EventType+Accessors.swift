@@ -272,6 +272,11 @@ extension EventType {
         return nil
     }
     
+    var uipc_bind: UIPCBindEvent? {
+        if case .uipc_bind(let e) = self { return e }
+        return nil
+    }
+    
     
     // MARK: TCC events
     var tcc_modify: TCCModifyEvent? {
