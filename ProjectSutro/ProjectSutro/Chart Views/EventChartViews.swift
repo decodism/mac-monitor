@@ -59,7 +59,8 @@ struct SystemChartEventView: View {
         "TCC_MODIFY",
         "GATEKEEPER_USER_OVERRIDE",
         "SETMODE",
-        "PTY_GRANT"
+        "PTY_GRANT",
+        "UIPC_CONNECT"
     ]
 
     private func eventCounts() -> [String: Int] {
@@ -163,6 +164,10 @@ struct SystemChartEventView: View {
             
             if message.event.xpc_connect != nil {
                 counts["XPC_CONNECT", default: 0] += 1
+            }
+            
+            if message.event.uipc_connect != nil {
+                counts["UIPC_CONNECT", default: 0] += 1
             }
             
             if message.event.tcc_modify != nil {

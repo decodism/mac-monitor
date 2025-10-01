@@ -266,6 +266,13 @@ extension EventType {
     }
     
     
+    // MARK: Socket events
+    var uipc_connect: UIPCConnectEvent? {
+        if case .uipc_connect(let e) = self { return e }
+        return nil
+    }
+    
+    
     // MARK: TCC events
     var tcc_modify: TCCModifyEvent? {
         if case .tcc_modify(let e) = self { return e }

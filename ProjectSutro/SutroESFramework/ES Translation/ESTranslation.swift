@@ -152,6 +152,10 @@ public func eventStringToImage(from eventString: String) -> String {
         return "plus.diamond"
     case "ES_EVENT_TYPE_NOTIFY_PTY_GRANT":
         return "apple.terminal"
+    case "ES_EVENT_TYPE_NOTIFY_UIPC_CONNECT":
+        return "line.diagonal.trianglehead.up.right.left.down"
+    case "ES_EVENT_TYPE_NOTIFY_UIPC_BIND":
+        return "line.diagonal.trianglehead.up.right"
     
     // MARK: - macOS 14+ events
     case "ES_EVENT_TYPE_NOTIFY_PROFILE_ADD":

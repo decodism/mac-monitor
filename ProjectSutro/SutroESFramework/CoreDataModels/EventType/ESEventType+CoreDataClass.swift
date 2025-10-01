@@ -96,6 +96,9 @@ public class ESEventType: NSManagedObject, Decodable {
         /// XPC events
         case xpc_connect
         
+        /// Socket events
+        case uipc_connect
+        
         /// TCC events
         case tcc_modify
         
@@ -235,6 +238,10 @@ public class ESEventType: NSManagedObject, Decodable {
         // MARK: XPC events
         case .xpc_connect(_):
             self.xpc_connect = ESXPCConnectEvent(from: message)
+        
+        // MARK: Socket events
+        case .uipc_connect(_):
+            self.uipc_connect = ESUIPCConnectEvent(from: message)
             
         // MARK: TCC events
         case .tcc_modify(_):
@@ -535,7 +542,13 @@ public class ESEventType: NSManagedObject, Decodable {
                 from: message,
                 insertIntoManagedObjectContext: context
             )
-            
+         
+        // MARK: Socket events
+        case .uipc_connect(_):
+            self.uipc_connect = ESUIPCConnectEvent(
+                from: message,
+                insertIntoManagedObjectContext: context
+            )
             
         // MARK: TCC events
         case .tcc_modify(_):
@@ -587,7 +600,7 @@ public class ESEventType: NSManagedObject, Decodable {
         try create = container.decodeIfPresent(ESFileCreateEvent.self, forKey: .create)
         try unlink = container.decodeIfPresent(ESFileDeleteEvent.self, forKey: .unlink)
         try rename = container.decodeIfPresent(ESFileRenameEvent.self, forKey: .rename)
-        try open = container.decodeIfPresent(ESFileOpenEvent.self, forKey: .open)
+        try `open` = container.decodeIfPresent(ESFileOpenEvent.self, forKey: .open)
         try write = container.decodeIfPresent(ESFileWriteEvent.self, forKey: .write)
         try close = container.decodeIfPresent(ESFileCloseEvent.self, forKey: .close)
         try dup = container.decodeIfPresent(ESFDDuplicateEvent.self, forKey: .dup)
@@ -647,6 +660,9 @@ public class ESEventType: NSManagedObject, Decodable {
         
         // MARK: XPC events
         try xpc_connect = container.decodeIfPresent(ESXPCConnectEvent.self, forKey: .xpc_connect)
+        
+        // MARK: Socket events
+        try uipc_connect = container.decodeIfPresent(ESUIPCConnectEvent.self, forKey: .uipc_connect)
         
         // MARK: TCC events
         try tcc_modify = container.decodeIfPresent(ESTCCModifyEvent.self, forKey: .tcc_modify)
@@ -742,6 +758,9 @@ extension ESEventType: Encodable {
         
         // MARK: XPC events
         try container.encodeIfPresent(xpc_connect, forKey: .xpc_connect)
+        
+        // MARK: Socket events
+        try container.encodeIfPresent(uipc_connect, forKey: .uipc_connect)
         
         // MARK: TCC events
         try container.encodeIfPresent(tcc_modify, forKey: .tcc_modify)

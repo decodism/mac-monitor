@@ -97,6 +97,7 @@
         <relationship name="signal" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ESProcessSignalEvent"/>
         <relationship name="tcc_modify" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ESTCCModifyEvent"/>
         <relationship name="trace" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ESProcessTraceEvent"/>
+        <relationship name="uipc_connect" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ESUIPCConnectEvent"/>
         <relationship name="unlink" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ESFileDeleteEvent"/>
         <relationship name="write" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ESFileWriteEvent"/>
         <relationship name="xp_malware_detected" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ESXProtectDetect"/>
@@ -577,6 +578,16 @@
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="tv_sec" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="tv_usec" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+    </entity>
+    <entity name="ESUIPCConnectEvent" representedClassName="ESUIPCConnectEvent" syncable="YES">
+        <attribute name="domain" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="domain_string" optional="YES" attributeType="String"/>
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="protocol" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="protocol_string" optional="YES" attributeType="String"/>
+        <attribute name="type" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="type_string" optional="YES" attributeType="String"/>
+        <relationship name="file" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ESFile"/>
     </entity>
     <entity name="ESXattrDeleteEvent" representedClassName="ESXattrDeleteEvent" syncable="YES">
         <attribute name="extattr" optional="YES" attributeType="String"/>

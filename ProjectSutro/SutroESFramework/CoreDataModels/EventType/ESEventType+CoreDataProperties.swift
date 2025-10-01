@@ -80,6 +80,8 @@ extension ESEventType {
     @NSManaged public var xp_malware_detected: ESXProtectDetect?
     @NSManaged public var xp_malware_remediated: ESXProtectRemediate?
     
+    @NSManaged public var uipc_connect: ESUIPCConnectEvent?
+    
     @NSManaged public var tcc_modify: ESTCCModifyEvent?
     
     @NSManaged public var gatekeeper_user_override: ESGatekeeperUserOverrideEvent?
