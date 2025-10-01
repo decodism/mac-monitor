@@ -12,26 +12,35 @@ import CoreData
 @objc(ESFileCloseEvent)
 public class ESFileCloseEvent: NSManagedObject, Decodable {
     enum CodingKeys: CodingKey {
-        case id, file_name, file_path
+        case id
+        case target
+        case modified
+        case was_mapped_writable
     }
     
     
     convenience init(from message: Message) {
-        let fileEvent: FileCloseEvent = message.event.close!
+        let event: FileCloseEvent = message.event.close!
         self.init()
-        self.id = fileEvent.id
-        self.file_name = fileEvent.file_name!
-        self.file_path = fileEvent.file_path!
+        self.id = event.id
+        self.target = ESFile(from: event.target)
+        self.modified = event.modified
+        self.was_mapped_writable = event.was_mapped_writable ?? false
     }
     
-    // MARK: - Custom Core Data initilizer for RCESFileOpenEvent
+    // MARK: - Custom Core Data initilizer for ESFileCloseEvent
     convenience init(from message: Message, insertIntoManagedObjectContext context: NSManagedObjectContext!) {
-        let fileEvent: FileCloseEvent = message.event.close!
+        let event: FileCloseEvent = message.event.close!
         let description = NSEntityDescription.entity(forEntityName: "ESFileCloseEvent", in: context)!
         self.init(entity: description, insertInto: context)
-        self.id = fileEvent.id
-        self.file_name = fileEvent.file_name!
-        self.file_path = fileEvent.file_path!
+        self.id = event.id
+        
+        self.target = ESFile(
+            from: event.target,
+            insertIntoManagedObjectContext: context
+        )
+        self.modified = event.modified
+        self.was_mapped_writable = event.was_mapped_writable ?? false
     }
     
     // MARK: - Decodable conformance
@@ -40,8 +49,10 @@ public class ESFileCloseEvent: NSManagedObject, Decodable {
         self.init()
         
         try id = container.decode(UUID.self, forKey: .id)
-        try file_path = container.decode(String.self, forKey: .file_path)
-        try file_name = container.decode(String.self, forKey: .file_name)
+        try target = container.decode(ESFile.self, forKey: .target)
+        try modified = container.decode(Bool.self, forKey: .modified)
+        try was_mapped_writable = container
+            .decode(Bool.self, forKey: .was_mapped_writable)
     }
 }
 
@@ -49,7 +60,9 @@ public class ESFileCloseEvent: NSManagedObject, Decodable {
 extension ESFileCloseEvent: Encodable {
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(file_path, forKey: .file_path)
-        try container.encode(file_name, forKey: .file_name)
+        try container.encode(target, forKey: .target)
+        try container.encode(modified, forKey: .modified)
+        try container
+            .encodeIfPresent(was_mapped_writable, forKey: .was_mapped_writable)
     }
 }

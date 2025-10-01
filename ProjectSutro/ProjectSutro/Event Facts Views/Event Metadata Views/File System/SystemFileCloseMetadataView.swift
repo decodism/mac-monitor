@@ -25,22 +25,30 @@ struct SystemFileCloseMetadataView: View {
             GroupBox {
                 VStack(alignment: .leading) {
                     HStack {
-                        Text("\u{2022} **File name:**")
+                        Text("\u{2022} File name:")
+                            .bold()
                             .padding([.leading], 5.0)
                         GroupBox {
-                            Text("`\(event.file_name!)`")
+                            Text(event.target.name)
+                                .monospaced()
                                 .frame(alignment: .leading)
                         }
                     }.frame(maxWidth: .infinity, alignment: .leading)
                     
-                    VStack(alignment: .leading) {
-                        Text("\u{2022} **File path:**")
-                            .padding([.leading], 5.0)
-                        GroupBox {
-                            Text("`\(event.file_path!)`")
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                        }
-                    }.frame(maxWidth: .infinity, alignment: .leading)
+                    
+                    if let path = event.target.path {
+                        VStack(alignment: .leading) {
+                            Text("\u{2022} File path:")
+                                .bold()
+                                .padding([.leading], 5.0)
+                            GroupBox {
+                                Text(path)
+                                    .monospaced()
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                            }
+                        }.frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                    
                 }.frame(maxWidth: .infinity, alignment: .leading)
             }
             
