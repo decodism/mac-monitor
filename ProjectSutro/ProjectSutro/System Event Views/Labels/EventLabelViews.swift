@@ -448,7 +448,7 @@ struct SetXattrEventLabelView: View {
     }
     
     var body: some View {
-        if event.xattr! == "com.apple.quarantine" {
+        if event.extattr == "com.apple.quarantine" {
             Label("**`\(eventType)`**", systemImage: eventStringToImage(from: eventType)).symbolRenderingMode(.palette).foregroundStyle(.green)
         } else {
             Label("**`\(eventType)`**", systemImage: eventStringToImage(from: eventType))

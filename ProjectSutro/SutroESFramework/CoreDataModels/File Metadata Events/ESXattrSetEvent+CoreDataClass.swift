@@ -12,28 +12,28 @@ import CoreData
 @objc(ESXattrSetEvent)
 public class ESXattrSetEvent: NSManagedObject, Decodable {
     enum CodingKeys: CodingKey {
-        case id, file_name, file_path, xattr
+        case id, target, extattr
     }
     
     // MARK: - Custom initilizer for ESXattrSetEvent during heavy flows
     convenience init(from message: Message) {
-        let xattrEvent: XattrSetEvent = message.event.setextattr!
+        let event: XattrSetEvent = message.event.setextattr!
         self.init()
-        self.id = xattrEvent.id
-        self.xattr = xattrEvent.xattr!
-        self.file_name = xattrEvent.file_name!
-        self.file_path = xattrEvent.file_path!
+        self.id = event.id
+        
+        target = ESFile(from: event.target)
+        extattr = event.extattr
     }
     
     // MARK: - Custom Core Data initilizer for ESXattrSetEvent
     convenience init(from message: Message, insertIntoManagedObjectContext context: NSManagedObjectContext!) {
-        let xattrEvent: XattrSetEvent = message.event.setextattr!
+        let event: XattrSetEvent = message.event.setextattr!
         let description = NSEntityDescription.entity(forEntityName: "ESXattrSetEvent", in: context)!
         self.init(entity: description, insertInto: context)
-        self.id = xattrEvent.id
-        self.xattr = xattrEvent.xattr!
-        self.file_name = xattrEvent.file_name!
-        self.file_path = xattrEvent.file_path!
+        self.id = event.id
+        
+        target = ESFile(from: event.target, insertIntoManagedObjectContext: context)
+        extattr = event.extattr
     }
     
     // MARK: - Decodable conformance
@@ -42,9 +42,8 @@ public class ESXattrSetEvent: NSManagedObject, Decodable {
         self.init()
         
         try id = container.decode(UUID.self, forKey: .id)
-        try file_name = container.decode(String.self, forKey: .file_name)
-        try file_path = container.decode(String.self, forKey: .file_path)
-        try xattr = container.decode(String.self, forKey: .xattr)
+        try target = container.decode(ESFile.self, forKey: .target)
+        try extattr = container.decode(String.self, forKey: .extattr)
     }
 }
 
@@ -52,8 +51,7 @@ public class ESXattrSetEvent: NSManagedObject, Decodable {
 extension ESXattrSetEvent: Encodable {
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(file_name, forKey: .file_name)
-        try container.encode(file_path, forKey: .file_path)
-        try container.encode(xattr, forKey: .xattr)
+        try container.encode(target, forKey: .target)
+        try container.encode(extattr, forKey: .extattr)
     }
 }

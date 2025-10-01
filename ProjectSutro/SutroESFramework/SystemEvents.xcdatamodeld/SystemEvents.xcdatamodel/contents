@@ -585,10 +585,9 @@
         <attribute name="xattr" optional="YES" attributeType="String"/>
     </entity>
     <entity name="ESXattrSetEvent" representedClassName="ESXattrSetEvent" syncable="YES">
-        <attribute name="file_name" optional="YES" attributeType="String"/>
-        <attribute name="file_path" optional="YES" attributeType="String"/>
+        <attribute name="extattr" optional="YES" attributeType="String"/>
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
-        <attribute name="xattr" optional="YES" attributeType="String"/>
+        <relationship name="target" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ESFile"/>
     </entity>
     <entity name="ESXPCConnectEvent" representedClassName="ESXPCConnectEvent" syncable="YES">
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>

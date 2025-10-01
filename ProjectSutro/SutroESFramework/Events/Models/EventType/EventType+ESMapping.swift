@@ -239,12 +239,13 @@ extension EventType {
         // MARK: - File Metadata events
         case ES_EVENT_TYPE_NOTIFY_SETEXTATTR:
             let event = XattrSetEvent(from: rawMessage)
-            let context = "[\(event.xattr ?? "")] \(event.file_path ?? "")"
+            let tgtPath: String = event.target.path
+            let context = "[\(event.extattr)] \(tgtPath)"
             return (
                 .setextattr(event),
                 "ES_EVENT_TYPE_NOTIFY_SETEXTATTR",
                 context,
-                event.file_path
+                tgtPath
             )
         case ES_EVENT_TYPE_NOTIFY_DELETEEXTATTR:
             let event = XattrDeleteEvent(from: rawMessage)
