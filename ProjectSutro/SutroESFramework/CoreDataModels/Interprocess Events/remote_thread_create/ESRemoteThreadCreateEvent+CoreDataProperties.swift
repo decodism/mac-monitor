@@ -16,9 +16,9 @@ extension ESRemoteThreadCreateEvent {
         return NSFetchRequest<ESRemoteThreadCreateEvent>(entityName: "ESRemoteThreadCreateEvent")
     }
 
-    @NSManaged public var id: UUID?
+    @NSManaged public var id: UUID
     @NSManaged public var target: ESProcess
-    @NSManaged public var thread_state: String
+    @NSManaged public var thread_state: String?
 
 }
 

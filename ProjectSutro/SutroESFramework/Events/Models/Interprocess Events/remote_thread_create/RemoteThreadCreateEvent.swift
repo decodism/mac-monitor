@@ -6,9 +6,6 @@
 //
 
 import Foundation
-import EndpointSecurity
-//import SwiftARMThreadStatus
-//import SwiftIntelThreadStatus
 
 
 // https://developer.apple.com/documentation/endpointsecurity/es_event_remote_thread_create_t
@@ -16,11 +13,10 @@ public struct RemoteThreadCreateEvent: Identifiable, Codable, Hashable {
     public var id: UUID = UUID()
     
     public var target: Process
-    public var thread_state: String = "NOT_SET"
+    public var thread_state: String?
     
     public func hash(into hasher: inout Hasher) {
-        hasher.combine(target.audit_token_string)
-        hasher.combine(thread_state)
+        hasher.combine(id)
     }
     
     public static func == (lhs: RemoteThreadCreateEvent, rhs: RemoteThreadCreateEvent) -> Bool {
@@ -38,10 +34,13 @@ public struct RemoteThreadCreateEvent: Identifiable, Codable, Hashable {
     init(from rawMessage: UnsafePointer<es_message_t>) {
         // Getting the thread create event
         let remoteThreadEvent: es_event_remote_thread_create_t = rawMessage.pointee.event.remote_thread_create
+        let version = Int(rawMessage.pointee.version)
         
-        if remoteThreadEvent.thread_state != nil {
+        self.target = Process(from: remoteThreadEvent.target.pointee, version: version)
+        
+        if let threadState = remoteThreadEvent.thread_state {
             #if arch(i386)
-            switch(threadEvent.thread_state!.pointee.flavor) {
+            switch(threadState.pointee.flavor) {
             case x86_THREAD_STATE32:
                 self.thread_state = "x86_THREAD_STATE32"
             case x86_FLOAT_STATE32:
@@ -88,11 +87,9 @@ public struct RemoteThreadCreateEvent: Identifiable, Codable, Hashable {
                 self.thread_state = "x86_LAST_BRANCH_STATE"
             case THREAD_STATE_NONE:
                 self.thread_state = "THREAD_STATE_NONE"
-            default:
-                self.thread_state = "UNKNOWN"
             }
             #elseif arch(arm64)
-            switch(remoteThreadEvent.thread_state!.pointee.flavor) {
+            switch(threadState.pointee.flavor) {
             case ARM_THREAD_STATE:
                 self.thread_state = "ARM_THREAD_STATE"
             case ARM_VFP_STATE:
@@ -118,13 +115,9 @@ public struct RemoteThreadCreateEvent: Identifiable, Codable, Hashable {
             case ARM_DEBUG_STATE64:
                 self.thread_state = "ARM_DEBUG_STATE64"
             default:
-                self.thread_state = "UNKNOWN"
+                break
             }
-            #else
-            self.thread_state = "UNKNOWN"
             #endif
         }
-        
-        self.target = Process(from: remoteThreadEvent.target.pointee, version: Int(rawMessage.pointee.version))
     }
 }

@@ -84,7 +84,13 @@ extension EventType {
         case ES_EVENT_TYPE_NOTIFY_REMOTE_THREAD_CREATE:
             let event = RemoteThreadCreateEvent(from: rawMessage)
             let targetPath = event.target.executable?.path ?? "Unknown"
-            let context = "[\(event.thread_state)] \(targetPath)"
+            var context = ""
+            if let state = event.thread_state {
+                context = "[\(state)] \(targetPath)"
+            } else {
+                context = targetPath
+            }
+            
             return (
                 .remote_thread_create(event),
                 "ES_EVENT_TYPE_NOTIFY_REMOTE_THREAD_CREATE",
