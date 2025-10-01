@@ -97,6 +97,7 @@
         <relationship name="signal" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ESProcessSignalEvent"/>
         <relationship name="tcc_modify" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ESTCCModifyEvent"/>
         <relationship name="trace" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ESProcessTraceEvent"/>
+        <relationship name="uipc_bind" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ESUIPCBindEvent"/>
         <relationship name="uipc_connect" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ESUIPCConnectEvent"/>
         <relationship name="unlink" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ESFileDeleteEvent"/>
         <relationship name="write" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ESFileWriteEvent"/>
@@ -578,6 +579,12 @@
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="tv_sec" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="tv_usec" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+    </entity>
+    <entity name="ESUIPCBindEvent" representedClassName="ESUIPCBindEvent" syncable="YES">
+        <attribute name="filename" optional="YES" attributeType="String"/>
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="mode" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <relationship name="dir" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ESFile"/>
     </entity>
     <entity name="ESUIPCConnectEvent" representedClassName="ESUIPCConnectEvent" syncable="YES">
         <attribute name="domain" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>

@@ -79,7 +79,8 @@ public var supportedEvents: [es_event_type_t] {
         ES_EVENT_TYPE_NOTIFY_PROC_CHECK,
         ES_EVENT_TYPE_NOTIFY_SETMODE,
         ES_EVENT_TYPE_NOTIFY_PTY_GRANT,
-        ES_EVENT_TYPE_NOTIFY_UIPC_CONNECT
+        ES_EVENT_TYPE_NOTIFY_UIPC_CONNECT,
+        ES_EVENT_TYPE_NOTIFY_UIPC_BIND
     ]
     
     var list = coreEvents
@@ -123,7 +124,8 @@ public var defaultEventSubscriptions: [es_event_type_t] {
         ES_EVENT_TYPE_NOTIFY_IOKIT_OPEN,
         ES_EVENT_TYPE_NOTIFY_SETMODE,
         ES_EVENT_TYPE_NOTIFY_PTY_GRANT,
-        ES_EVENT_TYPE_NOTIFY_UIPC_CONNECT
+        ES_EVENT_TYPE_NOTIFY_UIPC_CONNECT,
+        ES_EVENT_TYPE_NOTIFY_UIPC_BIND
     ]
     
     var list = defaultEvents

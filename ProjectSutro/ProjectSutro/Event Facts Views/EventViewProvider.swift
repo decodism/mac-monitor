@@ -246,6 +246,11 @@ struct EventSpecificViewsProvider {
         case _ where message.event.uipc_connect != nil:
             self.labelView = AnyView(IntelligentEventLabelView(message: message))
             self.metadataView = AnyView(SystemUIPCConnectMetadataView(message: message))
+        case _ where message.event.uipc_bind != nil:
+            self.labelView = AnyView(IntelligentEventLabelView(message: message))
+            self.metadataView = AnyView(
+                SystemUIPCBindMetadataView(message: message)
+            )
             
             
         // MARK: - TCC events
