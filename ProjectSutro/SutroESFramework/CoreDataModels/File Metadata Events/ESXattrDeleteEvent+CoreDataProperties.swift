@@ -16,11 +16,9 @@ extension ESXattrDeleteEvent {
         return NSFetchRequest<ESXattrDeleteEvent>(entityName: "ESXattrDeleteEvent")
     }
 
-    @NSManaged public var file_name: String?
-    @NSManaged public var file_path: String?
-    @NSManaged public var id: UUID?
-    @NSManaged public var operation: String?
-    @NSManaged public var xattr: String?
+    @NSManaged public var id: UUID
+    @NSManaged public var target: ESFile
+    @NSManaged public var extattr: String
 
 }
 
