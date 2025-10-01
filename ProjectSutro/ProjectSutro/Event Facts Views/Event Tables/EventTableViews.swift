@@ -16,15 +16,15 @@ struct XattrTableView: View {
     var body: some View {
         Table(xattrEvents, selection: $eventSelection) {
             TableColumn("Process name") { (message: ESMessage) in
-                Text(message.process.executable?.name ?? "—")
+                Text(message.process.executable!.name)
             }
 
             TableColumn("File path") { (message: ESMessage) in
-                Text(message.event.deleteextattr?.file_path ?? "—")
+                Text(message.event.deleteextattr!.target.path ?? "—")
             }
 
             TableColumn("xattr") { (message: ESMessage) in
-                Text(message.event.deleteextattr?.xattr ?? "—")
+                Text(message.event.deleteextattr!.extattr)
             }
         }
         .contextMenu(forSelectionType: ESMessage.ID.self) { selection in

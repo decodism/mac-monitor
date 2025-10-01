@@ -12,7 +12,6 @@ import SutroESFramework
 struct SystemXattrTableView: View {
     @EnvironmentObject var systemExtensionManager: EndpointSecurityManager
     @Environment(\.openWindow) private var openEventJSON
-    
     @EnvironmentObject var userPrefs: UserPrefs
     
     var xattrEvents: [ESMessage]
@@ -21,10 +20,14 @@ struct SystemXattrTableView: View {
     
     var body: some View {
         Table(of: ESMessage.self, selection: $eventSelection) {
-            TableColumn("xattr", value: \.event.deleteextattr!.xattr!)
-            TableColumn("File path", value: \.event.deleteextattr!.file_path!)
+            TableColumn("xattr") { message in
+                Text(message.event.deleteextattr!.extattr)
+            }
+            TableColumn("File path") { message in
+                Text(message.event.deleteextattr!.target.path ?? "")
+            }
         } rows: {
-            ForEach(xattrEvents) { (message: ESMessage) in
+            ForEach(xattrEvents) { message in
                 TableRow(message).contextMenu {
                     if message.event.exec != nil {
                         TableExecEventContextMenu(allFilters: $allFilters, message: message)
@@ -36,7 +39,7 @@ struct SystemXattrTableView: View {
                             .environmentObject(userPrefs)
                     }
                 }
-              }
+            }
         }
     }
 }
@@ -60,7 +63,7 @@ struct SystemFileMetadataEventTableViews: View {
                 SystemXattrTableView(
                     xattrEvents: eventsInScope
                         .filter {
-                            $0.event.deleteextattr?.xattr != nil
+                            $0.event.deleteextattr?.extattr != nil
                         },
                     eventSelection: $eventSelection,
                     allFilters: $allFilters)

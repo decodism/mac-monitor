@@ -149,16 +149,15 @@ struct DeleteXattrEventLabelView: View {
     }
     
     var body: some View {
-        if let xattr = event.xattr {
-            // MARK: Quarantine Xattr Delete
-            if xattr.hasSuffix("apple.quarantine") {
-                HStack {
-                    Image(systemName: "exclamationmark.triangle.fill").symbolRenderingMode(.palette).foregroundStyle(.black, .yellow).help("Quarantine extended attribute deleted")
-                    Label("**`\(message.es_event_type!)`**", systemImage: "lock.slash").symbolRenderingMode(.palette).foregroundStyle(.red)
-                }
-            } else {
-                Label("**`\(message.es_event_type!)`**", systemImage: eventStringToImage(from: message.es_event_type!)).foregroundStyle(.orange)
+        let xattr = event.extattr
+        // MARK: Quarantine Xattr Delete
+        if xattr.hasSuffix("apple.quarantine") {
+            HStack {
+                Image(systemName: "exclamationmark.triangle.fill").symbolRenderingMode(.palette).foregroundStyle(.black, .yellow).help("Quarantine extended attribute deleted")
+                Label("**`\(message.es_event_type!)`**", systemImage: "lock.slash").symbolRenderingMode(.palette).foregroundStyle(.red)
             }
+        } else {
+            Label("**`\(message.es_event_type!)`**", systemImage: eventStringToImage(from: message.es_event_type!)).foregroundStyle(.orange)
         }
     }
 }

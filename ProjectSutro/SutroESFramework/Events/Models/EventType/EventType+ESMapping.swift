@@ -249,12 +249,13 @@ extension EventType {
             )
         case ES_EVENT_TYPE_NOTIFY_DELETEEXTATTR:
             let event = XattrDeleteEvent(from: rawMessage)
-            let context = "[\(event.xattr ?? "")] \(event.file_path ?? "")"
+            let tgtPath: String = event.target.path
+            let context = "[\(event.extattr)] \(tgtPath)"
             return (
                 .deleteextattr(event),
                 "ES_EVENT_TYPE_NOTIFY_DELETEEXTATTR",
                 context,
-                event.file_path
+                tgtPath
             )
         case ES_EVENT_TYPE_NOTIFY_SETMODE:
             let event = SetModeEvent(from: rawMessage)
