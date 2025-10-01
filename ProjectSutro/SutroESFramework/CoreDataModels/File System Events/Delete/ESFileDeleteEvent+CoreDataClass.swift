@@ -12,28 +12,29 @@ import CoreData
 @objc(ESFileDeleteEvent)
 public class ESFileDeleteEvent: NSManagedObject, Decodable {
     enum CodingKeys: CodingKey {
-        case id, file_name, file_path, parent_directory
+        case id
+        case target
+        case parent_dir
     }
     
     
     convenience init(from message: Message) {
-        let fileEvent: FileDeleteEvent = message.event.unlink!
+        let event: FileDeleteEvent = message.event.unlink!
         self.init()
-        self.id = fileEvent.id
-        self.file_name = fileEvent.file_name!
-        self.file_path = fileEvent.file_path!
-        self.parent_directory = fileEvent.parent_directory!
+        self.id = event.id
+        self.target = ESFile(from: event.target)
+        self.parent_dir = ESFile(from: event.parent_dir)
     }
     
     // MARK: - Custom Core Data initilizer for ESFileDeleteEvent
     convenience init(from message: Message, insertIntoManagedObjectContext context: NSManagedObjectContext!) {
-        let fileEvent: FileDeleteEvent = message.event.unlink!
+        let event: FileDeleteEvent = message.event.unlink!
         let description = NSEntityDescription.entity(forEntityName: "ESFileDeleteEvent", in: context)!
         self.init(entity: description, insertInto: context)
-        self.id = fileEvent.id
-        self.file_name = fileEvent.file_name!
-        self.file_path = fileEvent.file_path!
-        self.parent_directory = fileEvent.parent_directory!
+        self.id = event.id
+        
+        self.target = ESFile(from: event.target, insertIntoManagedObjectContext: context)
+        self.parent_dir = ESFile(from: event.parent_dir, insertIntoManagedObjectContext: context)
     }
     
     // MARK: - Decodable conformance
@@ -42,9 +43,8 @@ public class ESFileDeleteEvent: NSManagedObject, Decodable {
         self.init()
         
         try id = container.decode(UUID.self, forKey: .id)
-        try file_path = container.decode(String.self, forKey: .file_path)
-        try file_name = container.decode(String.self, forKey: .file_name)
-        try parent_directory = container.decode(String.self, forKey: .parent_directory)
+        try target = container.decode(ESFile.self, forKey: .target)
+        try parent_dir = container.decode(ESFile.self, forKey: .parent_dir)
     }
 }
 
@@ -52,8 +52,7 @@ public class ESFileDeleteEvent: NSManagedObject, Decodable {
 extension ESFileDeleteEvent: Encodable {
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(file_path, forKey: .file_path)
-        try container.encode(file_name, forKey: .file_name)
-        try container.encode(parent_directory, forKey: .parent_directory)
+        try container.encode(target, forKey: .target)
+        try container.encode(parent_dir, forKey: .parent_dir)
     }
 }

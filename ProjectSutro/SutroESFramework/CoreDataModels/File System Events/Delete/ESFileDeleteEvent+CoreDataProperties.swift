@@ -16,10 +16,9 @@ extension ESFileDeleteEvent {
         return NSFetchRequest<ESFileDeleteEvent>(entityName: "ESFileDeleteEvent")
     }
 
-    @NSManaged public var id: UUID?
-    @NSManaged public var file_path: String?
-    @NSManaged public var file_name: String?
-    @NSManaged public var parent_directory: String?
+    @NSManaged public var id: UUID
+    @NSManaged public var target: ESFile
+    @NSManaged public var parent_dir: ESFile
 
 }
 
