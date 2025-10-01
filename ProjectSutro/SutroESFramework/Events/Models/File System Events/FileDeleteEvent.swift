@@ -12,7 +12,7 @@ import Foundation
 public struct FileDeleteEvent: Identifiable, Codable, Hashable {
     public var id: UUID = UUID()
     
-    public var parent_directory, file_path, file_name: String?
+    public var target, parent_dir: File
     
     public func hash(into hasher: inout Hasher) {
         hasher.combine(id)
@@ -23,17 +23,9 @@ public struct FileDeleteEvent: Identifiable, Codable, Hashable {
     }
     
     init(from rawMessage: UnsafePointer<es_message_t>) {
-        let fileDeleteEvent: es_event_unlink_t = rawMessage.pointee.event.unlink
-        self.parent_directory = ""
-        self.file_path = ""
-        self.file_name = ""
+        let event: es_event_unlink_t = rawMessage.pointee.event.unlink
         
-        if fileDeleteEvent.parent_dir.pointee.path.length > 0 {
-            self.parent_directory = String(cString: fileDeleteEvent.parent_dir.pointee.path.data)
-        }
-        if fileDeleteEvent.target.pointee.path.length > 0 {
-            self.file_path = String(cString: fileDeleteEvent.target.pointee.path.data)
-            self.file_name = (String(cString: fileDeleteEvent.target.pointee.path.data) as NSString).lastPathComponent
-        }
+        target = File(from: event.target.pointee)
+        parent_dir = File(from: event.target.pointee)
     }
 }

@@ -33,7 +33,7 @@ struct SystemChartEventView: View {
         "LW_LOGIN",
         "XP_MALWARE_DETECTED",
         "XP_MALWARE_REMEDIATED",
-        "DELETE",
+        "UNLINK",
         "OPEN",
         "WRITE",
         "LINK",
@@ -107,7 +107,7 @@ struct SystemChartEventView: View {
             if message.event.xp_malware_remediated != nil {
                 counts["XP_MALWARE_REMEDIATED", default: 0] += 1
             }
-            if message.event.unlink != nil { counts["DELETE", default: 0] += 1 }
+            if message.event.unlink != nil { counts["UNLINK", default: 0] += 1 }
             if message.event.open != nil { counts["OPEN", default: 0] += 1 }
             if message.event.write != nil { counts["WRITE", default: 0] += 1 }
             if message.event.link != nil { counts["LINK", default: 0] += 1 }

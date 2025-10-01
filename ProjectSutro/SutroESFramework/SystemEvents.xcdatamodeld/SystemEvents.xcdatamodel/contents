@@ -129,10 +129,9 @@
         <relationship name="destination" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ESFileDestination"/>
     </entity>
     <entity name="ESFileDeleteEvent" representedClassName="ESFileDeleteEvent" syncable="YES">
-        <attribute name="file_name" optional="YES" attributeType="String"/>
-        <attribute name="file_path" optional="YES" attributeType="String"/>
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
-        <attribute name="parent_directory" optional="YES" attributeType="String"/>
+        <relationship name="parent_dir" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ESFile"/>
+        <relationship name="target" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ESFile"/>
     </entity>
     <entity name="ESFileDestination" representedClassName="ESFileDestination" syncable="YES">
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
