@@ -344,6 +344,7 @@
 		CAD3D9812E0F111100028111 /* ESNewPath+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAD3D97B2E0F103500028111 /* ESNewPath+CoreDataProperties.swift */; };
 		CAD3D9822E0F167300028111 /* ESFileDestination+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAD3D9782E0F103500028111 /* ESFileDestination+CoreDataClass.swift */; };
 		CAD3D9832E0F167800028111 /* ESFileDestination+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAD3D9792E0F103500028111 /* ESFileDestination+CoreDataProperties.swift */; };
+		CADD9D792E8D9AA9009EC919 /* StatFS.swift in Sources */ = {isa = PBXBuildFile; fileRef = CADD9D782E8D9AA4009EC919 /* StatFS.swift */; };
 		CAE9E44D2E4FE2DD001143C2 /* TCCModifyEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAE9E44C2E4FE2D7001143C2 /* TCCModifyEvent.swift */; };
 		CAE9E4532E4FF87C001143C2 /* ESTCCModifyEvent+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAE9E44E2E4FF103001143C2 /* ESTCCModifyEvent+CoreDataClass.swift */; };
 		CAE9E4542E4FF883001143C2 /* ESTCCModifyEvent+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAE9E44F2E4FF103001143C2 /* ESTCCModifyEvent+CoreDataProperties.swift */; };
@@ -765,6 +766,7 @@
 		CAD3D9792E0F103500028111 /* ESFileDestination+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ESFileDestination+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		CAD3D97A2E0F103500028111 /* ESNewPath+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ESNewPath+CoreDataClass.swift"; sourceTree = "<group>"; };
 		CAD3D97B2E0F103500028111 /* ESNewPath+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ESNewPath+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		CADD9D782E8D9AA4009EC919 /* StatFS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatFS.swift; sourceTree = "<group>"; };
 		CAE9E44C2E4FE2D7001143C2 /* TCCModifyEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TCCModifyEvent.swift; sourceTree = "<group>"; };
 		CAE9E44E2E4FF103001143C2 /* ESTCCModifyEvent+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ESTCCModifyEvent+CoreDataClass.swift"; sourceTree = "<group>"; };
 		CAE9E44F2E4FF103001143C2 /* ESTCCModifyEvent+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ESTCCModifyEvent+CoreDataProperties.swift"; sourceTree = "<group>"; };
@@ -998,6 +1000,7 @@
 		28ADAC3B2DCC73A5000DB4D2 /* Files */ = {
 			isa = PBXGroup;
 			children = (
+				CADD9D782E8D9AA4009EC919 /* StatFS.swift */,
 				CA59365D2E8B519A008A115D /* FDPipe.swift */,
 				28A608A12D9B446800962337 /* FileDescriptor.swift */,
 				28B343A22D876880004127E8 /* Stat.swift */,
@@ -1377,9 +1380,6 @@
 		28B3438F2D863B45004127E8 /* Process Events */ = {
 			isa = PBXGroup;
 			children = (
-				28B865D52A3119C700F06441 /* ProcessHelpers.swift */,
-				28B343A92D8769D2004127E8 /* AuditToken.swift */,
-				28EF8F032D7E47D600223464 /* Process.swift */,
 				2820DD00297224990053CB48 /* ProcessExecEvent.swift */,
 				2820DD02297224D40053CB48 /* ProcessForkEvent.swift */,
 				2820DD04297224EC0053CB48 /* ProcessExitEvent.swift */,
@@ -2189,6 +2189,9 @@
 			isa = PBXGroup;
 			children = (
 				28A169CF2DA4E57000CA630B /* Thread.swift */,
+				28B865D52A3119C700F06441 /* ProcessHelpers.swift */,
+				28B343A92D8769D2004127E8 /* AuditToken.swift */,
+				28EF8F032D7E47D600223464 /* Process.swift */,
 			);
 			path = Process;
 			sourceTree = "<group>";
@@ -2598,6 +2601,7 @@
 				28A25018299FF613007B0753 /* ESFileRenameEvent+CoreDataClass.swift in Sources */,
 				2820DD0D297225570053CB48 /* LaunchItemAddEvent.swift in Sources */,
 				28EC62C529243FD500EAC8AD /* ESProcessForkEvent+CoreDataClass.swift in Sources */,
+				CADD9D792E8D9AA9009EC919 /* StatFS.swift in Sources */,
 				2852BBAA29DA8B3F00AA833C /* ESRemoteThreadCreateEvent+CoreDataClass.swift in Sources */,
 				28B865DE2A313E1800F06441 /* OpenDirectoryModifyPasswordEvent.swift in Sources */,
 				2820DD0B297225340053CB48 /* MMapEvent.swift in Sources */,
