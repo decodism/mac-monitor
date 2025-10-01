@@ -26,38 +26,31 @@ struct SystemMountMetadataView: View {
             GroupBox {
                 VStack(alignment: .leading) {
                     HStack {
-                        Label("**Owner:**", systemImage: "person.fill")
-                            .padding([.leading], 5.0)
-                        GroupBox {
-                            Text("`\(event.owner_uid_human!) (\(event.owner_uid))`")
-                        }
-                    }.frame(maxWidth: .infinity, alignment: .leading)
-                    
-                    HStack {
                         Text("\u{2022} **Source path:**")
                         GroupBox {
-                            Text("`\(event.source_name!)`").lineLimit(10)
-                        }
-                        Text("\u{2022} **ID:**")
-                        GroupBox {
-                            Text("`\(event.fs_id!)`")
+                            Text(event.statfs.f_mntfromname)
+                                .monospaced()
+                                .lineLimit(10)
                         }
                     }
                     HStack {
                         Text("\u{2022} **Mount directory:**")
                         GroupBox {
-                            Text("`\(event.mount_directory!)`")
+                            Text(event.statfs.f_mntonname)
+                                .monospaced()
                                 .lineLimit(10)
                         }
                     }
                     HStack {
                         Text("\u{2022} **Type:**")
                         GroupBox {
-                            Text("`\(event.type_name!)`")
+                            Text(event.disposition_string.replacingOccurrences(of: "ES_MOUNT_DISPOSITION_", with: ""))
+                                .monospaced()
                         }
                         Text("\u{2022} **Total files:**")
                         GroupBox {
-                            Text("`\(event.total_files)`")
+                            Text(String(event.statfs.f_files))
+                                .monospaced()
                         }
                     }
                     

@@ -18,36 +18,39 @@ func charPointerToString(_ pointer: UnsafePointer<Int8>) -> String {
 public struct MountEvent: Identifiable, Codable, Hashable {
     public var id: UUID = UUID()
     
-    public var mount_flags, owner_uid, total_files: Int64
-    public var mount_directory, source_name, type_name, fs_id, owner_uid_human: String
+    public var statfs: StatFS
+    public var disposition: Int16
+    public var disposition_string: String
     
     public func hash(into hasher: inout Hasher) {
-        hasher.combine(mount_directory)
-        hasher.combine(owner_uid)
-        hasher.combine(type_name)
-        hasher.combine(fs_id)
+        hasher.combine(id)
     }
     
     public static func == (lhs: MountEvent, rhs: MountEvent) -> Bool {
-        if lhs.mount_directory == rhs.mount_directory && lhs.total_files == rhs.total_files && lhs.fs_id == rhs.fs_id {
-            return true
-        }
-        
-        return false
+        return lhs.id == rhs.id
     }
     
     init(from rawMessage: UnsafePointer<es_message_t>) {
-        let mountEvent: es_event_mount_t = rawMessage.pointee.event.mount
+        let event: es_event_mount_t = rawMessage.pointee.event.mount
         
-        self.mount_flags = Int64(mountEvent.statfs.pointee.f_flags)
-        self.owner_uid = Int64(mountEvent.statfs.pointee.f_owner)
-        self.total_files = Int64(mountEvent.statfs.pointee.f_files)
+        statfs = StatFS(from: event.statfs.pointee)
         
-        self.mount_directory = charPointerToString(&mountEvent.statfs.pointee.f_mntonname.0)
-        self.source_name = charPointerToString(&mountEvent.statfs.pointee.f_mntfromname.0)
-        self.type_name = charPointerToString(&mountEvent.statfs.pointee.f_fstypename.0)
-        
-        self.fs_id = "\(mountEvent.statfs.pointee.f_fsid.val.0) \(mountEvent.statfs.pointee.f_fsid.val.1)"
-        self.owner_uid_human = String(cString: getpwuid(uid_t(mountEvent.statfs.pointee.f_owner))!.pointee.pw_name)
+        disposition = Int16(event.disposition.rawValue)
+        switch event.disposition {
+        case ES_MOUNT_DISPOSITION_NULLFS:
+            disposition_string = "ES_MOUNT_DISPOSITION_NULLFS"
+        case ES_MOUNT_DISPOSITION_NETWORK:
+            disposition_string = "ES_MOUNT_DISPOSITION_NETWORK"
+        case ES_MOUNT_DISPOSITION_UNKNOWN:
+            disposition_string = "ES_MOUNT_DISPOSITION_UNKNOWN"
+        case ES_MOUNT_DISPOSITION_VIRTUAL:
+            disposition_string = "ES_MOUNT_DISPOSITION_VIRTUAL"
+        case ES_MOUNT_DISPOSITION_EXTERNAL:
+            disposition_string = "ES_MOUNT_DISPOSITION_EXTERNAL"
+        case ES_MOUNT_DISPOSITION_INTERNAL:
+            disposition_string = "ES_MOUNT_DISPOSITION_INTERNAL"
+        default:
+            disposition_string = "UNKNOWN"
+        }
     }
 }

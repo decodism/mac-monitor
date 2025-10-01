@@ -16,15 +16,11 @@ extension ESMountEvent {
         return NSFetchRequest<ESMountEvent>(entityName: "ESMountEvent")
     }
 
-    @NSManaged public var id: UUID?
-    @NSManaged public var total_files: Int64
-    @NSManaged public var mount_flags: Int64
-    @NSManaged public var type_name: String?
-    @NSManaged public var source_name: String?
-    @NSManaged public var mount_directory: String?
-    @NSManaged public var owner_uid: Int64
-    @NSManaged public var fs_id: String?
-    @NSManaged public var owner_uid_human: String?
+    @NSManaged public var id: UUID
+    
+    @NSManaged public var statfsData: Data
+    @NSManaged public var disposition: Int16
+    @NSManaged public var disposition_string: String
 
 }
 

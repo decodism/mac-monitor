@@ -281,15 +281,10 @@
         <relationship name="source" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ESFile"/>
     </entity>
     <entity name="ESMountEvent" representedClassName="ESMountEvent" syncable="YES">
-        <attribute name="fs_id" optional="YES" attributeType="String"/>
+        <attribute name="disposition" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="disposition_string" optional="YES" attributeType="String"/>
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
-        <attribute name="mount_directory" optional="YES" attributeType="String"/>
-        <attribute name="mount_flags" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
-        <attribute name="owner_uid" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
-        <attribute name="owner_uid_human" optional="YES" attributeType="String"/>
-        <attribute name="source_name" optional="YES" attributeType="String"/>
-        <attribute name="total_files" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
-        <attribute name="type_name" optional="YES" attributeType="String"/>
+        <attribute name="statfsData" optional="YES" attributeType="Binary"/>
     </entity>
     <entity name="ESNewPath" representedClassName="ESNewPath" syncable="YES">
         <attribute name="filename" optional="YES" attributeType="String"/>

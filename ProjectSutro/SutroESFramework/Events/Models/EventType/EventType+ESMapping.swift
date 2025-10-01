@@ -343,11 +343,13 @@ extension EventType {
         // MARK: - File System Mounting events
         case ES_EVENT_TYPE_NOTIFY_MOUNT:
             let event = MountEvent(from: rawMessage)
+            let tgtPath: String = event.statfs.f_mntonname
+            let context: String = "[\(event.disposition_string.replacingOccurrences(of: "ES_MOUNT_DISPOSITION_", with: ""))] \(tgtPath)"
             return (
                 .mount(event),
                 "ES_EVENT_TYPE_NOTIFY_MOUNT",
-                event.mount_directory,
-                event.mount_directory
+                context,
+                tgtPath
             )
 
             
