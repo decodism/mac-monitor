@@ -6,8 +6,7 @@
 //
 
 import Foundation
-import EndpointSecurity
-import OSLog
+
 
 func charPointerToString(_ pointer: UnsafePointer<Int8>) -> String {
    return String(cString: UnsafeRawPointer(pointer).assumingMemoryBound(to: CChar.self))

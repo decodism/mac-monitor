@@ -91,6 +91,9 @@ public enum EventType: Hashable, Codable {
     // MARK: XPC events
     case xpc_connect(XPCConnectEvent)
     
+    // MARK: Socket events
+    case uipc_connect(UIPCConnectEvent)
+    
     // MARK: TCC events
     case tcc_modify(TCCModifyEvent)
     

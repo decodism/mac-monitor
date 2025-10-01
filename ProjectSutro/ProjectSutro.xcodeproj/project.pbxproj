@@ -345,6 +345,11 @@
 		CAD3D9822E0F167300028111 /* ESFileDestination+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAD3D9782E0F103500028111 /* ESFileDestination+CoreDataClass.swift */; };
 		CAD3D9832E0F167800028111 /* ESFileDestination+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAD3D9792E0F103500028111 /* ESFileDestination+CoreDataProperties.swift */; };
 		CADD9D792E8D9AA9009EC919 /* StatFS.swift in Sources */ = {isa = PBXBuildFile; fileRef = CADD9D782E8D9AA4009EC919 /* StatFS.swift */; };
+		CADD9D7C2E8DB6C4009EC919 /* UIPCConnectEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = CADD9D7B2E8DB6C1009EC919 /* UIPCConnectEvent.swift */; };
+		CADD9D7F2E8DBE52009EC919 /* ESUIPCConnectEvent+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = CADD9D7D2E8DBE52009EC919 /* ESUIPCConnectEvent+CoreDataClass.swift */; };
+		CADD9D802E8DBE52009EC919 /* ESUIPCConnectEvent+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = CADD9D7E2E8DBE52009EC919 /* ESUIPCConnectEvent+CoreDataProperties.swift */; };
+		CADD9D842E8DC73C009EC919 /* SystemUIPCConnectMetadataView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CADD9D832E8DC730009EC919 /* SystemUIPCConnectMetadataView.swift */; };
+		CADD9D882E8DC959009EC919 /* SocketTypeResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = CADD9D872E8DC955009EC919 /* SocketTypeResolver.swift */; };
 		CAE9E44D2E4FE2DD001143C2 /* TCCModifyEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAE9E44C2E4FE2D7001143C2 /* TCCModifyEvent.swift */; };
 		CAE9E4532E4FF87C001143C2 /* ESTCCModifyEvent+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAE9E44E2E4FF103001143C2 /* ESTCCModifyEvent+CoreDataClass.swift */; };
 		CAE9E4542E4FF883001143C2 /* ESTCCModifyEvent+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAE9E44F2E4FF103001143C2 /* ESTCCModifyEvent+CoreDataProperties.swift */; };
@@ -767,6 +772,11 @@
 		CAD3D97A2E0F103500028111 /* ESNewPath+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ESNewPath+CoreDataClass.swift"; sourceTree = "<group>"; };
 		CAD3D97B2E0F103500028111 /* ESNewPath+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ESNewPath+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		CADD9D782E8D9AA4009EC919 /* StatFS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatFS.swift; sourceTree = "<group>"; };
+		CADD9D7B2E8DB6C1009EC919 /* UIPCConnectEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIPCConnectEvent.swift; sourceTree = "<group>"; };
+		CADD9D7D2E8DBE52009EC919 /* ESUIPCConnectEvent+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ESUIPCConnectEvent+CoreDataClass.swift"; sourceTree = "<group>"; };
+		CADD9D7E2E8DBE52009EC919 /* ESUIPCConnectEvent+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ESUIPCConnectEvent+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		CADD9D832E8DC730009EC919 /* SystemUIPCConnectMetadataView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemUIPCConnectMetadataView.swift; sourceTree = "<group>"; };
+		CADD9D872E8DC955009EC919 /* SocketTypeResolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocketTypeResolver.swift; sourceTree = "<group>"; };
 		CAE9E44C2E4FE2D7001143C2 /* TCCModifyEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TCCModifyEvent.swift; sourceTree = "<group>"; };
 		CAE9E44E2E4FF103001143C2 /* ESTCCModifyEvent+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ESTCCModifyEvent+CoreDataClass.swift"; sourceTree = "<group>"; };
 		CAE9E44F2E4FF103001143C2 /* ESTCCModifyEvent+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ESTCCModifyEvent+CoreDataProperties.swift"; sourceTree = "<group>"; };
@@ -1036,6 +1046,7 @@
 				28B343792D862FEB004127E8 /* XProtect Events */,
 				28B3437B2D863312004127E8 /* MDM Events */,
 				28B3437E2D8633C4004127E8 /* Directory Events */,
+				CADD9D812E8DBE62009EC919 /* Socket Events */,
 				CAE9E4522E4FF823001143C2 /* TCC Events */,
 				CA4CE5B42E53F7DD00C057EB /* Gatekeeper Events */,
 			);
@@ -1620,6 +1631,7 @@
 				28B3439C2D863CD4004127E8 /* XProtect Events */,
 				28B343A12D863D51004127E8 /* MDM Events */,
 				28B3439A2D863CAD004127E8 /* Directory Events */,
+				CADD9D7A2E8DB6B5009EC919 /* Socket Events */,
 				CAE9E44B2E4FE28B001143C2 /* TCC Events */,
 				CA4CE59C2E53DB5F00C057EB /* Gatekeeper */,
 			);
@@ -1629,6 +1641,7 @@
 		28B9A93929DC8AC7006619FF /* Event Metadata Views */ = {
 			isa = PBXGroup;
 			children = (
+				CADD9D822E8DC720009EC919 /* Socket */,
 				CA4CE6442E5903FE00C057EB /* Gatekeeper */,
 				CA4CE5992E53BBC600C057EB /* TCC */,
 				CAC48B032E28565F00260C5F /* Open Directory */,
@@ -2216,6 +2229,32 @@
 			path = ActionType;
 			sourceTree = "<group>";
 		};
+		CADD9D7A2E8DB6B5009EC919 /* Socket Events */ = {
+			isa = PBXGroup;
+			children = (
+				CADD9D872E8DC955009EC919 /* SocketTypeResolver.swift */,
+				CADD9D7B2E8DB6C1009EC919 /* UIPCConnectEvent.swift */,
+			);
+			path = "Socket Events";
+			sourceTree = "<group>";
+		};
+		CADD9D812E8DBE62009EC919 /* Socket Events */ = {
+			isa = PBXGroup;
+			children = (
+				CADD9D7D2E8DBE52009EC919 /* ESUIPCConnectEvent+CoreDataClass.swift */,
+				CADD9D7E2E8DBE52009EC919 /* ESUIPCConnectEvent+CoreDataProperties.swift */,
+			);
+			path = "Socket Events";
+			sourceTree = "<group>";
+		};
+		CADD9D822E8DC720009EC919 /* Socket */ = {
+			isa = PBXGroup;
+			children = (
+				CADD9D832E8DC730009EC919 /* SystemUIPCConnectMetadataView.swift */,
+			);
+			path = Socket;
+			sourceTree = "<group>";
+		};
 		CAE9E44B2E4FE28B001143C2 /* TCC Events */ = {
 			isa = PBXGroup;
 			children = (
@@ -2439,6 +2478,8 @@
 				284BAED62A4D09BE007F1193 /* ESODAttributeValueAddEvent+CoreDataClass.swift in Sources */,
 				28B865DC2A312C7100F06441 /* ESODCreateUserEvent+CoreDataProperties.swift in Sources */,
 				CA7D0EE62E427E850024243F /* UpdateEngine.swift in Sources */,
+				CADD9D7F2E8DBE52009EC919 /* ESUIPCConnectEvent+CoreDataClass.swift in Sources */,
+				CADD9D802E8DBE52009EC919 /* ESUIPCConnectEvent+CoreDataProperties.swift in Sources */,
 				28EC62C9292441C400EAC8AD /* ESProcessExitEvent+CoreDataClass.swift in Sources */,
 				2852BBB029DA92DF00AA833C /* ESIOKitOpenEvent+CoreDataClass.swift in Sources */,
 				2852BB8329D83C9F00AA833C /* FileDeleteEvent.swift in Sources */,
@@ -2531,6 +2572,7 @@
 				28B343AA2D8769D2004127E8 /* AuditToken.swift in Sources */,
 				281BBE782A391754009B94F8 /* OpenDirectoryGroupAddEvent.swift in Sources */,
 				CAD3D9812E0F111100028111 /* ESNewPath+CoreDataProperties.swift in Sources */,
+				CADD9D7C2E8DB6C4009EC919 /* UIPCConnectEvent.swift in Sources */,
 				285932562A379C2000B9C7A6 /* EventSubscriptions.swift in Sources */,
 				2852BBB129DA92DF00AA833C /* ESIOKitOpenEvent+CoreDataProperties.swift in Sources */,
 				28CEF11B2978CF00003057D2 /* ESLWUnlockEvent+CoreDataProperties.swift in Sources */,
@@ -2551,6 +2593,7 @@
 				2852BB8029D83C6100AA833C /* ESFileDeleteEvent+CoreDataClass.swift in Sources */,
 				2829EA6C2DC48096005E7788 /* ESAuthResult+CoreDataClass.swift in Sources */,
 				283C4D4629E0B761009FF6D3 /* EventStreamControl.swift in Sources */,
+				CADD9D882E8DC959009EC919 /* SocketTypeResolver.swift in Sources */,
 				282FEDED295FCE3600572E22 /* ESXProtectDetect+CoreDataProperties.swift in Sources */,
 				28235282296F5A4200A31F99 /* ESMessage+CoreDataProperties.swift in Sources */,
 				CAE9E4542E4FF883001143C2 /* ESTCCModifyEvent+CoreDataProperties.swift in Sources */,
@@ -2709,6 +2752,7 @@
 				28CEF0FF29776D64003057D2 /* SystemForkProcMetadataView.swift in Sources */,
 				2881CE1C294D0B2300F97F99 /* TableContextMenus.swift in Sources */,
 				283C4D3B29DF5352009FF6D3 /* HighFidelityEventPartitionView.swift in Sources */,
+				CADD9D842E8DC73C009EC919 /* SystemUIPCConnectMetadataView.swift in Sources */,
 				28CEF0ED29776C73003057D2 /* SystemXProtectDetectMetadataView.swift in Sources */,
 				CA59365C2E8B1920008A115D /* SystemPTYGrantMetadataView.swift in Sources */,
 				28B49C5229DCA1C200ADDABA /* SystemGetTaskMetadataView.swift in Sources */,

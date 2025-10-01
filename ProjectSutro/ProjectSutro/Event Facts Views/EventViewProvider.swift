@@ -242,6 +242,12 @@ struct EventSpecificViewsProvider {
             self.metadataView = AnyView(SystemOpenDirectoryAttrAddMetadataView(esSystemEvent: message))
         
             
+        // MARK: - Socket events
+        case _ where message.event.uipc_connect != nil:
+            self.labelView = AnyView(IntelligentEventLabelView(message: message))
+            self.metadataView = AnyView(SystemUIPCConnectMetadataView(message: message))
+            
+            
         // MARK: - TCC events
         case _ where message.event.tcc_modify != nil:
             self.labelView = AnyView(

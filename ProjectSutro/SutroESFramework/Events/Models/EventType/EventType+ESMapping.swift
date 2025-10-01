@@ -554,6 +554,25 @@ extension EventType {
                 nil // @note: `target_path` does not make sense in this context.
             )
         
+        // MARK: - Socket events
+        case ES_EVENT_TYPE_NOTIFY_UIPC_CONNECT:
+            let event = UIPCConnectEvent(from: rawMessage)
+            let tgtPath = event.file.path
+            var metadata: String {
+                if event.protocol != 0 {
+                    return "\(event.protocol_string), \(event.type_string), \(event.domain_string)"
+                }
+                return "[\(event.type_string)]"
+            }
+            let context = "\(metadata) → \(event.file.path)"
+            return (
+                .uipc_connect(event),
+                "ES_EVENT_TYPE_NOTIFY_UIPC_CONNECT",
+                context,
+                tgtPath
+            )
+        
+        // MARK: - TCC events
         case ES_EVENT_TYPE_NOTIFY_TCC_MODIFY:
             let event = TCCModifyEvent(from: rawMessage)
             
@@ -571,6 +590,7 @@ extension EventType {
                 nil // @note: `target_path` does not make sense in this context.
             )
         
+        // MARK: - Gatekeeper events
         case ES_EVENT_TYPE_NOTIFY_GATEKEEPER_USER_OVERRIDE:
             let event = GatekeeperUserOverrideEvent(from: rawMessage)
             var context = ""
