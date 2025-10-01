@@ -90,24 +90,31 @@ struct SystemSetXattrMetadataView: View {
             GroupBox {
                 VStack(alignment: .leading) {
                     HStack {
-                        Text("\u{2022} **Extended attribute:**")
+                        Text("\u{2022} Extended attribute:")
+                            .bold()
                         GroupBox {
-                            Text("`\(event.xattr!)`")
+                            Text(event.extattr)
+                                .monospaced()
                         }
                     }
                     
                     HStack {
-                        Text("\u{2022} **File name:**")
+                        Text("\u{2022} File name:")
+                            .bold()
                         GroupBox {
-                            Text("`\(event.file_name!)`")
+                            Text(event.target.name)
+                                .monospaced()
                         }
                     }
                     
-                    VStack(alignment: .leading) {
-                        Text("\u{2022} **File path:**")
-                        GroupBox {
-                            Text("`\(event.file_path!)`")
-                                .lineLimit(30)
+                    if let path = event.target.path {
+                        VStack(alignment: .leading) {
+                            Text("\u{2022} File path:")
+                            GroupBox {
+                                Text(path)
+                                    .monospaced()
+                                    .lineLimit(30)
+                            }
                         }
                     }
                 }.frame(maxWidth: .infinity, alignment: .leading)
