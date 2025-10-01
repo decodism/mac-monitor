@@ -349,6 +349,7 @@
 		CADD9D7F2E8DBE52009EC919 /* ESUIPCConnectEvent+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = CADD9D7D2E8DBE52009EC919 /* ESUIPCConnectEvent+CoreDataClass.swift */; };
 		CADD9D802E8DBE52009EC919 /* ESUIPCConnectEvent+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = CADD9D7E2E8DBE52009EC919 /* ESUIPCConnectEvent+CoreDataProperties.swift */; };
 		CADD9D842E8DC73C009EC919 /* SystemUIPCConnectMetadataView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CADD9D832E8DC730009EC919 /* SystemUIPCConnectMetadataView.swift */; };
+		CADD9D882E8DC959009EC919 /* SocketTypeResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = CADD9D872E8DC955009EC919 /* SocketTypeResolver.swift */; };
 		CAE9E44D2E4FE2DD001143C2 /* TCCModifyEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAE9E44C2E4FE2D7001143C2 /* TCCModifyEvent.swift */; };
 		CAE9E4532E4FF87C001143C2 /* ESTCCModifyEvent+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAE9E44E2E4FF103001143C2 /* ESTCCModifyEvent+CoreDataClass.swift */; };
 		CAE9E4542E4FF883001143C2 /* ESTCCModifyEvent+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAE9E44F2E4FF103001143C2 /* ESTCCModifyEvent+CoreDataProperties.swift */; };
@@ -775,6 +776,7 @@
 		CADD9D7D2E8DBE52009EC919 /* ESUIPCConnectEvent+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ESUIPCConnectEvent+CoreDataClass.swift"; sourceTree = "<group>"; };
 		CADD9D7E2E8DBE52009EC919 /* ESUIPCConnectEvent+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ESUIPCConnectEvent+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		CADD9D832E8DC730009EC919 /* SystemUIPCConnectMetadataView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemUIPCConnectMetadataView.swift; sourceTree = "<group>"; };
+		CADD9D872E8DC955009EC919 /* SocketTypeResolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocketTypeResolver.swift; sourceTree = "<group>"; };
 		CAE9E44C2E4FE2D7001143C2 /* TCCModifyEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TCCModifyEvent.swift; sourceTree = "<group>"; };
 		CAE9E44E2E4FF103001143C2 /* ESTCCModifyEvent+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ESTCCModifyEvent+CoreDataClass.swift"; sourceTree = "<group>"; };
 		CAE9E44F2E4FF103001143C2 /* ESTCCModifyEvent+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ESTCCModifyEvent+CoreDataProperties.swift"; sourceTree = "<group>"; };
@@ -2230,6 +2232,7 @@
 		CADD9D7A2E8DB6B5009EC919 /* Socket Events */ = {
 			isa = PBXGroup;
 			children = (
+				CADD9D872E8DC955009EC919 /* SocketTypeResolver.swift */,
 				CADD9D7B2E8DB6C1009EC919 /* UIPCConnectEvent.swift */,
 			);
 			path = "Socket Events";
@@ -2590,6 +2593,7 @@
 				2852BB8029D83C6100AA833C /* ESFileDeleteEvent+CoreDataClass.swift in Sources */,
 				2829EA6C2DC48096005E7788 /* ESAuthResult+CoreDataClass.swift in Sources */,
 				283C4D4629E0B761009FF6D3 /* EventStreamControl.swift in Sources */,
+				CADD9D882E8DC959009EC919 /* SocketTypeResolver.swift in Sources */,
 				282FEDED295FCE3600572E22 /* ESXProtectDetect+CoreDataProperties.swift in Sources */,
 				28235282296F5A4200A31F99 /* ESMessage+CoreDataProperties.swift in Sources */,
 				CAE9E4542E4FF883001143C2 /* ESTCCModifyEvent+CoreDataProperties.swift in Sources */,
