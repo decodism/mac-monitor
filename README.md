@@ -12,7 +12,10 @@ Mac Monitor is an **advanced, stand-alone system monitoring tool tailor-made for
 
 ## How can I install this thing?
 
-**Installer package**
+**☕️ (Recommended) Homebrew**
+* `brew install --cask mac-monitor`
+
+**📦 Installer package**
 * Go to the releases section and download the latest installer: https://github.com/Brandon7CC/mac-monitor/releases
 
 **Install**
