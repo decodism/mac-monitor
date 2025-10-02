@@ -354,6 +354,7 @@
 		CADD9D802E8DBE52009EC919 /* ESUIPCConnectEvent+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = CADD9D7E2E8DBE52009EC919 /* ESUIPCConnectEvent+CoreDataProperties.swift */; };
 		CADD9D842E8DC73C009EC919 /* SystemUIPCConnectMetadataView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CADD9D832E8DC730009EC919 /* SystemUIPCConnectMetadataView.swift */; };
 		CADD9D882E8DC959009EC919 /* SocketTypeResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = CADD9D872E8DC955009EC919 /* SocketTypeResolver.swift */; };
+		CADD9D902E8F0680009EC919 /* Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = CADD9D8F2E8F067D009EC919 /* Profile.swift */; };
 		CAE9E44D2E4FE2DD001143C2 /* TCCModifyEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAE9E44C2E4FE2D7001143C2 /* TCCModifyEvent.swift */; };
 		CAE9E4532E4FF87C001143C2 /* ESTCCModifyEvent+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAE9E44E2E4FF103001143C2 /* ESTCCModifyEvent+CoreDataClass.swift */; };
 		CAE9E4542E4FF883001143C2 /* ESTCCModifyEvent+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAE9E44F2E4FF103001143C2 /* ESTCCModifyEvent+CoreDataProperties.swift */; };
@@ -785,6 +786,7 @@
 		CADD9D7E2E8DBE52009EC919 /* ESUIPCConnectEvent+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ESUIPCConnectEvent+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		CADD9D832E8DC730009EC919 /* SystemUIPCConnectMetadataView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemUIPCConnectMetadataView.swift; sourceTree = "<group>"; };
 		CADD9D872E8DC955009EC919 /* SocketTypeResolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocketTypeResolver.swift; sourceTree = "<group>"; };
+		CADD9D8F2E8F067D009EC919 /* Profile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Profile.swift; sourceTree = "<group>"; };
 		CAE9E44C2E4FE2D7001143C2 /* TCCModifyEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TCCModifyEvent.swift; sourceTree = "<group>"; };
 		CAE9E44E2E4FF103001143C2 /* ESTCCModifyEvent+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ESTCCModifyEvent+CoreDataClass.swift"; sourceTree = "<group>"; };
 		CAE9E44F2E4FF103001143C2 /* ESTCCModifyEvent+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ESTCCModifyEvent+CoreDataProperties.swift"; sourceTree = "<group>"; };
@@ -1447,6 +1449,7 @@
 		28A169CE2DA4E56600CA630B /* Artifacts */ = {
 			isa = PBXGroup;
 			children = (
+				CADD9D8E2E8F0675009EC919 /* MDM */,
 				280C78CD2E8DE20C00B172E5 /* Socket */,
 				CA5936452E8873A5008A115D /* Service Management */,
 				CA4CE5A22E53E6F800C057EB /* Code Signing */,
@@ -1671,8 +1674,7 @@
 		28B3437B2D863312004127E8 /* MDM Events */ = {
 			isa = PBXGroup;
 			children = (
-				2847138D2A2EA51A00FA4E59 /* ESProfileAddEvent+CoreDataClass.swift */,
-				2847138E2A2EA51A00FA4E59 /* ESProfileAddEvent+CoreDataProperties.swift */,
+				CADD9D8C2E8F057D009EC919 /* profile_add */,
 			);
 			path = "MDM Events";
 			sourceTree = "<group>";
@@ -2004,7 +2006,7 @@
 		28B343A12D863D51004127E8 /* MDM Events */ = {
 			isa = PBXGroup;
 			children = (
-				2847138B2A2E9D4D00FA4E59 /* ProfileAddEvent.swift */,
+				CADD9D8B2E8F0571009EC919 /* profile_add */,
 			);
 			path = "MDM Events";
 			sourceTree = "<group>";
@@ -2578,7 +2580,7 @@
 		CAC48B002E284F7900260C5F /* MDM */ = {
 			isa = PBXGroup;
 			children = (
-				28B865C62A2FF5EF00F06441 /* SystemProfileAddMetadataView.swift */,
+				CADD9D8D2E8F059B009EC919 /* profile_add */,
 			);
 			path = MDM;
 			sourceTree = "<group>";
@@ -2713,6 +2715,39 @@
 				CADD9D7B2E8DB6C1009EC919 /* UIPCConnectEvent.swift */,
 			);
 			path = connect;
+			sourceTree = "<group>";
+		};
+		CADD9D8B2E8F0571009EC919 /* profile_add */ = {
+			isa = PBXGroup;
+			children = (
+				2847138B2A2E9D4D00FA4E59 /* ProfileAddEvent.swift */,
+			);
+			path = profile_add;
+			sourceTree = "<group>";
+		};
+		CADD9D8C2E8F057D009EC919 /* profile_add */ = {
+			isa = PBXGroup;
+			children = (
+				2847138D2A2EA51A00FA4E59 /* ESProfileAddEvent+CoreDataClass.swift */,
+				2847138E2A2EA51A00FA4E59 /* ESProfileAddEvent+CoreDataProperties.swift */,
+			);
+			path = profile_add;
+			sourceTree = "<group>";
+		};
+		CADD9D8D2E8F059B009EC919 /* profile_add */ = {
+			isa = PBXGroup;
+			children = (
+				28B865C62A2FF5EF00F06441 /* SystemProfileAddMetadataView.swift */,
+			);
+			path = profile_add;
+			sourceTree = "<group>";
+		};
+		CADD9D8E2E8F0675009EC919 /* MDM */ = {
+			isa = PBXGroup;
+			children = (
+				CADD9D8F2E8F067D009EC919 /* Profile.swift */,
+			);
+			path = MDM;
 			sourceTree = "<group>";
 		};
 		CAE9E44B2E4FE28B001143C2 /* TCC Events */ = {
@@ -3005,6 +3040,7 @@
 				28CEF0DD2977634C003057D2 /* ESMountEvent+CoreDataProperties.swift in Sources */,
 				282FEDEA295FCE3600572E22 /* ESXProtectRemediate+CoreDataClass.swift in Sources */,
 				2852BBAB29DA8B3F00AA833C /* ESRemoteThreadCreateEvent+CoreDataProperties.swift in Sources */,
+				CADD9D902E8F0680009EC919 /* Profile.swift in Sources */,
 				28CEF1132978CA71003057D2 /* LWLoginEvent.swift in Sources */,
 				2820DD092972251F0053CB48 /* XattrDeleteEvent.swift in Sources */,
 				2820DD01297224990053CB48 /* ProcessExecEvent.swift in Sources */,

@@ -488,17 +488,10 @@
     </entity>
     <entity name="ESProfileAddEvent" representedClassName="ESProfileAddEvent" syncable="YES">
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
-        <attribute name="instigator_process_audit_token" optional="YES" attributeType="String"/>
-        <attribute name="instigator_process_name" optional="YES" attributeType="String"/>
-        <attribute name="instigator_process_path" optional="YES" attributeType="String"/>
-        <attribute name="instigator_process_signing_id" optional="YES" attributeType="String"/>
         <attribute name="is_update" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
-        <attribute name="profile_display_name" optional="YES" attributeType="String"/>
-        <attribute name="profile_identifier" optional="YES" attributeType="String"/>
-        <attribute name="profile_organization" optional="YES" attributeType="String"/>
-        <attribute name="profile_scope" optional="YES" attributeType="String"/>
-        <attribute name="profile_source_type" optional="YES" attributeType="String"/>
-        <attribute name="profile_uuid" optional="YES" attributeType="String"/>
+        <attribute name="profileData" optional="YES" attributeType="Binary"/>
+        <relationship name="instigator" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ESProcess"/>
+        <relationship name="instigator_token" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ESAuditToken"/>
     </entity>
     <entity name="ESPTYGrantEvent" representedClassName="ESPTYGrantEvent" syncable="YES">
         <attribute name="dev" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>

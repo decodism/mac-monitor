@@ -430,10 +430,7 @@ extension EventType {
             // MARK: MDM events
         case ES_EVENT_TYPE_NOTIFY_PROFILE_ADD:
             let event = ProfileAddEvent(from: rawMessage)
-            let scope: String = event.profile_scope ?? ""
-            let displayName: String = event.profile_display_name ?? ""
-            let profId: String = event.profile_identifier ?? ""
-            let context: String = "[Scope: \(scope)]  Name: \(displayName), ID: \(profId)"
+            let context: String = event.profile.toString()
             return (
                 .profile_add(event),
                 "ES_EVENT_TYPE_NOTIFY_PROFILE_ADD",
