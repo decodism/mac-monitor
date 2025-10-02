@@ -445,15 +445,16 @@ extension EventType {
             // MARK: - Security Authorization events
         case ES_EVENT_TYPE_NOTIFY_AUTHORIZATION_JUDGEMENT:
             let event = AuthorizationJudgementEvent(from: rawMessage)
-            let petitionerName: String = event.petitioner_process_name ?? ""
-            let instigatorName: String = event.instigator_process_name ?? ""
-            let result = event.results ?? ""
+            let tgtPath: String = event.instigator?.executable?.path ?? ""
+            let petitionerName: String = event.petitioner?.executable?.name ?? ""
+            let instigatorName: String = event.instigator?.executable?.name ?? ""
+            let result: String = event.results.map({ $0.description }).joined(separator: "|")
             let context = "\(result): \(petitionerName) → \(instigatorName)"
             return (
                 .authorization_judgement(event),
                 "ES_EVENT_TYPE_NOTIFY_AUTHORIZATION_JUDGEMENT",
                 context,
-                event.instigator_process_path
+                tgtPath
             )
         case ES_EVENT_TYPE_NOTIFY_AUTHORIZATION_PETITION:
             let event = AuthorizationPetitionEvent(from: rawMessage)

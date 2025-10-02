@@ -2675,8 +2675,8 @@
 		CADD9D7A2E8DB6B5009EC919 /* Socket Events */ = {
 			isa = PBXGroup;
 			children = (
-				280C78CE2E8DE21800B172E5 /* UIPCBindEvent.swift */,
-				CADD9D7B2E8DB6C1009EC919 /* UIPCConnectEvent.swift */,
+				CADD9D8A2E8EED05009EC919 /* connect */,
+				CADD9D892E8EECFF009EC919 /* bind */,
 			);
 			path = "Socket Events";
 			sourceTree = "<group>";
@@ -2697,6 +2697,22 @@
 				280C78D92E8DE87400B172E5 /* connect */,
 			);
 			path = Socket;
+			sourceTree = "<group>";
+		};
+		CADD9D892E8EECFF009EC919 /* bind */ = {
+			isa = PBXGroup;
+			children = (
+				280C78CE2E8DE21800B172E5 /* UIPCBindEvent.swift */,
+			);
+			path = bind;
+			sourceTree = "<group>";
+		};
+		CADD9D8A2E8EED05009EC919 /* connect */ = {
+			isa = PBXGroup;
+			children = (
+				CADD9D7B2E8DB6C1009EC919 /* UIPCConnectEvent.swift */,
+			);
+			path = connect;
 			sourceTree = "<group>";
 		};
 		CAE9E44B2E4FE28B001143C2 /* TCC Events */ = {
