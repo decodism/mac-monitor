@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import EndpointSecurity
 
 
 // MARK: - Process Trace Event https://developer.apple.com/documentation/endpointsecurity/es_event_trace_t
@@ -15,15 +14,11 @@ public struct ProcessTraceEvent: Identifiable, Codable, Hashable {
     public var target: Process
     
     public func hash(into hasher: inout Hasher) {
-        hasher.combine(target.audit_token_string)
+        hasher.combine(id)
     }
     
     public static func == (lhs: ProcessTraceEvent, rhs: ProcessTraceEvent) -> Bool {
-        if lhs.target.audit_token_string != rhs.target.audit_token_string {
-            return false
-        }
-        
-        return true
+        return lhs.id == rhs.id
     }
     
     init(from rawMessage: UnsafePointer<es_message_t>) {
