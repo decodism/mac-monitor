@@ -234,11 +234,16 @@ extension EventType {
             // MARK: - Symbolic Link events
         case ES_EVENT_TYPE_NOTIFY_LINK:
             let event = LinkEvent(from: rawMessage)
+            let tgtPath = URL(
+                fileURLWithPath: event.target_dir.path
+            )
+                .appendingPathComponent(event.target_filename)
+                .path()
             return (
                 .link(event),
                 "ES_EVENT_TYPE_NOTIFY_LINK",
-                event.target_file_path,
-                event.target_file_path
+                tgtPath,    // Context
+                tgtPath     // Target path
             )
             
             
