@@ -12,78 +12,112 @@ import SutroESFramework
 struct AuthProcsView: View {
     var event: ESAuthorizationPetitionEvent
     
+    var instigator: ESProcess? {
+        event.instigator
+    }
+    
+    var petitioner: ESProcess? {
+        event.petitioner
+    }
+    
     var body: some View {
         VStack(alignment: .leading) {
-            if event.instigator_process_signing_id != event.petitioner_process_signing_id {
-                HStack {
-                    Text("\u{2022} **Instigator process name:**")
-                    GroupBox {
-                        Text("`\(event.instigator_process_name ?? "Unknown")`")
-                    }
-                }
-                VStack(alignment: .leading) {
-                    Text("\u{2022} **Instigator process path:**")
-                    GroupBox {
-                        Text("`\(event.instigator_process_path ?? "Unknown")`")
-                            .font(.title3).frame(maxWidth: .infinity, alignment: .leading)
-                            .lineLimit(30)
-                    }
-                }
-                HStack {
-                    Text("\u{2022} **Instigator process signing ID:**")
-                    GroupBox {
-                        Text("`\(event.instigator_process_signing_id ?? "Unknown")`")
-                    }
-                }
+            if let instigator = instigator,
+               let petitioner = petitioner,
+               let instigatorSigningId = instigator.signing_id,
+               let petitionerSigningId = petitioner.signing_id,
+               let instigatorExe = instigator.executable,
+               let petitionerExe = petitioner.executable {
                 
-                
-                Divider().padding(.vertical, 10)
-                
-                HStack {
-                    Text("\u{2022} **Petitioner process name:**")
-                    GroupBox {
-                        Text("`\(event.petitioner_process_name ?? "Unknown")`")
+                if instigatorSigningId != petitionerSigningId {
+                    HStack {
+                        Text("\u{2022} Instigator process name:")
+                            .bold()
+                        GroupBox {
+                            Text(instigatorExe.name)
+                                .monospaced()
+                        }
                     }
-                }
-                VStack(alignment: .leading) {
-                    Text("\u{2022} **Petitioner process path:**")
-                    GroupBox {
-                        Text("`\(event.petitioner_process_path ?? "Unknown")`")
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .lineLimit(30)
+                    VStack(alignment: .leading) {
+                        Text("\u{2022} Instigator process path:")
+                            .bold()
+                        GroupBox {
+                            Text(instigatorExe.path ?? "")
+                                .monospaced()
+                                .font(.title3).frame(maxWidth: .infinity, alignment: .leading)
+                                .lineLimit(30)
+                        }
                     }
-                }
-                HStack {
-                    Text("\u{2022} **Petitioner process signing ID:**")
-                    GroupBox {
-                        Text("`\(event.petitioner_process_signing_id ?? "Unknown")`")
+                    HStack {
+                        Text("\u{2022} Instigator process signing ID:")
+                            .bold()
+                        GroupBox {
+                            Text(instigatorSigningId)
+                                .monospaced()
+                        }
                     }
+                    
+                    
+                    Divider().padding(.vertical, 10)
+                    
+                    HStack {
+                        Text("\u{2022} Petitioner process name:")
+                            .bold()
+                        GroupBox {
+                            Text(petitionerExe.name)
+                                .monospaced()
+                        }
+                    }
+                    VStack(alignment: .leading) {
+                        Text("\u{2022} Petitioner process path:")
+                            .bold()
+                        GroupBox {
+                            Text(petitionerExe.path ?? "")
+                                .monospaced()
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .lineLimit(30)
+                        }
+                    }
+                    HStack {
+                        Text("\u{2022} Petitioner process signing ID:")
+                            .bold()
+                        GroupBox {
+                            Text(petitionerSigningId)
+                                .monospaced()
+                        }
+                    }
+                    
+                    Divider().padding(.vertical, 10)
                 }
-                
-                Divider().padding(.vertical, 10)
-            } else {
+            } else if let instigatorExe = instigator?.executable {
                 GroupBox {
                     Label("The processes petitioning and instigating are the same:", systemImage: "info.square")
                         .frame(maxWidth: .infinity, alignment: .leading)
                 }
                 HStack {
-                    Text("\u{2022} **Process name:**")
+                    Text("\u{2022} Process name:")
+                        .bold()
                     GroupBox {
-                        Text("`\(event.instigator_process_name ?? "Unknown")`")
+                        Text(instigatorExe.name)
+                            .monospaced()
                     }
                 }
                 VStack(alignment: .leading) {
-                    Text("\u{2022} **Process path:**")
+                    Text("\u{2022} Process path:")
+                        .bold()
                     GroupBox {
-                        Text("`\(event.instigator_process_path ?? "Unknown")`")
+                        Text(instigatorExe.path ?? "")
+                            .monospaced()
                             .lineLimit(nil)
                             .fixedSize(horizontal: false, vertical: true)
                     }
                 }
                 HStack {
-                    Text("\u{2022} **Process signing ID:**")
+                    Text("\u{2022} Process signing ID:")
+                        .bold()
                     GroupBox {
-                        Text("`\(event.instigator_process_signing_id ?? "Unknown")`")
+                        Text(instigator?.signing_id ?? "")
+                            .monospaced()
                     }
                 }
                 Divider().padding(.vertical, 10)
@@ -92,30 +126,19 @@ struct AuthProcsView: View {
     }
 }
 
-
 struct SystemAuthorizationPetitionMetadataView: View {
     var esSystemEvent: ESMessage
     @State private var showAuditTokens: Bool = false
-    
     
     var event: ESAuthorizationPetitionEvent {
         esSystemEvent.event.authorization_petition!
     }
     
-    var flagsList: [String] {
-        if let flags = event.flags {
-            return flags.contains("[::]") ? flags.components(separatedBy: "[::]") : [flags]
-        }
-        return []
+    // Helper struct for Table
+    private struct IdentifiableString: Identifiable {
+        let id = UUID()
+        let value: String
     }
-
-    var rightsList: [String] {
-        if let rights = event.rights {
-            return rights.contains("[::]") ? rights.components(separatedBy: "[::]") : [rights]
-        }
-        return []
-    }
-
     
     var body: some View {
         VStack(alignment: .leading) {
@@ -127,43 +150,37 @@ struct SystemAuthorizationPetitionMetadataView: View {
                 VStack(alignment: .leading) {
                     AuthProcsView(event: event)
                     
-                    Text("**Flags:**")
+                    Text("Flags:")
+                        .bold()
                     GroupBox {
                         Label("Flags are defined as part of the Security framework in: `Authorization/Authorization.h`", systemImage: "info.square")
                             .frame(maxWidth: .infinity, alignment: .leading)
                     }
                     GroupBox {
-                        ScrollView {
-                            VStack(alignment: .leading) {
-                                ForEach(flagsList, id: \.self) { flag in
-                                    GroupBox {
-                                        Text("`\(flag)`")
-                                    }
-                                }
-                            }
+                        Table(event.flags_array.map { IdentifiableString(value: $0) }) {
+                            TableColumn("Flag", value: \.value)
+                                .width(min: 200)
                         }
-                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+                        .monospaced()
+                        .frame(minHeight: 100, maxHeight: 200)
                     }
                     
                     Divider()
                         .padding(.vertical, 10)
                     
-                    Text("**Rights requested:**").font(.title3)
+                    Text("Rights requested:")
+                        .bold()
                     GroupBox {
                         Label("Default right definitions: `/System/Library/Security/authorization.plist` and runtime authorization database: `/var/db/auth.db`.", systemImage: "info.square")
                             .frame(maxWidth: .infinity, alignment: .leading)
                     }
                     GroupBox {
-                        ScrollView {
-                            VStack(alignment: .leading) {
-                                ForEach(rightsList, id: \.self) { right in
-                                    GroupBox {
-                                        Text("`\(right)`")
-                                    }
-                                }
-                            }
+                        Table(event.rights.map { IdentifiableString(value: $0) }) {
+                            TableColumn("Right", value: \.value)
+                                .width(min: 200)
                         }
-                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+                        .monospaced()
+                        .frame(minHeight: 100, maxHeight: 200)
                     }
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)

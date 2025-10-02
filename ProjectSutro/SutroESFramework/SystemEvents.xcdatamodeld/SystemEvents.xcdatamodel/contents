@@ -32,18 +32,15 @@
         <attribute name="return_code" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
     </entity>
     <entity name="ESAuthorizationPetitionEvent" representedClassName="ESAuthorizationPetitionEvent" syncable="YES">
-        <attribute name="flags" optional="YES" attributeType="String"/>
+        <attribute name="flags" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="flagsData" optional="YES" attributeType="Binary"/>
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
-        <attribute name="instigator_process_audit_token" optional="YES" attributeType="String"/>
-        <attribute name="instigator_process_name" optional="YES" attributeType="String"/>
-        <attribute name="instigator_process_path" optional="YES" attributeType="String"/>
-        <attribute name="instigator_process_signing_id" optional="YES" attributeType="String"/>
-        <attribute name="petitioner_process_audit_token" optional="YES" attributeType="String"/>
-        <attribute name="petitioner_process_name" optional="YES" attributeType="String"/>
-        <attribute name="petitioner_process_path" optional="YES" attributeType="String"/>
-        <attribute name="petitioner_process_signing_id" optional="YES" attributeType="String"/>
         <attribute name="right_count" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
-        <attribute name="rights" optional="YES" attributeType="String"/>
+        <attribute name="rightsData" optional="YES" attributeType="Binary"/>
+        <relationship name="instigator" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ESProcess"/>
+        <relationship name="instigator_token" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ESAuditToken"/>
+        <relationship name="petitioner" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ESProcess"/>
+        <relationship name="petitioner_token" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ESAuditToken"/>
     </entity>
     <entity name="ESAuthResult" representedClassName="ESAuthResult" syncable="YES">
         <attribute name="auth" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
