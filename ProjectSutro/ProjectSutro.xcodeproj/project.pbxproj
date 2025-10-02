@@ -1108,6 +1108,152 @@
 			path = cs_invalidated;
 			sourceTree = "<group>";
 		};
+		280C7A6D2E8E1A7200B172E5 /* link */ = {
+			isa = PBXGroup;
+			children = (
+				2852BB9429D9465E00AA833C /* LinkEvent.swift */,
+			);
+			path = link;
+			sourceTree = "<group>";
+		};
+		280C7A6E2E8E1B1E00B172E5 /* link */ = {
+			isa = PBXGroup;
+			children = (
+				2852BB9629D948D000AA833C /* ESLinkEvent+CoreDataClass.swift */,
+				2852BB9729D948D000AA833C /* ESLinkEvent+CoreDataProperties.swift */,
+			);
+			path = link;
+			sourceTree = "<group>";
+		};
+		280C7A6F2E8E28DE00B172E5 /* link */ = {
+			isa = PBXGroup;
+			children = (
+				28B9A93229DBEAC1006619FF /* SystemLinkEventMetadataView.swift */,
+			);
+			path = link;
+			sourceTree = "<group>";
+		};
+		280C7A702E8E28E400B172E5 /* unlink */ = {
+			isa = PBXGroup;
+			children = (
+				28B9A92C29DBE836006619FF /* SystemUnlinkEventMetadataView.swift */,
+			);
+			path = unlink;
+			sourceTree = "<group>";
+		};
+		280C7A712E8E28F800B172E5 /* create */ = {
+			isa = PBXGroup;
+			children = (
+				28CEF0F829776D00003057D2 /* SystemFileCreateMetadataView.swift */,
+			);
+			path = create;
+			sourceTree = "<group>";
+		};
+		280C7A722E8E290000B172E5 /* rename */ = {
+			isa = PBXGroup;
+			children = (
+				28A2501C299FFD1B007B0753 /* SystemFileRenameMetadataView.swift */,
+			);
+			path = rename;
+			sourceTree = "<group>";
+		};
+		280C7A732E8E290500B172E5 /* write */ = {
+			isa = PBXGroup;
+			children = (
+				28B9A93029DBE9E1006619FF /* SystemFileWriteMetadataView.swift */,
+			);
+			path = write;
+			sourceTree = "<group>";
+		};
+		280C7A742E8E290D00B172E5 /* open */ = {
+			isa = PBXGroup;
+			children = (
+				28B9A92E29DBE976006619FF /* SystemFileOpenMetadataView.swift */,
+			);
+			path = open;
+			sourceTree = "<group>";
+		};
+		280C7A752E8E291300B172E5 /* close */ = {
+			isa = PBXGroup;
+			children = (
+				28B9A93429DBEC9F006619FF /* SystemFileCloseMetadataView.swift */,
+			);
+			path = close;
+			sourceTree = "<group>";
+		};
+		280C7A762E8E291B00B172E5 /* dup */ = {
+			isa = PBXGroup;
+			children = (
+				28A2501E29A35D5F007B0753 /* SystemFDDuplicateMetadataView.swift */,
+			);
+			path = dup;
+			sourceTree = "<group>";
+		};
+		280C7A772E8E292900B172E5 /* unlink */ = {
+			isa = PBXGroup;
+			children = (
+				2852BB8229D83C9F00AA833C /* FileDeleteEvent.swift */,
+			);
+			path = unlink;
+			sourceTree = "<group>";
+		};
+		280C7A782E8E293600B172E5 /* create */ = {
+			isa = PBXGroup;
+			children = (
+				2820DD06297225080053CB48 /* FileCreateEvent.swift */,
+			);
+			path = create;
+			sourceTree = "<group>";
+		};
+		280C7A792E8E293B00B172E5 /* rename */ = {
+			isa = PBXGroup;
+			children = (
+				28A2501A299FF635007B0753 /* FileRenameEvent.swift */,
+			);
+			path = rename;
+			sourceTree = "<group>";
+		};
+		280C7A7A2E8E293F00B172E5 /* open */ = {
+			isa = PBXGroup;
+			children = (
+				2852BB8829D89AEB00AA833C /* FileOpenEvent.swift */,
+			);
+			path = open;
+			sourceTree = "<group>";
+		};
+		280C7A7B2E8E294400B172E5 /* write */ = {
+			isa = PBXGroup;
+			children = (
+				2852BB9229D8CAFC00AA833C /* FileWriteEvent.swift */,
+			);
+			path = write;
+			sourceTree = "<group>";
+		};
+		280C7A7C2E8E294900B172E5 /* close */ = {
+			isa = PBXGroup;
+			children = (
+				2852BB9A29D97DB600AA833C /* FileCloseEvent.swift */,
+			);
+			path = close;
+			sourceTree = "<group>";
+		};
+		280C7A7D2E8E295000B172E5 /* dup */ = {
+			isa = PBXGroup;
+			children = (
+				28A25014299EFCAA007B0753 /* FDDuplicateEvent.swift */,
+			);
+			path = dup;
+			sourceTree = "<group>";
+		};
+		280C7A7E2E8E297500B172E5 /* unlink */ = {
+			isa = PBXGroup;
+			children = (
+				2852BB7E29D83C6100AA833C /* ESFileDeleteEvent+CoreDataClass.swift */,
+				2852BB7F29D83C6100AA833C /* ESFileDeleteEvent+CoreDataProperties.swift */,
+			);
+			path = unlink;
+			sourceTree = "<group>";
+		};
 		2820DCFF2972245F0053CB48 /* Events */ = {
 			isa = PBXGroup;
 			children = (
@@ -1318,7 +1464,7 @@
 				28B343722D862DD8004127E8 /* File System Mounting Events */,
 				28B343742D862E1C004127E8 /* File Metadata Events */,
 				CA5936552E8B1423008A115D /* Pseudoterminal Events */,
-				28B343732D862DF4004127E8 /* Symbolic Link Events */,
+				28B343732D862DF4004127E8 /* Link Events */,
 				28B3437C2D863342004127E8 /* XPC Events */,
 				28B343762D862F28004127E8 /* Service Management Events */,
 				28B3437D2D8633A2004127E8 /* Security Authorization Events */,
@@ -1401,13 +1547,13 @@
 			path = "File System Mounting Events";
 			sourceTree = "<group>";
 		};
-		28B343732D862DF4004127E8 /* Symbolic Link Events */ = {
+		28B343732D862DF4004127E8 /* Link Events */ = {
 			isa = PBXGroup;
 			children = (
-				2852BB9629D948D000AA833C /* ESLinkEvent+CoreDataClass.swift */,
-				2852BB9729D948D000AA833C /* ESLinkEvent+CoreDataProperties.swift */,
+				280C7A7E2E8E297500B172E5 /* unlink */,
+				280C7A6E2E8E1B1E00B172E5 /* link */,
 			);
-			path = "Symbolic Link Events";
+			path = "Link Events";
 			sourceTree = "<group>";
 		};
 		28B343742D862E1C004127E8 /* File Metadata Events */ = {
@@ -1432,7 +1578,6 @@
 				28B343882D8634B1004127E8 /* Rename */,
 				28B3438B2D8634C7004127E8 /* Duplicate */,
 				28B343892D8634B9004127E8 /* Close */,
-				28B3438A2D8634C0004127E8 /* Delete */,
 			);
 			path = "File System Events";
 			sourceTree = "<group>";
@@ -1636,15 +1781,6 @@
 			path = Close;
 			sourceTree = "<group>";
 		};
-		28B3438A2D8634C0004127E8 /* Delete */ = {
-			isa = PBXGroup;
-			children = (
-				2852BB7E29D83C6100AA833C /* ESFileDeleteEvent+CoreDataClass.swift */,
-				2852BB7F29D83C6100AA833C /* ESFileDeleteEvent+CoreDataProperties.swift */,
-			);
-			path = Delete;
-			sourceTree = "<group>";
-		};
 		28B3438B2D8634C7004127E8 /* Duplicate */ = {
 			isa = PBXGroup;
 			children = (
@@ -1720,13 +1856,12 @@
 		28B343952D863BEE004127E8 /* File System Events */ = {
 			isa = PBXGroup;
 			children = (
-				2820DD06297225080053CB48 /* FileCreateEvent.swift */,
-				28A2501A299FF635007B0753 /* FileRenameEvent.swift */,
-				2852BB8829D89AEB00AA833C /* FileOpenEvent.swift */,
-				2852BB9229D8CAFC00AA833C /* FileWriteEvent.swift */,
-				2852BB9A29D97DB600AA833C /* FileCloseEvent.swift */,
-				2852BB8229D83C9F00AA833C /* FileDeleteEvent.swift */,
-				28A25014299EFCAA007B0753 /* FDDuplicateEvent.swift */,
+				280C7A7D2E8E295000B172E5 /* dup */,
+				280C7A7C2E8E294900B172E5 /* close */,
+				280C7A7B2E8E294400B172E5 /* write */,
+				280C7A7A2E8E293F00B172E5 /* open */,
+				280C7A792E8E293B00B172E5 /* rename */,
+				280C7A782E8E293600B172E5 /* create */,
 			);
 			path = "File System Events";
 			sourceTree = "<group>";
@@ -1749,12 +1884,13 @@
 			path = "File Metadata Events";
 			sourceTree = "<group>";
 		};
-		28B343982D863C88004127E8 /* Symbolic Link Events */ = {
+		28B343982D863C88004127E8 /* Link Events */ = {
 			isa = PBXGroup;
 			children = (
-				2852BB9429D9465E00AA833C /* LinkEvent.swift */,
+				280C7A772E8E292900B172E5 /* unlink */,
+				280C7A6D2E8E1A7200B172E5 /* link */,
 			);
-			path = "Symbolic Link Events";
+			path = "Link Events";
 			sourceTree = "<group>";
 		};
 		28B343992D863CA2004127E8 /* XPC Events */ = {
@@ -1896,7 +2032,7 @@
 				28B343962D863C4E004127E8 /* File System Mounting Events */,
 				28B343972D863C63004127E8 /* File Metadata Events */,
 				CA5936522E8B1358008A115D /* Pseudoterminal Events */,
-				28B343982D863C88004127E8 /* Symbolic Link Events */,
+				28B343982D863C88004127E8 /* Link Events */,
 				28B343992D863CA2004127E8 /* XPC Events */,
 				28B3439D2D863D0D004127E8 /* Service Management Events */,
 				28B3439B2D863CC9004127E8 /* Security Authorization Events */,
@@ -1929,9 +2065,9 @@
 				28F37F512E25E7DB00B6E59C /* XProtect */,
 				28F37F502E25E76600B6E59C /* OpenSSH */,
 				CAC48AFB2E25DC5000260C5F /* Service Management */,
-				CA59365A2E8B1908008A115D /* Pseudoterminal Events */,
+				CA59365A2E8B1908008A115D /* Pseudoterminal */,
 				CAC48AFA2E25DBCD00260C5F /* File Metadata */,
-				CAC48AF92E25DAA000260C5F /* Symbolic Link */,
+				CAC48AF92E25DAA000260C5F /* Link */,
 				CAC48AF82E25D02600260C5F /* File System */,
 				CAC48AF72E25CFBF00260C5F /* Memory Mapping */,
 				CAC48AF62E247C1600260C5F /* Code Signing */,
@@ -2286,12 +2422,12 @@
 			path = "Pseudoterminal Events";
 			sourceTree = "<group>";
 		};
-		CA59365A2E8B1908008A115D /* Pseudoterminal Events */ = {
+		CA59365A2E8B1908008A115D /* Pseudoterminal */ = {
 			isa = PBXGroup;
 			children = (
 				CA59365B2E8B1913008A115D /* SystemPTYGrantMetadataView.swift */,
 			);
-			path = "Pseudoterminal Events";
+			path = Pseudoterminal;
 			sourceTree = "<group>";
 		};
 		CAC48AF22E2471B900260C5F /* Process */ = {
@@ -2336,23 +2472,23 @@
 		CAC48AF82E25D02600260C5F /* File System */ = {
 			isa = PBXGroup;
 			children = (
-				28CEF0F829776D00003057D2 /* SystemFileCreateMetadataView.swift */,
-				28A2501C299FFD1B007B0753 /* SystemFileRenameMetadataView.swift */,
-				28B9A92E29DBE976006619FF /* SystemFileOpenMetadataView.swift */,
-				28B9A93029DBE9E1006619FF /* SystemFileWriteMetadataView.swift */,
-				28B9A93429DBEC9F006619FF /* SystemFileCloseMetadataView.swift */,
-				28B9A92C29DBE836006619FF /* SystemUnlinkEventMetadataView.swift */,
-				28A2501E29A35D5F007B0753 /* SystemFDDuplicateMetadataView.swift */,
+				280C7A762E8E291B00B172E5 /* dup */,
+				280C7A752E8E291300B172E5 /* close */,
+				280C7A742E8E290D00B172E5 /* open */,
+				280C7A732E8E290500B172E5 /* write */,
+				280C7A722E8E290000B172E5 /* rename */,
+				280C7A712E8E28F800B172E5 /* create */,
 			);
 			path = "File System";
 			sourceTree = "<group>";
 		};
-		CAC48AF92E25DAA000260C5F /* Symbolic Link */ = {
+		CAC48AF92E25DAA000260C5F /* Link */ = {
 			isa = PBXGroup;
 			children = (
-				28B9A93229DBEAC1006619FF /* SystemLinkEventMetadataView.swift */,
+				280C7A702E8E28E400B172E5 /* unlink */,
+				280C7A6F2E8E28DE00B172E5 /* link */,
 			);
-			path = "Symbolic Link";
+			path = Link;
 			sourceTree = "<group>";
 		};
 		CAC48AFA2E25DBCD00260C5F /* File Metadata */ = {

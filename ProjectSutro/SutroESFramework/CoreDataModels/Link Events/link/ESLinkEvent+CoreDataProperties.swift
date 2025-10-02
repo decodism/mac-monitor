@@ -16,11 +16,10 @@ extension ESLinkEvent {
         return NSFetchRequest<ESLinkEvent>(entityName: "ESLinkEvent")
     }
 
-    @NSManaged public var id: UUID?
-    @NSManaged public var source_file_path: String?
-    @NSManaged public var source_file_name: String?
-    @NSManaged public var target_file_path: String?
-    @NSManaged public var target_file_name: String?
+    @NSManaged public var id: UUID
+    @NSManaged public var source: ESFile
+    @NSManaged public var target_dir: ESFile
+    @NSManaged public var target_filename: String
 
 }
 

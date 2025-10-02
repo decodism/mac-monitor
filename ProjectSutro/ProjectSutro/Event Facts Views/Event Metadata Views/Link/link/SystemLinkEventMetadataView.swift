@@ -16,6 +16,18 @@ struct SystemLinkEventMetadataView: View {
         esSystemEvent.event.link!
     }
     
+    private var tgtPath: String? {
+        if let path = event.target_dir.path {
+            return URL(
+                fileURLWithPath: path
+            )
+            .appendingPathComponent(event.target_filename)
+            .path()
+        }
+        
+        return nil
+    }
+    
     var body: some View {
         VStack(alignment: .leading) {
             // MARK: Event label
@@ -24,42 +36,54 @@ struct SystemLinkEventMetadataView: View {
             
             GroupBox {
                 VStack(alignment: .leading) {
-                    VStack(alignment: .leading) {
-                        Text("\u{2022} **Source file path:**")
-                            .padding([.leading], 5.0)
-                        GroupBox {
-                            Text("`\(event.source_file_path!)`")
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                        }
-                    }.frame(maxWidth: .infinity, alignment: .leading)
+                    if let srcPath = event.source.path {
+                        VStack(alignment: .leading) {
+                            Text("\u{2022} Source file path:")
+                                .bold()
+                                .padding([.leading], 5.0)
+                            GroupBox {
+                                Text(srcPath)
+                                    .monospaced()
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                            }
+                        }.frame(maxWidth: .infinity, alignment: .leading)
+                    }
                     
-                    VStack(alignment: .leading) {
-                        Text("\u{2022} **Destination file path:**")
-                            .padding([.leading], 5.0)
-                        GroupBox {
-                            Text("`\(event.target_file_path!)`")
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                        }
-                    }.frame(maxWidth: .infinity, alignment: .leading)
+                    if let tgtPath = tgtPath {
+                        VStack(alignment: .leading) {
+                            Text("\u{2022} Destination file path:")
+                                .bold()
+                                .padding([.leading], 5.0)
+                            GroupBox {
+                                Text(tgtPath)
+                                    .monospaced()
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                            }
+                        }.frame(maxWidth: .infinity, alignment: .leading)
+                    }
                 }.frame(maxWidth: .infinity, alignment: .leading)
                 
                 Divider()
                 
                 HStack {
                     VStack(alignment: .leading) {
-                        Text("\u{2022} **Source file name:**")
+                        Text("\u{2022} Source file name:")
+                            .bold()
                             .padding([.leading], 5.0)
                         GroupBox {
-                            Text("`\(event.source_file_name!)`")
+                            Text(event.source.name)
+                                .monospaced()
                                 .frame(maxWidth: .infinity, alignment: .leading)
                         }
                     }.frame(maxWidth: .infinity, alignment: .leading)
                     Image(systemName: "arrow.right")
                     VStack(alignment: .leading) {
-                        Text("\u{2022} **Destination file name:**")
+                        Text("\u{2022} Destination file name:")
+                            .bold()
                             .padding([.leading], 5.0)
                         GroupBox {
-                            Text("`\(event.target_file_name!)`")
+                            Text(event.target_filename)
+                                .monospaced()
                                 .frame(maxWidth: .infinity, alignment: .leading)
                         }
                     }.frame(maxWidth: .infinity, alignment: .leading)

@@ -218,10 +218,9 @@
     </entity>
     <entity name="ESLinkEvent" representedClassName="ESLinkEvent" syncable="YES">
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
-        <attribute name="source_file_name" optional="YES" attributeType="String"/>
-        <attribute name="source_file_path" optional="YES" attributeType="String"/>
-        <attribute name="target_file_name" optional="YES" attributeType="String"/>
-        <attribute name="target_file_path" optional="YES" attributeType="String"/>
+        <attribute name="target_filename" optional="YES" attributeType="String"/>
+        <relationship name="source" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ESFile"/>
+        <relationship name="target_dir" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ESFile"/>
     </entity>
     <entity name="ESLoginLoginEvent" representedClassName="ESLoginLoginEvent" syncable="YES">
         <attribute name="failure_message" optional="YES" attributeType="String"/>
