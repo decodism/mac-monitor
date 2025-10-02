@@ -16,18 +16,16 @@ extension ESAuthorizationJudgementEvent {
         return NSFetchRequest<ESAuthorizationJudgementEvent>(entityName: "ESAuthorizationJudgementEvent")
     }
 
-    @NSManaged public var id: UUID?
-    @NSManaged public var instigator_process_name: String?
-    @NSManaged public var instigator_process_path: String?
-    @NSManaged public var instigator_process_audit_token: String?
-    @NSManaged public var instigator_process_signing_id: String?
-    @NSManaged public var petitioner_process_name: String?
-    @NSManaged public var petitioner_process_path: String?
-    @NSManaged public var petitioner_process_audit_token: String?
-    @NSManaged public var petitioner_process_signing_id: String?
+    @NSManaged public var id: UUID
+    
+    @NSManaged public var instigator: ESProcess?
+    @NSManaged public var petitioner: ESProcess?
+    @NSManaged public var resultsData: Data?
     @NSManaged public var return_code: Int32
     @NSManaged public var result_count: Int32
-    @NSManaged public var results: String?
+    
+    @NSManaged public var instigator_token: ESAuditToken?
+    @NSManaged public var petitioner_token: ESAuditToken?
 
 }
 

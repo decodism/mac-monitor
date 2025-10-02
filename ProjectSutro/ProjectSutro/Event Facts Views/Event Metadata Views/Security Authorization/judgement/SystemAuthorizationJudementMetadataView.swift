@@ -27,84 +27,121 @@ struct Result: Identifiable, Hashable {
     }
 }
 
-struct AuthJudegeProcsView: View {
+struct AuthJudgeProcsView: View {
     var event: ESAuthorizationJudgementEvent
     
     var body: some View {
         VStack(alignment: .leading) {
-            if event.instigator_process_signing_id != event.petitioner_process_signing_id {
-                HStack {
-                    Text("\u{2022} **Instigator process name:**")
-                    GroupBox {
-                        Text("`\(event.instigator_process_name ?? "Unknown")`")
+            if let instigator = event.instigator,
+               let petitioner = event.petitioner,
+               let instigatorSigningId = instigator.signing_id,
+               let petitionerSigningId = petitioner.signing_id,
+               let instigatorExe = instigator.executable,
+               let petitionerExe = petitioner.executable {
+                
+                if instigatorSigningId != petitionerSigningId {
+                    HStack {
+                        Text("\u{2022} Instigator process name:")
+                            .bold()
+                        GroupBox {
+                            Text(instigatorExe.name)
+                                .monospaced()
+                        }
                     }
-                }
-                VStack(alignment: .leading) {
-                    Text("\u{2022} **Instigator process path:**")
+                    
+                    if let path = instigatorExe.path {
+                        VStack(alignment: .leading) {
+                            Text("\u{2022} Instigator process path:")
+                                .bold()
+                            GroupBox {
+                                Text(path)
+                                    .monospaced()
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                    .lineLimit(30)
+                            }
+                        }
+                    }
+                    
+                    HStack {
+                        Text("\u{2022} Instigator process signing ID:")
+                            .bold()
+                        GroupBox {
+                            Text(instigatorSigningId)
+                                .monospaced()
+                        }
+                    }
+                    
+                    Divider().padding(.vertical, 10)
+                    
+                    HStack {
+                        Text("\u{2022} Petitioner process name:")
+                            .bold()
+                        GroupBox {
+                            Text(petitionerExe.name)
+                                .monospaced()
+                        }
+                    }
+                    
+                    if let path = petitionerExe.path {
+                        VStack(alignment: .leading) {
+                            Text("\u{2022} Petitioner process path:")
+                                .bold()
+                            GroupBox {
+                                Text(path)
+                                    .monospaced()
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                    .lineLimit(30)
+                            }
+                        }
+                    }
+                    
+                    HStack {
+                        Text("\u{2022} Petitioner process signing ID:")
+                            .bold()
+                        GroupBox {
+                            Text(petitionerSigningId)
+                                .monospaced()
+                        }
+                    }
+                    
+                    Divider().padding(.vertical, 10)
+                } else {
                     GroupBox {
-                        Text("`\(event.instigator_process_path ?? "Unknown")`")
+                        Label("The processes petitioning and instigating are the same:", systemImage: "info.square")
                             .frame(maxWidth: .infinity, alignment: .leading)
-                            .lineLimit(30)
                     }
-                }
-                HStack {
-                    Text("\u{2022} **Instigator process signing ID:**")
-                    GroupBox {
-                        Text("`\(event.instigator_process_signing_id ?? "Unknown")`")
+                    HStack {
+                        Text("\u{2022} Process name:")
+                            .bold()
+                        GroupBox {
+                            Text(instigatorExe.name)
+                                .monospaced()
+                        }
                     }
-                }
-                
-                
-                Divider().padding(.vertical, 10)
-                
-                HStack {
-                    Text("\u{2022} **Petitioner process name:**")
-                    GroupBox {
-                        Text("`\(event.petitioner_process_name ?? "Unknown")`")
+                    
+                    if let path = instigatorExe.path {
+                        VStack(alignment: .leading) {
+                            Text("\u{2022} Process path:")
+                                .bold()
+                            GroupBox {
+                                Text(path)
+                                    .monospaced()
+                                    .lineLimit(nil)
+                                    .fixedSize(horizontal: false, vertical: true)
+                            }
+                        }
                     }
-                }
-                VStack(alignment: .leading) {
-                    Text("\u{2022} **Petitioner process path:**")
-                    GroupBox {
-                        Text("`\(event.petitioner_process_path ?? "Unknown")`")
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .lineLimit(30)
+                    
+                    HStack {
+                        Text("\u{2022} Process signing ID:")
+                            .bold()
+                        GroupBox {
+                            Text(instigatorSigningId)
+                                .monospaced()
+                        }
                     }
+                    Divider().padding(.vertical, 10)
                 }
-                HStack {
-                    Text("\u{2022} **Petitioner process signing ID:**")
-                    GroupBox {
-                        Text("`\(event.petitioner_process_signing_id ?? "Unknown")`")
-                    }
-                }
-                
-                Divider().padding(.vertical, 10)
-            } else {
-                GroupBox {
-                    Label("The processes petitioning and instigating are the same:", systemImage: "info.square")
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                }
-                HStack {
-                    Text("\u{2022} **Process name:**")
-                    GroupBox {
-                        Text("`\(event.instigator_process_name ?? "Unknown")`")
-                    }
-                }
-                VStack(alignment: .leading) {
-                    Text("\u{2022} **Process path:**")
-                    GroupBox {
-                        Text("`\(event.instigator_process_path ?? "Unknown")`")
-                            .lineLimit(nil)
-                            .fixedSize(horizontal: false, vertical: true)
-                    }
-                }
-                HStack {
-                    Text("\u{2022} **Process signing ID:**")
-                    GroupBox {
-                        Text("`\(event.instigator_process_signing_id ?? "Unknown")`")
-                    }
-                }
-                Divider().padding(.vertical, 10)
             }
         }
     }
@@ -119,16 +156,6 @@ struct SystemAuthorizationJudgementMetadataView: View {
         esSystemEvent.event.authorization_judgement!
     }
     
-    var resultsList: [String] {
-        if let results = event.results {
-            return results.contains("[::]") ? results.components(separatedBy: "[::]") : [results]
-        }
-        return []
-    }
-    
-    var results: [Result] {
-        return resultsList.map { Result(from: $0) }
-    }
     
     var body: some View {
         VStack(alignment: .leading) {
@@ -138,15 +165,15 @@ struct SystemAuthorizationJudgementMetadataView: View {
             
             GroupBox {
                 VStack(alignment: .leading) {
-                    AuthJudegeProcsView(event: event)
+                    AuthJudgeProcsView(event: event)
                     
                     Text("**Results from authorization petition:**")
-                    Table(results) {
+                    Table(event.results) {
                         TableColumn("Right name") { result in
-                            Text("`\(result.rightName)`")
+                            Text("`\(result.right_name)`")
                         }
                         TableColumn("Rule class") { result in
-                            Text("`\(result.ruleClass)`")
+                            Text("`\(result.ruleClassShortName)`")
                         }
                         TableColumn("Granted") { result in
                             Text("`\(result.granted ? "Yes" : "No")`")
