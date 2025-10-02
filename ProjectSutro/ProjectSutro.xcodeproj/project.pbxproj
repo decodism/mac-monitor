@@ -1091,6 +1091,23 @@
 			path = get_task;
 			sourceTree = "<group>";
 		};
+		280C7A6B2E8E191F00B172E5 /* cs_invalidated */ = {
+			isa = PBXGroup;
+			children = (
+				2852BBB229DB74BF00AA833C /* CodeSignatureInvalidatedEvent.swift */,
+			);
+			path = cs_invalidated;
+			sourceTree = "<group>";
+		};
+		280C7A6C2E8E195500B172E5 /* cs_invalidated */ = {
+			isa = PBXGroup;
+			children = (
+				2852BBB429DB756900AA833C /* ESCodeSignatureInvalidatedEvent+CoreDataClass.swift */,
+				2852BBB529DB756900AA833C /* ESCodeSignatureInvalidatedEvent+CoreDataProperties.swift */,
+			);
+			path = cs_invalidated;
+			sourceTree = "<group>";
+		};
 		2820DCFF2972245F0053CB48 /* Events */ = {
 			isa = PBXGroup;
 			children = (
@@ -1352,8 +1369,7 @@
 		28B3436F2D862D7C004127E8 /* Code Signing Events */ = {
 			isa = PBXGroup;
 			children = (
-				2852BBB429DB756900AA833C /* ESCodeSignatureInvalidatedEvent+CoreDataClass.swift */,
-				2852BBB529DB756900AA833C /* ESCodeSignatureInvalidatedEvent+CoreDataProperties.swift */,
+				280C7A6C2E8E195500B172E5 /* cs_invalidated */,
 			);
 			path = "Code Signing Events";
 			sourceTree = "<group>";
@@ -1688,8 +1704,7 @@
 		28B343932D863BCA004127E8 /* Code Signing Events */ = {
 			isa = PBXGroup;
 			children = (
-				28A608A32D9B633000962337 /* X509Cert.swift */,
-				2852BBB229DB74BF00AA833C /* CodeSignatureInvalidatedEvent.swift */,
+				280C7A6B2E8E191F00B172E5 /* cs_invalidated */,
 			);
 			path = "Code Signing Events";
 			sourceTree = "<group>";
@@ -2155,6 +2170,7 @@
 			isa = PBXGroup;
 			children = (
 				CA4CE5A32E53E70400C057EB /* SignedFileInfo.swift */,
+				28A608A32D9B633000962337 /* X509Cert.swift */,
 			);
 			path = "Code Signing";
 			sourceTree = "<group>";
