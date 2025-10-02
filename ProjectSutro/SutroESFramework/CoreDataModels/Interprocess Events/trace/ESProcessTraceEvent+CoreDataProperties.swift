@@ -16,7 +16,7 @@ extension ESProcessTraceEvent {
         return NSFetchRequest<ESProcessTraceEvent>(entityName: "ESProcessTraceEvent")
     }
 
-    @NSManaged public var id: UUID?
+    @NSManaged public var id: UUID
     @NSManaged public var target: ESProcess
 
 }
