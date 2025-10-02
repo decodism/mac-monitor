@@ -159,6 +159,10 @@ public struct MuteSet {
             ]),
             (eventType: ES_EVENT_TYPE_NOTIFY_IOKIT_OPEN, muteType: ES_MUTE_PATH_TYPE_LITERAL, paths: [
                 "/usr/libexec/PerfPowerServices"
+            ]),
+            (eventType: ES_EVENT_TYPE_NOTIFY_SETMODE, muteType: ES_MUTE_PATH_TYPE_LITERAL, paths: [
+                "/usr/sbin/cfprefsd",
+                "/usr/libexec/mobileassetd"
             ])
         ]
 
