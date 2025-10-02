@@ -1108,6 +1108,186 @@
 			path = cs_invalidated;
 			sourceTree = "<group>";
 		};
+		280C7A6D2E8E1A7200B172E5 /* link */ = {
+			isa = PBXGroup;
+			children = (
+				2852BB9429D9465E00AA833C /* LinkEvent.swift */,
+			);
+			path = link;
+			sourceTree = "<group>";
+		};
+		280C7A6E2E8E1B1E00B172E5 /* link */ = {
+			isa = PBXGroup;
+			children = (
+				2852BB9629D948D000AA833C /* ESLinkEvent+CoreDataClass.swift */,
+				2852BB9729D948D000AA833C /* ESLinkEvent+CoreDataProperties.swift */,
+			);
+			path = link;
+			sourceTree = "<group>";
+		};
+		280C7A6F2E8E28DE00B172E5 /* link */ = {
+			isa = PBXGroup;
+			children = (
+				28B9A93229DBEAC1006619FF /* SystemLinkEventMetadataView.swift */,
+			);
+			path = link;
+			sourceTree = "<group>";
+		};
+		280C7A702E8E28E400B172E5 /* unlink */ = {
+			isa = PBXGroup;
+			children = (
+				28B9A92C29DBE836006619FF /* SystemUnlinkEventMetadataView.swift */,
+			);
+			path = unlink;
+			sourceTree = "<group>";
+		};
+		280C7A712E8E28F800B172E5 /* create */ = {
+			isa = PBXGroup;
+			children = (
+				28CEF0F829776D00003057D2 /* SystemFileCreateMetadataView.swift */,
+			);
+			path = create;
+			sourceTree = "<group>";
+		};
+		280C7A722E8E290000B172E5 /* rename */ = {
+			isa = PBXGroup;
+			children = (
+				28A2501C299FFD1B007B0753 /* SystemFileRenameMetadataView.swift */,
+			);
+			path = rename;
+			sourceTree = "<group>";
+		};
+		280C7A732E8E290500B172E5 /* write */ = {
+			isa = PBXGroup;
+			children = (
+				28B9A93029DBE9E1006619FF /* SystemFileWriteMetadataView.swift */,
+			);
+			path = write;
+			sourceTree = "<group>";
+		};
+		280C7A742E8E290D00B172E5 /* open */ = {
+			isa = PBXGroup;
+			children = (
+				28B9A92E29DBE976006619FF /* SystemFileOpenMetadataView.swift */,
+			);
+			path = open;
+			sourceTree = "<group>";
+		};
+		280C7A752E8E291300B172E5 /* close */ = {
+			isa = PBXGroup;
+			children = (
+				28B9A93429DBEC9F006619FF /* SystemFileCloseMetadataView.swift */,
+			);
+			path = close;
+			sourceTree = "<group>";
+		};
+		280C7A762E8E291B00B172E5 /* dup */ = {
+			isa = PBXGroup;
+			children = (
+				28A2501E29A35D5F007B0753 /* SystemFDDuplicateMetadataView.swift */,
+			);
+			path = dup;
+			sourceTree = "<group>";
+		};
+		280C7A772E8E292900B172E5 /* unlink */ = {
+			isa = PBXGroup;
+			children = (
+				2852BB8229D83C9F00AA833C /* FileDeleteEvent.swift */,
+			);
+			path = unlink;
+			sourceTree = "<group>";
+		};
+		280C7A782E8E293600B172E5 /* create */ = {
+			isa = PBXGroup;
+			children = (
+				2820DD06297225080053CB48 /* FileCreateEvent.swift */,
+			);
+			path = create;
+			sourceTree = "<group>";
+		};
+		280C7A792E8E293B00B172E5 /* rename */ = {
+			isa = PBXGroup;
+			children = (
+				28A2501A299FF635007B0753 /* FileRenameEvent.swift */,
+			);
+			path = rename;
+			sourceTree = "<group>";
+		};
+		280C7A7A2E8E293F00B172E5 /* open */ = {
+			isa = PBXGroup;
+			children = (
+				2852BB8829D89AEB00AA833C /* FileOpenEvent.swift */,
+			);
+			path = open;
+			sourceTree = "<group>";
+		};
+		280C7A7B2E8E294400B172E5 /* write */ = {
+			isa = PBXGroup;
+			children = (
+				2852BB9229D8CAFC00AA833C /* FileWriteEvent.swift */,
+			);
+			path = write;
+			sourceTree = "<group>";
+		};
+		280C7A7C2E8E294900B172E5 /* close */ = {
+			isa = PBXGroup;
+			children = (
+				2852BB9A29D97DB600AA833C /* FileCloseEvent.swift */,
+			);
+			path = close;
+			sourceTree = "<group>";
+		};
+		280C7A7D2E8E295000B172E5 /* dup */ = {
+			isa = PBXGroup;
+			children = (
+				28A25014299EFCAA007B0753 /* FDDuplicateEvent.swift */,
+			);
+			path = dup;
+			sourceTree = "<group>";
+		};
+		280C7A7E2E8E297500B172E5 /* unlink */ = {
+			isa = PBXGroup;
+			children = (
+				2852BB7E29D83C6100AA833C /* ESFileDeleteEvent+CoreDataClass.swift */,
+				2852BB7F29D83C6100AA833C /* ESFileDeleteEvent+CoreDataProperties.swift */,
+			);
+			path = unlink;
+			sourceTree = "<group>";
+		};
+		280C7A7F2E8E314400B172E5 /* authorization_petition */ = {
+			isa = PBXGroup;
+			children = (
+				289646C42A4B990C000E9564 /* ESAuthorizationPetitionEvent+CoreDataClass.swift */,
+				289646C52A4B990C000E9564 /* ESAuthorizationPetitionEvent+CoreDataProperties.swift */,
+			);
+			path = authorization_petition;
+			sourceTree = "<group>";
+		};
+		280C7A802E8E315100B172E5 /* authorization_judgement */ = {
+			isa = PBXGroup;
+			children = (
+				284BAEC42A4CB1BE007F1193 /* ESAuthorizationJudgementEvent+CoreDataClass.swift */,
+				284BAEC52A4CB1BE007F1193 /* ESAuthorizationJudgementEvent+CoreDataProperties.swift */,
+			);
+			path = authorization_judgement;
+			sourceTree = "<group>";
+		};
+		280C7A812E8E353C00B172E5 /* petition */ = {
+			isa = PBXGroup;
+			children = (
+				289646C22A4B9296000E9564 /* AuthorizationPetitionEvent.swift */,
+			);
+			path = petition;
+			sourceTree = "<group>";
+		};
+		280C7A822E8E354100B172E5 /* judgement */ = {
+			isa = PBXGroup;
+			children = (
+				284BAEC22A4CAEEE007F1193 /* AuthorizationJudgementEvent.swift */,
+			);
+			path = judgement;
+			sourceTree = "<group>";
+		};
 		2820DCFF2972245F0053CB48 /* Events */ = {
 			isa = PBXGroup;
 			children = (
@@ -1510,10 +1690,8 @@
 		28B3437D2D8633A2004127E8 /* Security Authorization Events */ = {
 			isa = PBXGroup;
 			children = (
-				289646C42A4B990C000E9564 /* ESAuthorizationPetitionEvent+CoreDataClass.swift */,
-				289646C52A4B990C000E9564 /* ESAuthorizationPetitionEvent+CoreDataProperties.swift */,
-				284BAEC42A4CB1BE007F1193 /* ESAuthorizationJudgementEvent+CoreDataClass.swift */,
-				284BAEC52A4CB1BE007F1193 /* ESAuthorizationJudgementEvent+CoreDataProperties.swift */,
+				280C7A802E8E315100B172E5 /* authorization_judgement */,
+				280C7A7F2E8E314400B172E5 /* authorization_petition */,
 			);
 			path = "Security Authorization Events";
 			sourceTree = "<group>";
@@ -1782,8 +1960,8 @@
 		28B3439B2D863CC9004127E8 /* Security Authorization Events */ = {
 			isa = PBXGroup;
 			children = (
-				289646C22A4B9296000E9564 /* AuthorizationPetitionEvent.swift */,
-				284BAEC22A4CAEEE007F1193 /* AuthorizationJudgementEvent.swift */,
+				280C7A822E8E354100B172E5 /* judgement */,
+				280C7A812E8E353C00B172E5 /* petition */,
 			);
 			path = "Security Authorization Events";
 			sourceTree = "<group>";

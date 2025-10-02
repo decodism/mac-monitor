@@ -452,15 +452,16 @@ extension EventType {
             )
         case ES_EVENT_TYPE_NOTIFY_AUTHORIZATION_PETITION:
             let event = AuthorizationPetitionEvent(from: rawMessage)
-            let petitionerName: String = event.petitioner_process_name ?? ""
-            let instigatorName: String = event.instigator_process_name ?? ""
-            let rights: String = event.rights
-            let context = "\(rights): \(petitionerName) → \(instigatorName)"
+            let tgtPath: String = event.petitioner?.executable?.path ?? ""
+            let petitionerName: String = event.petitioner?.executable?.name ?? ""
+            let instigatorName: String = event.instigator?.executable?.name ?? ""
+            let rights: String = event.rights.joined(separator: ",")
+            let context = "[\(rights)] \(petitionerName) → \(instigatorName)"
             return (
                 .authorization_petition(event),
                 "ES_EVENT_TYPE_NOTIFY_AUTHORIZATION_PETITION",
                 context,
-                event.petitioner_process_path
+                tgtPath
             )
             
             
