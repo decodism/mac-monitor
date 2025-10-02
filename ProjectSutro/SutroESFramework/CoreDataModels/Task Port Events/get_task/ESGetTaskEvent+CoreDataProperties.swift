@@ -16,12 +16,10 @@ extension ESGetTaskEvent {
         return NSFetchRequest<ESGetTaskEvent>(entityName: "ESGetTaskEvent")
     }
 
-    @NSManaged public var id: UUID?
-    @NSManaged public var process_path: String?
-    @NSManaged public var process_name: String?
-    @NSManaged public var process_audit_token: String?
-    @NSManaged public var process_signing_id: String?
-    @NSManaged public var type: String?
+    @NSManaged public var id: UUID
+    @NSManaged public var target: ESProcess
+    @NSManaged public var type: Int16
+    @NSManaged public var type_string: String
 
 }
 

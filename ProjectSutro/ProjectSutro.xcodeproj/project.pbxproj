@@ -1074,6 +1074,23 @@
 			path = trace;
 			sourceTree = "<group>";
 		};
+		280C79322E8E0F9500B172E5 /* get_task */ = {
+			isa = PBXGroup;
+			children = (
+				28B9A92029DBD4EC006619FF /* GetTaskEvent.swift */,
+			);
+			path = get_task;
+			sourceTree = "<group>";
+		};
+		280C79332E8E10DC00B172E5 /* get_task */ = {
+			isa = PBXGroup;
+			children = (
+				28B9A92229DBD5FD006619FF /* ESGetTaskEvent+CoreDataClass.swift */,
+				28B9A92329DBD5FD006619FF /* ESGetTaskEvent+CoreDataProperties.swift */,
+			);
+			path = get_task;
+			sourceTree = "<group>";
+		};
 		2820DCFF2972245F0053CB48 /* Events */ = {
 			isa = PBXGroup;
 			children = (
@@ -1327,8 +1344,7 @@
 		28B3436E2D862D41004127E8 /* Task Port Events */ = {
 			isa = PBXGroup;
 			children = (
-				28B9A92229DBD5FD006619FF /* ESGetTaskEvent+CoreDataClass.swift */,
-				28B9A92329DBD5FD006619FF /* ESGetTaskEvent+CoreDataProperties.swift */,
+				280C79332E8E10DC00B172E5 /* get_task */,
 			);
 			path = "Task Port Events";
 			sourceTree = "<group>";
@@ -1664,7 +1680,7 @@
 		28B343922D863B98004127E8 /* Task Port Events */ = {
 			isa = PBXGroup;
 			children = (
-				28B9A92029DBD4EC006619FF /* GetTaskEvent.swift */,
+				280C79322E8E0F9500B172E5 /* get_task */,
 			);
 			path = "Task Port Events";
 			sourceTree = "<group>";

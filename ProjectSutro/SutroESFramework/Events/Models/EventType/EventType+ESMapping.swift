@@ -402,12 +402,23 @@ extension EventType {
             // MARK: - Task Port events
         case ES_EVENT_TYPE_NOTIFY_GET_TASK:
             let event = GetTaskEvent(from: rawMessage)
-            let context = "[\(event.type ?? "")] \(event.process_path ?? "")"
+            var tgtPath: String = ""
+            var context: String = ""
+            
+            if let exe = event.target.executable {
+                tgtPath = exe.path
+                let typeString: String = event.type_string.replacingOccurrences(
+                    of: "ES_GET_TASK_TYPE_",
+                    with: ""
+                )
+                context = "[\(typeString)] \(exe.path)"
+            }
+            
             return (
                 .get_task(event),
                 "ES_EVENT_TYPE_NOTIFY_GET_TASK",
                 context,
-                event.process_path
+                tgtPath
             )
             
             
