@@ -18,11 +18,7 @@ public struct CodeSignatureInvalidatedEvent: Identifiable, Codable, Hashable {
     }
     
     public static func == (lhs: CodeSignatureInvalidatedEvent, rhs: CodeSignatureInvalidatedEvent) -> Bool {
-        if lhs.id == rhs.id {
-            return true
-        }
-        
-        return false
+        return lhs.id == rhs.id
     }
     
     init(from rawMessage: UnsafePointer<es_message_t>) {
