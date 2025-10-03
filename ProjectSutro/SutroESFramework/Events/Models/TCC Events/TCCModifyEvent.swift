@@ -25,11 +25,7 @@ public struct TCCModifyEvent: Identifiable, Codable, Hashable {
     }
     
     public static func == (lhs: TCCModifyEvent, rhs: TCCModifyEvent) -> Bool {
-        if lhs.instigator_token == rhs.instigator_token && lhs.id == rhs.id {
-            return true
-        }
-        
-        return false
+        return lhs.id == rhs.id
     }
     
     init(from rawMessage: UnsafePointer<es_message_t>) {

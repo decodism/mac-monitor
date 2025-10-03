@@ -29,20 +29,16 @@ import Foundation
 
 public struct XPCConnectEvent: Identifiable, Codable, Hashable {
     public var id: UUID = UUID()
-    public var service_name: String?
-    public var service_domain_type: String?
+    public var service_name: String
+    public var service_domain_type: Int32
+    public var service_domain_type_string: String
     
     public func hash(into hasher: inout Hasher) {
         hasher.combine(id)
-        hasher.combine(service_name)
     }
     
     public static func == (lhs: XPCConnectEvent, rhs: XPCConnectEvent) -> Bool {
-        if lhs.id == rhs.id && lhs.service_name == rhs.service_name {
-            return true
-        }
-        
-        return false
+        return lhs.id == rhs.id
     }
     
     init(from rawMessage: UnsafePointer<es_message_t>) {
@@ -53,33 +49,34 @@ public struct XPCConnectEvent: Identifiable, Codable, Hashable {
             self.service_name = String(cString: xpcConnectEvent.service_name.data)
         }
         
+        self.service_domain_type = Int32(xpcConnectEvent.service_domain_type.rawValue)
         switch(xpcConnectEvent.service_domain_type){
         case ES_XPC_DOMAIN_TYPE_GUI:
-            self.service_domain_type = "GUI"
+            self.service_domain_type_string = "GUI"
             break
         case ES_XPC_DOMAIN_TYPE_PID:
-            self.service_domain_type = "PID"
+            self.service_domain_type_string = "PID"
             break
         case ES_XPC_DOMAIN_TYPE_PORT:
-            self.service_domain_type = "PORT"
+            self.service_domain_type_string = "PORT"
             break
         case ES_XPC_DOMAIN_TYPE_USER:
-            self.service_domain_type = "USER"
+            self.service_domain_type_string = "USER"
             break
         case ES_XPC_DOMAIN_TYPE_SYSTEM:
-            self.service_domain_type = "SYSTEM"
+            self.service_domain_type_string = "SYSTEM"
             break
         case ES_XPC_DOMAIN_TYPE_MANAGER:
-            self.service_domain_type = "MANAGER"
+            self.service_domain_type_string = "MANAGER"
             break
         case ES_XPC_DOMAIN_TYPE_SESSION:
-            self.service_domain_type = "SESSION"
+            self.service_domain_type_string = "SESSION"
             break
         case ES_XPC_DOMAIN_TYPE_USER_LOGIN:
-            self.service_domain_type = "USER LOGIN"
+            self.service_domain_type_string = "USER LOGIN"
             break
         default:
-            self.service_domain_type = "UNKNOWN"
+            self.service_domain_type_string = "UNKNOWN"
         }
     }
 }

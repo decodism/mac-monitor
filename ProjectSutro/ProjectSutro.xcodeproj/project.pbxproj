@@ -1520,8 +1520,6 @@
 		28B3436C2D862C49004127E8 /* Process Events */ = {
 			isa = PBXGroup;
 			children = (
-				28EF8F072D7EA45400223464 /* ESProcess+CoreDataClass.swift */,
-				28EF8F082D7EA45400223464 /* ESProcess+CoreDataProperties.swift */,
 				28B3437F2D863404004127E8 /* Execution */,
 				28B343802D86340F004127E8 /* Fork */,
 				28B343842D86344F004127E8 /* Access Control */,
@@ -1663,10 +1661,8 @@
 		28B3437A2D863007004127E8 /* Login Window Events */ = {
 			isa = PBXGroup;
 			children = (
-				28CEF1142978CBF1003057D2 /* ESLWLoginEvent+CoreDataClass.swift */,
-				28CEF1152978CBF1003057D2 /* ESLWLoginEvent+CoreDataProperties.swift */,
-				28CEF1182978CF00003057D2 /* ESLWUnlockEvent+CoreDataClass.swift */,
-				28CEF1192978CF00003057D2 /* ESLWUnlockEvent+CoreDataProperties.swift */,
+				CA9C061C2E907D0600A0D5C8 /* lw_session_unlock */,
+				CA9C061B2E907CFF00A0D5C8 /* lw_session_login */,
 			);
 			path = "Login Window Events";
 			sourceTree = "<group>";
@@ -1682,8 +1678,7 @@
 		28B3437C2D863342004127E8 /* XPC Events */ = {
 			isa = PBXGroup;
 			children = (
-				28C6DF1C2A46CDA200E97922 /* ESXPCConnectEvent+CoreDataClass.swift */,
-				28C6DF1D2A46CDA200E97922 /* ESXPCConnectEvent+CoreDataProperties.swift */,
+				CA9C06292E9080A300A0D5C8 /* xpc_connect */,
 			);
 			path = "XPC Events";
 			sourceTree = "<group>";
@@ -1858,7 +1853,7 @@
 		28B343912D863B87004127E8 /* Memory Mapping Events */ = {
 			isa = PBXGroup;
 			children = (
-				2820DD0A297225340053CB48 /* MMapEvent.swift */,
+				CA9C061F2E907D4400A0D5C8 /* mmap */,
 			);
 			path = "Memory Mapping Events";
 			sourceTree = "<group>";
@@ -1882,7 +1877,7 @@
 		28B343942D863BDF004127E8 /* Kernel Events */ = {
 			isa = PBXGroup;
 			children = (
-				2852BBAC29DA90BB00AA833C /* IOKitOpenEvent.swift */,
+				CA9C06202E907D4D00A0D5C8 /* iokit_open */,
 			);
 			path = "Kernel Events";
 			sourceTree = "<group>";
@@ -1903,7 +1898,7 @@
 		28B343962D863C4E004127E8 /* File System Mounting Events */ = {
 			isa = PBXGroup;
 			children = (
-				28CEF0D829775941003057D2 /* MountEvent.swift */,
+				CA9C06212E907D5A00A0D5C8 /* mount */,
 			);
 			path = "File System Mounting Events";
 			sourceTree = "<group>";
@@ -1911,9 +1906,9 @@
 		28B343972D863C63004127E8 /* File Metadata Events */ = {
 			isa = PBXGroup;
 			children = (
-				CA5936482E8AFF4A008A115D /* SetModeEvent.swift */,
-				2820DD082972251F0053CB48 /* XattrDeleteEvent.swift */,
-				2852BBB829DB840C00AA833C /* XattrSetEvent.swift */,
+				CA9C06242E907D7600A0D5C8 /* setextattr */,
+				CA9C06232E907D6F00A0D5C8 /* deleteextattr */,
+				CA9C06222E907D6100A0D5C8 /* setmode */,
 			);
 			path = "File Metadata Events";
 			sourceTree = "<group>";
@@ -1930,7 +1925,7 @@
 		28B343992D863CA2004127E8 /* XPC Events */ = {
 			isa = PBXGroup;
 			children = (
-				28C6DF1A2A4676FA00E97922 /* XPCConnectEvent.swift */,
+				CA9C06262E907D8E00A0D5C8 /* xpc_connect */,
 			);
 			path = "XPC Events";
 			sourceTree = "<group>";
@@ -1979,8 +1974,8 @@
 		28B3439E2D863D1E004127E8 /* OpenSSH Events */ = {
 			isa = PBXGroup;
 			children = (
-				2820DD10297225900053CB48 /* SSHLoginEvent.swift */,
-				2820DD162972268C0053CB48 /* OpenSSHLogoutEvent.swift */,
+				CA9C06282E907F4200A0D5C8 /* logout */,
+				CA9C06272E907F3E00A0D5C8 /* login */,
 			);
 			path = "OpenSSH Events";
 			sourceTree = "<group>";
@@ -1997,8 +1992,8 @@
 		28B343A02D863D3A004127E8 /* Login Window Events */ = {
 			isa = PBXGroup;
 			children = (
-				28CEF1122978CA71003057D2 /* LWLoginEvent.swift */,
-				28B3438D2D8637F2004127E8 /* LWUnlockEvent.swift */,
+				CA9C061A2E907C9100A0D5C8 /* lw_session_unlock */,
+				CA9C06192E907C8C00A0D5C8 /* lw_session_login */,
 			);
 			path = "Login Window Events";
 			sourceTree = "<group>";
@@ -2442,7 +2437,7 @@
 		CA5936522E8B1358008A115D /* Pseudoterminal Events */ = {
 			isa = PBXGroup;
 			children = (
-				CA5936532E8B1392008A115D /* PTYGrantEvent.swift */,
+				CA9C06252E907D8600A0D5C8 /* pty_grant */,
 			);
 			path = "Pseudoterminal Events";
 			sourceTree = "<group>";
@@ -2462,6 +2457,147 @@
 				CA59365B2E8B1913008A115D /* SystemPTYGrantMetadataView.swift */,
 			);
 			path = Pseudoterminal;
+			sourceTree = "<group>";
+		};
+		CA9C06192E907C8C00A0D5C8 /* lw_session_login */ = {
+			isa = PBXGroup;
+			children = (
+				28CEF1122978CA71003057D2 /* LWLoginEvent.swift */,
+			);
+			path = lw_session_login;
+			sourceTree = "<group>";
+		};
+		CA9C061A2E907C9100A0D5C8 /* lw_session_unlock */ = {
+			isa = PBXGroup;
+			children = (
+				28B3438D2D8637F2004127E8 /* LWUnlockEvent.swift */,
+			);
+			path = lw_session_unlock;
+			sourceTree = "<group>";
+		};
+		CA9C061B2E907CFF00A0D5C8 /* lw_session_login */ = {
+			isa = PBXGroup;
+			children = (
+				28CEF1142978CBF1003057D2 /* ESLWLoginEvent+CoreDataClass.swift */,
+				28CEF1152978CBF1003057D2 /* ESLWLoginEvent+CoreDataProperties.swift */,
+			);
+			path = lw_session_login;
+			sourceTree = "<group>";
+		};
+		CA9C061C2E907D0600A0D5C8 /* lw_session_unlock */ = {
+			isa = PBXGroup;
+			children = (
+				28CEF1182978CF00003057D2 /* ESLWUnlockEvent+CoreDataClass.swift */,
+				28CEF1192978CF00003057D2 /* ESLWUnlockEvent+CoreDataProperties.swift */,
+			);
+			path = lw_session_unlock;
+			sourceTree = "<group>";
+		};
+		CA9C061D2E907D2400A0D5C8 /* Audit Token */ = {
+			isa = PBXGroup;
+			children = (
+				28B343AB2D87740D004127E8 /* ESAuditToken+CoreDataClass.swift */,
+				28B343AC2D87740D004127E8 /* ESAuditToken+CoreDataProperties.swift */,
+			);
+			path = "Audit Token";
+			sourceTree = "<group>";
+		};
+		CA9C061E2E907D2C00A0D5C8 /* Thread */ = {
+			isa = PBXGroup;
+			children = (
+				2852DCE42DB2DB5B00910979 /* ESThread+CoreDataClass.swift */,
+				2852DCE52DB2DB5B00910979 /* ESThread+CoreDataProperties.swift */,
+			);
+			path = Thread;
+			sourceTree = "<group>";
+		};
+		CA9C061F2E907D4400A0D5C8 /* mmap */ = {
+			isa = PBXGroup;
+			children = (
+				2820DD0A297225340053CB48 /* MMapEvent.swift */,
+			);
+			path = mmap;
+			sourceTree = "<group>";
+		};
+		CA9C06202E907D4D00A0D5C8 /* iokit_open */ = {
+			isa = PBXGroup;
+			children = (
+				2852BBAC29DA90BB00AA833C /* IOKitOpenEvent.swift */,
+			);
+			path = iokit_open;
+			sourceTree = "<group>";
+		};
+		CA9C06212E907D5A00A0D5C8 /* mount */ = {
+			isa = PBXGroup;
+			children = (
+				28CEF0D829775941003057D2 /* MountEvent.swift */,
+			);
+			path = mount;
+			sourceTree = "<group>";
+		};
+		CA9C06222E907D6100A0D5C8 /* setmode */ = {
+			isa = PBXGroup;
+			children = (
+				CA5936482E8AFF4A008A115D /* SetModeEvent.swift */,
+			);
+			path = setmode;
+			sourceTree = "<group>";
+		};
+		CA9C06232E907D6F00A0D5C8 /* deleteextattr */ = {
+			isa = PBXGroup;
+			children = (
+				2820DD082972251F0053CB48 /* XattrDeleteEvent.swift */,
+			);
+			path = deleteextattr;
+			sourceTree = "<group>";
+		};
+		CA9C06242E907D7600A0D5C8 /* setextattr */ = {
+			isa = PBXGroup;
+			children = (
+				2852BBB829DB840C00AA833C /* XattrSetEvent.swift */,
+			);
+			path = setextattr;
+			sourceTree = "<group>";
+		};
+		CA9C06252E907D8600A0D5C8 /* pty_grant */ = {
+			isa = PBXGroup;
+			children = (
+				CA5936532E8B1392008A115D /* PTYGrantEvent.swift */,
+			);
+			path = pty_grant;
+			sourceTree = "<group>";
+		};
+		CA9C06262E907D8E00A0D5C8 /* xpc_connect */ = {
+			isa = PBXGroup;
+			children = (
+				28C6DF1A2A4676FA00E97922 /* XPCConnectEvent.swift */,
+			);
+			path = xpc_connect;
+			sourceTree = "<group>";
+		};
+		CA9C06272E907F3E00A0D5C8 /* login */ = {
+			isa = PBXGroup;
+			children = (
+				2820DD10297225900053CB48 /* SSHLoginEvent.swift */,
+			);
+			path = login;
+			sourceTree = "<group>";
+		};
+		CA9C06282E907F4200A0D5C8 /* logout */ = {
+			isa = PBXGroup;
+			children = (
+				2820DD162972268C0053CB48 /* OpenSSHLogoutEvent.swift */,
+			);
+			path = logout;
+			sourceTree = "<group>";
+		};
+		CA9C06292E9080A300A0D5C8 /* xpc_connect */ = {
+			isa = PBXGroup;
+			children = (
+				28C6DF1C2A46CDA200E97922 /* ESXPCConnectEvent+CoreDataClass.swift */,
+				28C6DF1D2A46CDA200E97922 /* ESXPCConnectEvent+CoreDataProperties.swift */,
+			);
+			path = xpc_connect;
 			sourceTree = "<group>";
 		};
 		CAC48AF22E2471B900260C5F /* Process */ = {
@@ -2657,10 +2793,10 @@
 		CAD3D9762E0F0D0700028111 /* Process */ = {
 			isa = PBXGroup;
 			children = (
-				28B343AB2D87740D004127E8 /* ESAuditToken+CoreDataClass.swift */,
-				28B343AC2D87740D004127E8 /* ESAuditToken+CoreDataProperties.swift */,
-				2852DCE42DB2DB5B00910979 /* ESThread+CoreDataClass.swift */,
-				2852DCE52DB2DB5B00910979 /* ESThread+CoreDataProperties.swift */,
+				28EF8F072D7EA45400223464 /* ESProcess+CoreDataClass.swift */,
+				28EF8F082D7EA45400223464 /* ESProcess+CoreDataProperties.swift */,
+				CA9C061E2E907D2C00A0D5C8 /* Thread */,
+				CA9C061D2E907D2400A0D5C8 /* Audit Token */,
 			);
 			path = Process;
 			sourceTree = "<group>";

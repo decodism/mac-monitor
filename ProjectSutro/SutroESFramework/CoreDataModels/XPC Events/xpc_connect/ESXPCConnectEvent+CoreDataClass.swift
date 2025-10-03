@@ -12,7 +12,7 @@ import CoreData
 @objc(ESXPCConnectEvent)
 public class ESXPCConnectEvent: NSManagedObject {
     enum CodingKeys: CodingKey {
-        case id, service_name, service_domain_type
+        case id, service_name, service_domain_type, service_domain_type_string
     }
     
     convenience init(from message: Message, insertIntoManagedObjectContext context: NSManagedObjectContext!) {
@@ -23,6 +23,7 @@ public class ESXPCConnectEvent: NSManagedObject {
         self.id = xpcConnectEvent.id
         self.service_name = xpcConnectEvent.service_name
         self.service_domain_type = xpcConnectEvent.service_domain_type
+        self.service_domain_type_string = xpcConnectEvent.service_domain_type_string
     }
 }
 
@@ -31,6 +32,7 @@ extension ESXPCConnectEvent: Encodable {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(service_name, forKey: .service_name)
         try container.encode(service_domain_type, forKey: .service_domain_type)
+        try container.encode(service_domain_type_string, forKey: .service_domain_type_string)
     }
 }
 

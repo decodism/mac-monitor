@@ -25,16 +25,11 @@ public struct GatekeeperUserOverrideEvent: Identifiable, Codable, Hashable {
     public var signing_info: SignedFileInfo?
     
     public func hash(into hasher: inout Hasher) {
-        hasher.combine(sha256)
         hasher.combine(id)
     }
     
     public static func == (lhs: GatekeeperUserOverrideEvent, rhs: GatekeeperUserOverrideEvent) -> Bool {
-        if lhs.sha256 == rhs.sha256 && lhs.id == rhs.id {
-            return true
-        }
-        
-        return false
+        return lhs.id == rhs.id
     }
     
     init(from rawMessage: UnsafePointer<es_message_t>) {

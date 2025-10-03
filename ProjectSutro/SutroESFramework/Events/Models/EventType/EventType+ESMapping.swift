@@ -475,8 +475,8 @@ extension EventType {
                 cString: rawMessage.pointee.process.pointee.executable.pointee.path.data
             )
             let requestorName = URL(fileURLWithPath: requestorPath).lastPathComponent
-            let serviceLabel: String = event.service_name ?? ""
-            let serviceDomain: String = event.service_domain_type ?? ""
+            let serviceLabel: String = event.service_name
+            let serviceDomain: String = event.service_domain_type_string
             
             let context = "\(requestorName) → \(serviceLabel) in \(serviceDomain)"
             return (

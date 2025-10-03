@@ -20,17 +20,11 @@ public struct SSHLoginEvent: Identifiable, Codable, Hashable {
     public var user_name: String = "Unknown"
     
     public func hash(into hasher: inout Hasher) {
-        hasher.combine(source_address)
-        hasher.combine(result_type)
         hasher.combine(id)
     }
     
     public static func == (lhs: SSHLoginEvent, rhs: SSHLoginEvent) -> Bool {
-        if lhs.source_address == rhs.source_address && lhs.result_type == rhs.result_type && lhs.user_name == rhs.user_name {
-            return true
-        }
-        
-        return false
+        return lhs.id == rhs.id
     }
     
     init(from rawMessage: UnsafePointer<es_message_t>) {
