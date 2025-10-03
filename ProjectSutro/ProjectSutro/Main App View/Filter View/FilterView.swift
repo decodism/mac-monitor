@@ -136,6 +136,7 @@ struct FilterView: View {
     @Binding var filterPlatform: Bool
     
     @State private var selectableEvents: [SelectableEvent] = getSupportedEventTypesSelectable()
+    @State private var searchText: String = ""
     
     private var initiatingProcessPathFilters: [String] {
         allFilters.initiatingPaths
@@ -147,6 +148,17 @@ struct FilterView: View {
     
     private var eventFilters: Set<String> {
         return Set(allFilters.events.map { $0 })
+    }
+    
+    private var eventFilterSearch: [String] {
+        return Array(eventFilters).filter({
+            if !searchText.isEmpty {
+                return $0
+                    .lowercased()
+                    .contains(searchText.lowercased())
+            }
+            return true
+        })
     }
     
     private var userIDs: [String] {
@@ -401,35 +413,38 @@ struct FilterView: View {
                     if !eventFilters.isEmpty {
                         Spacer(minLength: 10)
                         Section {
-                            Text("Endpoint Security events").font(.title2).frame(alignment: .leading)
-                            Spacer()
+                            Text("Endpoint Security events")
+                                .font(.title2)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                            
+                            HStack {
+                                TextField("", text: $searchText, prompt: Text("Search..."))
+                                    .textFieldStyle(.roundedBorder)
+                            }
+                            
                             GroupBox {
-                                VStack(alignment: .leading) {
-                                    ForEach(
-                                        Array(eventFilters).sorted(),
-                                        id: \.self
-                                    ) { event in
+                                VStack(alignment: .leading, spacing: 8) {
+                                    ForEach(eventFilterSearch, id: \.self) { event in
                                         GroupBox {
                                             HStack {
                                                 Image(systemName: eventStringToImage(from: event))
-                                                Text("**`\(event)`**")
+                                                Text(event)
+                                                    .font(.system(.body, design: .monospaced))
+                                                    .fontWeight(.semibold)
                                                 Spacer()
-                                                Button(action: {
+                                                Button("Remove") {
                                                     allFilters.events.removeAll(where: { $0 == event })
-                                                }) {
-                                                    Text("**Remove**")
-                                                }.buttonStyle(.borderedProminent).tint(.pink).opacity(0.8).padding(.trailing)
-                                            }.frame(alignment: .leading)
+                                                }
+                                                .buttonStyle(.borderedProminent)
+                                                .tint(.pink)
+                                            }
                                         }
                                     }
-                                }.frame(maxWidth: .infinity, maxHeight: .infinity)
+                                }
                             }
                         }
                         Divider()
                     }
-                    
-                    
-                    
                     
                 }.padding(.all)
             }
@@ -441,11 +456,6 @@ struct FilterView: View {
         Button("Close", action: {
             filteredTelemetryShown.toggle()
         }).buttonStyle(.borderedProminent).tint(.pink).frame(alignment: .center).padding(.all)
-    }
-    
-    
-    func delete(at offsets: IndexSet) {
-        
     }
 }
 
