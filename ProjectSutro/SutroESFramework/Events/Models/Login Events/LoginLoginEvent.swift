@@ -15,7 +15,8 @@ public struct LoginLoginEvent: Identifiable, Codable, Hashable {
     public var id: UUID = UUID()
     
     public var succcess, has_uid: Bool
-    public var failure_message, username, uid_human: String
+    public var username, uid_human: String
+    public var failure_message: String?
     public var uid: Int64
     
     public func hash(into hasher: inout Hasher) {
@@ -32,8 +33,6 @@ public struct LoginLoginEvent: Identifiable, Codable, Hashable {
         self.succcess = loginLoginEvent.success
         if !loginLoginEvent.success &&  loginLoginEvent.failure_message.length > 0 {
             self.failure_message = String(cString: loginLoginEvent.failure_message.data)
-        } else {
-            self.failure_message = ""
         }
         
         self.username = String(cString: loginLoginEvent.username.data)

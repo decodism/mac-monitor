@@ -45,7 +45,7 @@ extension ESLoginLoginEvent: Encodable {
         var container = encoder.container(keyedBy: CodingKeys.self)
         
         try container.encode(success, forKey: .success)
-        try container.encodeIfPresent(failure_message, forKey: .failure_message)
+        try container.encode(failure_message, forKey: .failure_message)
         try container.encode(username, forKey: .username)
         try container.encode(has_uid, forKey: .has_uid)
         try container.encodeIfPresent(uid?.int64Value, forKey: .uid)
