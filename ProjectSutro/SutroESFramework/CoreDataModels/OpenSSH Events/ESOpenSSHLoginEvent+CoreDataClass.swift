@@ -10,23 +10,11 @@ import Foundation
 import CoreData
 
 @objc(ESOpenSSHLoginEvent)
-public class ESOpenSSHLoginEvent: NSManagedObject, Decodable {
+public class ESOpenSSHLoginEvent: NSManagedObject {
     enum CodingKeys: CodingKey {
         case id, result_type, source_address, source_address_type, success, user_name
     }
-    
-    // MARK: - Custom initilizer for ESOpenSSHLoginEvent during heavy flows
-    convenience init(from message: Message) {
-        let sshLoginEvent: SSHLoginEvent = message.event.openssh_login!
-        self.init()
-        self.id = sshLoginEvent.id
-        self.result_type = sshLoginEvent.result_type
-        self.source_address = sshLoginEvent.source_address
-        self.source_address_type = sshLoginEvent.source_address_type
-        self.success = sshLoginEvent.success
-        self.user_name = sshLoginEvent.user_name
-    }
-    
+
     // MARK: - Custom Core Data initilizer for ESOpenSSHLoginEvent
     convenience init(from message: Message, insertIntoManagedObjectContext context: NSManagedObjectContext!) {
         let sshLoginEvent: SSHLoginEvent = message.event.openssh_login!
@@ -38,19 +26,6 @@ public class ESOpenSSHLoginEvent: NSManagedObject, Decodable {
         self.source_address_type = sshLoginEvent.source_address_type
         self.success = sshLoginEvent.success
         self.user_name = sshLoginEvent.user_name
-    }
-    
-    // MARK: - Decodable conformance
-    required convenience public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.init()
-        
-        try id = container.decode(UUID.self, forKey: .id)
-        try result_type = container.decode(String.self, forKey: .result_type)
-        try source_address = container.decode(String.self, forKey: .source_address)
-        try source_address_type = container.decode(String.self, forKey: .source_address_type)
-        try success = container.decode(Bool.self, forKey: .success)
-        try user_name = container.decode(String.self, forKey: .user_name)
     }
 }
 

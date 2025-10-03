@@ -10,20 +10,11 @@ import Foundation
 import CoreData
 
 @objc(ESRemoteThreadCreateEvent)
-public class ESRemoteThreadCreateEvent: NSManagedObject, Decodable {
+public class ESRemoteThreadCreateEvent: NSManagedObject {
     enum CodingKeys: CodingKey {
         case id
         case target
         case thread_state
-    }
-    
-    // MARK: - Custom initilizer for ESRemoteThreadCreateEvent during heavy flows
-    convenience init(from message: Message) {
-        let threadEvent: RemoteThreadCreateEvent = message.event.remote_thread_create!
-        self.init()
-        self.id = threadEvent.id
-        self.thread_state = threadEvent.thread_state
-        self.target = ESProcess(from: threadEvent.target, version: message.version)
     }
     
     // MARK: - Custom Core Data initilizer for ESRemoteThreadCreateEvent
@@ -34,17 +25,6 @@ public class ESRemoteThreadCreateEvent: NSManagedObject, Decodable {
         self.id = threadEvent.id
         self.thread_state = threadEvent.thread_state
         self.target = ESProcess(from: threadEvent.target, version: message.version, insertIntoManagedObjectContext: context)
-    }
-    
-    // MARK: - Decodable conformance
-    required convenience public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.init()
-        
-        try id = container.decode(UUID.self, forKey: .id)
-        try thread_state = container
-            .decodeIfPresent(String.self, forKey: .thread_state)
-        try target = container.decode(ESProcess.self, forKey: .target)
     }
 }
 

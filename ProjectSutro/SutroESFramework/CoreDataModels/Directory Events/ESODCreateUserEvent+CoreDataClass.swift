@@ -15,27 +15,9 @@ import CoreData
 ///
 ///
 @objc(ESODCreateUserEvent)
-public class ESODCreateUserEvent: NSManagedObject, Decodable {
+public class ESODCreateUserEvent: NSManagedObject {
     enum CodingKeys: CodingKey {
         case id, instigator_process_name, instigator_process_path, instigator_process_audit_token, instigator_process_signing_id, error_code, user_name, node_name, db_path, error_code_human
-    }
-    
-    // MARK: - Custom initilizer for ESODCreateUserEvent during heavy flows
-    convenience init(from message: Message) {
-        let odCreateUserEvent: OpenDirectoryCreateUserEvent = message.event.od_create_user!
-        self.init()
-        
-        self.id = odCreateUserEvent.id
-        self.instigator_process_name = odCreateUserEvent.instigator_process_name
-        self.instigator_process_path = odCreateUserEvent.instigator_process_path
-        self.instigator_process_audit_token = odCreateUserEvent.instigator_process_audit_token
-        self.instigator_process_signing_id = odCreateUserEvent.instigator_process_signing_id
-        
-        self.error_code = Int32(odCreateUserEvent.error_code)
-        self.user_name = odCreateUserEvent.user_name
-        self.node_name = odCreateUserEvent.node_name
-        self.db_path = odCreateUserEvent.db_path
-        self.error_code_human = odCreateUserEvent.error_code_human
     }
     
     // MARK: - Custom Core Data initilizer for ESODCreateUserEvent
@@ -55,24 +37,6 @@ public class ESODCreateUserEvent: NSManagedObject, Decodable {
         self.node_name = odCreateUserEvent.node_name
         self.db_path = odCreateUserEvent.db_path
         self.error_code_human = odCreateUserEvent.error_code_human
-    }
-    
-    // MARK: - Decodable conformance
-    required convenience public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.init()
-        
-        try id = container.decode(UUID.self, forKey: .id)
-        try instigator_process_name = container.decode(String.self, forKey: .instigator_process_name)
-        try instigator_process_path = container.decode(String.self, forKey: .instigator_process_path)
-        try instigator_process_audit_token = container.decode(String.self, forKey: .instigator_process_audit_token)
-        try instigator_process_signing_id = container.decode(String.self, forKey: .instigator_process_signing_id)
-        
-        try error_code = container.decode(Int32.self, forKey: .error_code)
-        try user_name = container.decode(String.self, forKey: .user_name)
-        try node_name = container.decode(String.self, forKey: .node_name)
-        try db_path = container.decode(String.self, forKey: .db_path)
-        try error_code_human = container.decode(String.self, forKey: .error_code_human)
     }
 }
 

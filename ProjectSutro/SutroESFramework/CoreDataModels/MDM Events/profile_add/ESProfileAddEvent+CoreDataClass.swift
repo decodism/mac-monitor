@@ -10,7 +10,7 @@ import Foundation
 import CoreData
 
 @objc(ESProfileAddEvent)
-public class ESProfileAddEvent: NSManagedObject, Decodable {
+public class ESProfileAddEvent: NSManagedObject {
     enum CodingKeys: CodingKey {
         case id
         case instigator
@@ -29,23 +29,6 @@ public class ESProfileAddEvent: NSManagedObject, Decodable {
         }
     }
     
-    // MARK: - Custom initilizer for ESProfileAddEvent during heavy flows
-    convenience init(from message: Message) {
-        let event: ProfileAddEvent = message.event.profile_add!
-        self.init()
-        
-        self.id = event.id
-        self.is_update = event.is_update
-        if let instigator = event.instigator {
-            self.instigator = ESProcess(from: instigator, version: message.version)
-            
-            if let instigator_token = event.instigator_token {
-                self.instigator_token = ESAuditToken(from: instigator_token)
-            }
-        }
-        self.profile = event.profile
-    }
-    
     // MARK: - Custom Core Data initilizer for ESProfileAddEvent
     convenience init(from message: Message, insertIntoManagedObjectContext context: NSManagedObjectContext!) {
         let event: ProfileAddEvent = message.event.profile_add!
@@ -62,18 +45,6 @@ public class ESProfileAddEvent: NSManagedObject, Decodable {
             }
         }
         self.profile = event.profile
-    }
-    
-    // MARK: - Decodable conformance
-    required convenience public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.init()
-        
-        try id = container.decode(UUID.self, forKey: .id)
-        try is_update = container.decode(Bool.self, forKey: .is_update)
-        try instigator = container.decodeIfPresent(ESProcess.self, forKey: .instigator)
-        try instigator_token = container.decodeIfPresent(ESAuditToken.self, forKey: .instigator_token)
-        try profile = container.decodeIfPresent(Profile.self, forKey: .profile)
     }
 }
 

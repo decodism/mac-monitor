@@ -14,21 +14,16 @@ import OSLog
 public struct LoginLoginEvent: Identifiable, Codable, Hashable {
     public var id: UUID = UUID()
     
-    public var succcess: Bool
+    public var succcess, has_uid: Bool
     public var failure_message, username, uid_human: String
     public var uid: Int64
     
     public func hash(into hasher: inout Hasher) {
-        hasher.combine(username)
         hasher.combine(id)
     }
     
     public static func == (lhs: LoginLoginEvent, rhs: LoginLoginEvent) -> Bool {
-        if lhs.succcess == rhs.succcess && lhs.username == rhs.username && lhs.id == rhs.id {
-            return true
-        }
-        
-        return false
+        return lhs.id == rhs.id
     }
     
     init(from rawMessage: UnsafePointer<es_message_t>) {
@@ -42,6 +37,7 @@ public struct LoginLoginEvent: Identifiable, Codable, Hashable {
         }
         
         self.username = String(cString: loginLoginEvent.username.data)
+        self.has_uid = loginLoginEvent.has_uid
         if loginLoginEvent.has_uid {
             self.uid = Int64(loginLoginEvent.uid.uid)
             self.uid_human = String(cString: getpwuid(uid_t(loginLoginEvent.uid.uid))!.pointee.pw_name)
@@ -49,6 +45,5 @@ public struct LoginLoginEvent: Identifiable, Codable, Hashable {
             self.uid = -1
             self.uid_human = "Unknown"
         }
-        
     }
 }

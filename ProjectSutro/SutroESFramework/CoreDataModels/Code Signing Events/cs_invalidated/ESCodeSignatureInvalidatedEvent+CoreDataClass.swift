@@ -10,17 +10,9 @@ import Foundation
 import CoreData
 
 @objc(ESCodeSignatureInvalidatedEvent)
-public class ESCodeSignatureInvalidatedEvent: NSManagedObject, Decodable {
+public class ESCodeSignatureInvalidatedEvent: NSManagedObject {
     enum CodingKeys: CodingKey {
         case id
-    }
-    
-    // MARK: - Custom initilizer for ESCodeSignatureInvalidatedEvent during heavy flows
-    convenience init(from message: Message) {
-        let csInvalidated: CodeSignatureInvalidatedEvent = message.event.cs_invalidated!
-        self.init()
-        
-        self.id = csInvalidated.id
     }
     
     // MARK: - Custom Core Data initilizer for ESCodeSignatureInvalidatedEvent
@@ -30,14 +22,6 @@ public class ESCodeSignatureInvalidatedEvent: NSManagedObject, Decodable {
         self.init(entity: description, insertInto: context)
         
         self.id = csInvalidated.id
-    }
-    
-    // MARK: - Decodable conformance
-    required convenience public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.init()
-        
-        try id = container.decode(UUID.self, forKey: .id)
     }
 }
 

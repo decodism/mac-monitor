@@ -10,22 +10,12 @@ import Foundation
 import CoreData
 
 @objc(ESFileCloseEvent)
-public class ESFileCloseEvent: NSManagedObject, Decodable {
+public class ESFileCloseEvent: NSManagedObject {
     enum CodingKeys: CodingKey {
         case id
         case target
         case modified
         case was_mapped_writable
-    }
-    
-    
-    convenience init(from message: Message) {
-        let event: FileCloseEvent = message.event.close!
-        self.init()
-        self.id = event.id
-        self.target = ESFile(from: event.target)
-        self.modified = event.modified
-        self.was_mapped_writable = event.was_mapped_writable ?? false
     }
     
     // MARK: - Custom Core Data initilizer for ESFileCloseEvent
@@ -41,18 +31,6 @@ public class ESFileCloseEvent: NSManagedObject, Decodable {
         )
         self.modified = event.modified
         self.was_mapped_writable = event.was_mapped_writable ?? false
-    }
-    
-    // MARK: - Decodable conformance
-    required convenience public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.init()
-        
-        try id = container.decode(UUID.self, forKey: .id)
-        try target = container.decode(ESFile.self, forKey: .target)
-        try modified = container.decode(Bool.self, forKey: .modified)
-        try was_mapped_writable = container
-            .decode(Bool.self, forKey: .was_mapped_writable)
     }
 }
 

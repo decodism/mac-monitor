@@ -11,19 +11,10 @@ import CoreData
 
 
 @objc(ESFileWriteEvent)
-public class ESFileWriteEvent: NSManagedObject, Decodable {
+public class ESFileWriteEvent: NSManagedObject {
     enum CodingKeys: CodingKey {
         case id
         case target
-    }
-    
-    
-    convenience init(from message: Message) {
-        let event: FileWriteEvent = message.event.write!
-        self.init()
-        self.id = event.id
-        
-        self.target = ESFile(from: event.target)
     }
     
     // MARK: - Custom Core Data initilizer for ESFileWriteEvent
@@ -34,16 +25,6 @@ public class ESFileWriteEvent: NSManagedObject, Decodable {
         self.id = event.id
         
         self.target = ESFile(from: event.target, insertIntoManagedObjectContext: context)
-    }
-    
-    // MARK: - Decodable conformance
-    required convenience public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.init()
-        
-        try id = container.decode(UUID.self, forKey: .id)
-        
-        try target = container.decode(ESFile.self, forKey: .target)
     }
 }
 

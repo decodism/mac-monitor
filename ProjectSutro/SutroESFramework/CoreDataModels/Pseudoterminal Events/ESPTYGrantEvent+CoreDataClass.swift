@@ -11,18 +11,10 @@ import CoreData
 
 
 @objc(ESPTYGrantEvent)
-public class ESPTYGrantEvent: NSManagedObject, Decodable {
+public class ESPTYGrantEvent: NSManagedObject {
     enum CodingKeys: CodingKey {
         case id
         case dev
-    }
-    
-    // MARK: - Custom initilizer for ESPTYGrantEvent during heavy flows
-    convenience init(from message: Message) {
-        let event: PTYGrantEvent = message.event.pty_grant!
-        self.init()
-        self.id = event.id
-        self.dev = event.dev
     }
     
     // MARK: - Custom Core Data initilizer for ESPTYGrantEvent
@@ -32,15 +24,6 @@ public class ESPTYGrantEvent: NSManagedObject, Decodable {
         self.init(entity: description, insertInto: context)
         self.id = event.id
         self.dev = event.dev
-    }
-    
-    // MARK: - Decodable conformance
-    required convenience public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.init()
-        
-        try id = container.decode(UUID.self, forKey: .id)
-        try dev = container.decode(Int64.self, forKey: .dev)
     }
 }
 

@@ -10,7 +10,7 @@ import Foundation
 import CoreData
 
 @objc(ESMountEvent)
-public class ESMountEvent: NSManagedObject, Decodable {
+public class ESMountEvent: NSManagedObject {
     enum CodingKeys: CodingKey {
         case id
         case statfs
@@ -28,17 +28,6 @@ public class ESMountEvent: NSManagedObject, Decodable {
         }
     }
     
-    // MARK: - Custom initilizer for ESMountEvent during heavy flows
-    convenience init(from message: Message) {
-        let event: MountEvent = message.event.mount!
-        self.init()
-        self.id = event.id
-        
-        self.statfs = event.statfs
-        self.disposition = event.disposition
-        self.disposition_string = event.disposition_string
-    }
-    
     // MARK: - Custom Core Data initilizer for ESMountEvent
     convenience init(from message: Message, insertIntoManagedObjectContext context: NSManagedObjectContext!) {
         let event: MountEvent = message.event.mount!
@@ -49,18 +38,6 @@ public class ESMountEvent: NSManagedObject, Decodable {
         self.statfs = event.statfs
         self.disposition = event.disposition
         self.disposition_string = event.disposition_string
-    }
-    
-    // MARK: - Decodable conformance
-    required convenience public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.init()
-        
-        try id = container.decode(UUID.self, forKey: .id)
-        try statfs = container.decode(StatFS.self, forKey: .statfs)
-        try disposition = container.decode(Int16.self, forKey: .disposition)
-        try disposition_string = container.decode(String.self, forKey: .disposition_string)
-        
     }
 }
 

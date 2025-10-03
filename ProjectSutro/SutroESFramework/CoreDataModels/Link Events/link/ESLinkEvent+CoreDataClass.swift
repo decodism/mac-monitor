@@ -10,22 +10,12 @@ import Foundation
 import CoreData
 
 @objc(ESLinkEvent)
-public class ESLinkEvent: NSManagedObject, Decodable {
+public class ESLinkEvent: NSManagedObject {
     enum CodingKeys: CodingKey {
         case id
         case source
         case target_dir
         case target_filename
-    }
-    
-    convenience init(from message: Message) {
-        let event: LinkEvent = message.event.link!
-        self.init()
-        self.id = event.id
-        
-        self.source = ESFile(from: event.source)
-        self.target_dir = ESFile(from: event.target_dir)
-        self.target_filename = event.target_filename
     }
     
     // MARK: - Custom Core Data initilizer for ESLinkEvent
@@ -44,17 +34,6 @@ public class ESLinkEvent: NSManagedObject, Decodable {
             insertIntoManagedObjectContext: context
         )
         self.target_filename = event.target_filename
-    }
-    
-    // MARK: - Decodable conformance
-    required convenience public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.init()
-        try id = container.decode(UUID.self, forKey: .id)
-        
-        try source = container.decode(ESFile.self, forKey: .source)
-        try target_dir = container.decode(ESFile.self, forKey: .target_dir)
-        try target_filename = container.decode(String.self, forKey: .target_filename)
     }
 }
 

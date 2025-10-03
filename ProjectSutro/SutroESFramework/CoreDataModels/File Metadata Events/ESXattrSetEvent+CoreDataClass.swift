@@ -10,20 +10,11 @@ import Foundation
 import CoreData
 
 @objc(ESXattrSetEvent)
-public class ESXattrSetEvent: NSManagedObject, Decodable {
+public class ESXattrSetEvent: NSManagedObject {
     enum CodingKeys: CodingKey {
         case id, target, extattr
     }
     
-    // MARK: - Custom initilizer for ESXattrSetEvent during heavy flows
-    convenience init(from message: Message) {
-        let event: XattrSetEvent = message.event.setextattr!
-        self.init()
-        self.id = event.id
-        
-        target = ESFile(from: event.target)
-        extattr = event.extattr
-    }
     
     // MARK: - Custom Core Data initilizer for ESXattrSetEvent
     convenience init(from message: Message, insertIntoManagedObjectContext context: NSManagedObjectContext!) {
@@ -34,16 +25,6 @@ public class ESXattrSetEvent: NSManagedObject, Decodable {
         
         target = ESFile(from: event.target, insertIntoManagedObjectContext: context)
         extattr = event.extattr
-    }
-    
-    // MARK: - Decodable conformance
-    required convenience public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.init()
-        
-        try id = container.decode(UUID.self, forKey: .id)
-        try target = container.decode(ESFile.self, forKey: .target)
-        try extattr = container.decode(String.self, forKey: .extattr)
     }
 }
 

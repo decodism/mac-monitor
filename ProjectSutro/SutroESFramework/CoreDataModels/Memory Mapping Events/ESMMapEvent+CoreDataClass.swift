@@ -10,7 +10,7 @@ import Foundation
 import CoreData
 
 @objc(ESMMapEvent)
-public class ESMMapEvent: NSManagedObject, Decodable {
+public class ESMMapEvent: NSManagedObject {
     enum CodingKeys: CodingKey {
         case id
         case protection
@@ -18,19 +18,6 @@ public class ESMMapEvent: NSManagedObject, Decodable {
         case flags
         case file_pos
         case source
-    }
-    
-    // MARK: - Custom initilizer for ESMMapEvent during heavy flows
-    convenience init(from message: Message) {
-        let mmapEvent: MMapEvent = message.event.mmap!
-        self.init()
-        self.id = mmapEvent.id
-        
-        self.protection = mmapEvent.protection
-        self.max_protection = mmapEvent.max_protection
-        self.flags = mmapEvent.flags
-        self.file_pos = Int64(mmapEvent.file_pos)
-        self.source = ESFile(from: mmapEvent.source)
     }
     
     // MARK: - Custom Core Data initilizer for ESMMapEvent
@@ -48,19 +35,6 @@ public class ESMMapEvent: NSManagedObject, Decodable {
             from: mmapEvent.source,
             insertIntoManagedObjectContext: context
         )
-    }
-    
-    // MARK: - Decodable conformance
-    required convenience public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.init()
-        try id = container.decode(UUID.self, forKey: .id)
-        
-        try protection = container.decode(Int32.self, forKey: .protection)
-        try max_protection = container.decode(Int32.self, forKey: .max_protection)
-        try flags = container.decode(Int32.self, forKey: .flags)
-        try file_pos = container.decode(Int64.self, forKey: .file_pos)
-        try source = container.decodeIfPresent(ESFile.self, forKey: .source)!
     }
 }
 

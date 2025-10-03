@@ -10,19 +10,11 @@ import Foundation
 import CoreData
 
 @objc(ESTimeSpec)
-public class ESTimeSpec: NSManagedObject, Decodable {
+public class ESTimeSpec: NSManagedObject {
     enum CodingKeys: CodingKey {
         case id, tv_sec, tv_nsec
     }
-    
-    // MARK: - Custom initilizer for ESTimeSpec
-    convenience init(from spec: TimeSpec) {
-        self.init()
-        self.id = spec.id
-        self.tv_sec = Int64(spec.tv_sec)
-        self.tv_nsec = Int64(spec.tv_nsec)
-    }
-    
+
     // MARK: - Custom Core Data initilizer for ESTimeSpec
     convenience init(
         from spec: TimeSpec,
@@ -33,16 +25,6 @@ public class ESTimeSpec: NSManagedObject, Decodable {
         self.id = spec.id
         self.tv_sec = Int64(spec.tv_sec)
         self.tv_nsec = Int64(spec.tv_nsec)
-    }
-    
-    // MARK: - Decodable conformance
-    required convenience public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.init()
-        
-        try id = container.decode(UUID.self, forKey: .id)
-        try tv_sec = container.decode(Int64.self, forKey: .tv_sec)
-        try tv_nsec = container.decode(Int64.self, forKey: .tv_nsec)
     }
 }
 

@@ -10,7 +10,7 @@ import Foundation
 import CoreData
 
 @objc(ESLaunchItemAddEvent)
-public class ESLaunchItemAddEvent: NSManagedObject, Decodable {
+public class ESLaunchItemAddEvent: NSManagedObject {
     enum CodingKeys: CodingKey {
         case id
         case instigator
@@ -18,33 +18,6 @@ public class ESLaunchItemAddEvent: NSManagedObject, Decodable {
         case item
         case executable_path
         case instigator_token, app_token
-    }
-    
-    // MARK: - Custom initilizer for ESLaunchItemAddEvent during heavy flows
-    convenience init(from message: Message) {
-        let event: LaunchItemAddEvent = message.event.btm_launch_item_add!
-        let version: Int = message.version
-        self.init()
-        self.id = event.id
-        
-        if let instigator = event.instigator {
-            self.instigator = ESProcess(from: instigator, version: version)
-        }
-        
-        if let app = event.app {
-            self.app = ESProcess(from: app, version: version)
-        }
-        
-        item = ESLaunchItem(from: event.item)
-        
-        executable_path = event.executable_path
-        if let instigator_token = event.instigator_token {
-            self.instigator_token = ESAuditToken(from: instigator_token)
-        }
-        
-        if let app_token = event.app_token {
-            self.app_token = ESAuditToken(from: app_token)
-        }
     }
     
     // MARK: - Custom Core Data initilizer for ESLaunchItemAddEvent
@@ -81,21 +54,6 @@ public class ESLaunchItemAddEvent: NSManagedObject, Decodable {
         if let app_token = event.app_token {
             self.app_token = ESAuditToken(from: app_token, insertIntoManagedObjectContext: context)
         }
-    }
-    
-    // MARK: - Decodable conformance
-    required convenience public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.init()
-        try id = container.decode(UUID.self, forKey: .id)
-        
-        try instigator = container.decodeIfPresent(ESProcess.self, forKey: .instigator)
-        try app = container.decodeIfPresent(ESProcess.self, forKey: .app)
-        try item = container.decode(ESLaunchItem.self, forKey: .item)
-        try executable_path = container.decode(String.self, forKey: .executable_path)
-        try instigator_token = container.decodeIfPresent(ESAuditToken.self, forKey: .instigator_token)
-        try app_token = container.decodeIfPresent(ESAuditToken.self, forKey: .app_token)
-        
     }
 }
 

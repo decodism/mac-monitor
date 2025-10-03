@@ -10,21 +10,11 @@ import Foundation
 import CoreData
 
 @objc(ESFileOpenEvent)
-public class ESFileOpenEvent: NSManagedObject, Decodable {
+public class ESFileOpenEvent: NSManagedObject {
     enum CodingKeys: CodingKey {
         case id, file, fflag
     }
-    
-    
-    convenience init(from message: Message) {
-        let fileEvent: FileOpenEvent = message.event.open!
-        self.init()
-        self.id = fileEvent.id
-        
-        self.file = ESFile(from: fileEvent.file)
-        self.fflag = fileEvent.fflag
-    }
-    
+
     // MARK: - Custom Core Data initilizer for ESFileOpenEvent
     convenience init(from message: Message, insertIntoManagedObjectContext context: NSManagedObjectContext!) {
         let fileEvent: FileOpenEvent = message.event.open!
@@ -34,16 +24,6 @@ public class ESFileOpenEvent: NSManagedObject, Decodable {
         
         self.file = ESFile(from: fileEvent.file, insertIntoManagedObjectContext: context)
         self.fflag = fileEvent.fflag
-    }
-    
-    // MARK: - Decodable conformance
-    required convenience public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.init()
-        
-        try id = container.decode(UUID.self, forKey: .id)
-        try file = container.decode(ESFile.self, forKey: .file)
-        try fflag = container.decode(Int32.self, forKey: .fflag)
     }
 }
 

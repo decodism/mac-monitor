@@ -10,18 +10,10 @@ import Foundation
 import CoreData
 
 @objc(ESFDDuplicateEvent)
-public class ESFDDuplicateEvent: NSManagedObject, Decodable {
+public class ESFDDuplicateEvent: NSManagedObject {
     enum CodingKeys: CodingKey {
         case id
         case target
-    }
-    
-    // MARK: - Custom initilizer for ESFDDuplicateEvent during heavy flows
-    convenience init(from message: Message) {
-        let event: FDDuplicateEvent = message.event.dup!
-        self.init()
-        self.id = event.id
-        self.target = ESFile(from: event.target)
     }
     
     // MARK: - Custom Core Data initilizer for ESFDDuplicateEvent
@@ -31,15 +23,6 @@ public class ESFDDuplicateEvent: NSManagedObject, Decodable {
         self.init(entity: description, insertInto: context)
         self.id = event.id
         self.target = ESFile(from: event.target, insertIntoManagedObjectContext: context)
-    }
-    
-    // MARK: - Decodable conformance
-    required convenience public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.init()
-        
-        try id = container.decode(UUID.self, forKey: .id)
-        try target = container.decode(ESFile.self, forKey: .target)
     }
 }
 

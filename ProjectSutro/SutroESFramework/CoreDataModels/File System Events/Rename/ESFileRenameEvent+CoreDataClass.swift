@@ -11,29 +11,13 @@ import CoreData
 import OSLog
 
 @objc(ESFileRenameEvent)
-public class ESFileRenameEvent: NSManagedObject, Decodable {
+public class ESFileRenameEvent: NSManagedObject {
     enum CodingKeys: CodingKey {
         case id
         case source
         case destination_type, destination_type_string
         case destination, destination_path
         case is_quarantined
-    }
-    
-    // MARK: - Custom initilizer for ESFileRenameEvent during heavy flows
-    convenience init(from message: Message) {
-        let fileRenameEvent: FileRenameEvent = message.event.rename!
-        self.init()
-        self.id = fileRenameEvent.id
-        
-        self.source = ESFile(from: fileRenameEvent.source)
-        
-        self.destination_type = Int16(fileRenameEvent.destination_type)
-        self.destination_type_string = fileRenameEvent.destination_type_string
-        self.destination = ESFileDestination(from: fileRenameEvent.destination)
-        
-        self.destination_path = fileRenameEvent.destination_path
-        self.is_quarantined = fileRenameEvent.is_quarantined
     }
     
     // MARK: - Custom Core Data initilizer for ESFileRenameEvent
@@ -51,21 +35,6 @@ public class ESFileRenameEvent: NSManagedObject, Decodable {
         self.destination_path = fileRenameEvent.destination_path
         
         self.is_quarantined = fileRenameEvent.is_quarantined
-    }
-    
-    // MARK: - Decodable conformance
-    required convenience public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.init()
-        try id = container.decode(UUID.self, forKey: .id)
-        
-        try source = container.decode(ESFile.self, forKey: .source)
-        try destination_type = container.decode(Int16.self, forKey: .destination_type)
-        try destination_type_string = container.decode(String.self, forKey: .destination_type_string)
-        try destination = container.decode(ESFileDestination.self, forKey: .destination)
-        
-        try destination_path = container.decode(String.self, forKey: .destination_path)
-        try is_quarantined = container.decode(Int16.self, forKey: .is_quarantined)
     }
 }
 

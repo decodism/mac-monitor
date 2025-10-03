@@ -11,7 +11,7 @@ import CoreData
 
 
 @objc(ESUIPCConnectEvent)
-public class ESUIPCConnectEvent: NSManagedObject, Decodable {
+public class ESUIPCConnectEvent: NSManagedObject {
     enum CodingKeys: CodingKey {
         case id
         case file
@@ -21,20 +21,6 @@ public class ESUIPCConnectEvent: NSManagedObject, Decodable {
         case type_string
         case domain_string
         case protocol_string
-    }
-    
-    convenience init(from message: Message) {
-        let event: UIPCConnectEvent = message.event.uipc_connect!
-        self.init()
-        self.id = event.id
-        
-        self.file = ESFile(from: event.file)
-        self.domain = event.domain
-        self.type = event.type
-        self.protocol = event.protocol
-        self.type_string = event.type_string
-        self.domain_string = event.domain_string
-        self.protocol_string = event.protocol_string
     }
     
     convenience init(from message: Message, insertIntoManagedObjectContext context: NSManagedObjectContext!) {
@@ -50,21 +36,6 @@ public class ESUIPCConnectEvent: NSManagedObject, Decodable {
         self.type_string = event.type_string
         self.domain_string = event.domain_string
         self.protocol_string = event.protocol_string
-    }
-    
-    required convenience public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.init()
-        
-        try id = container.decode(UUID.self, forKey: .id)
-        try file = container.decode(ESFile.self, forKey: .file)
-        try domain = container.decode(Int32.self, forKey: .domain)
-        try type = container.decode(Int32.self, forKey: .type)
-        try `protocol` = container.decode(Int32.self, forKey: .protocol)
-        
-        try type_string = container.decode(String.self, forKey: .type_string)
-        try domain_string = container.decode(String.self, forKey: .domain_string)
-        try protocol_string = container.decode(String.self, forKey: .protocol_string)
     }
 }
 

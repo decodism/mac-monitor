@@ -11,7 +11,7 @@ import CoreData
 
 
 @objc(ESAuthorizationJudgementEvent)
-public class ESAuthorizationJudgementEvent: NSManagedObject, Decodable {
+public class ESAuthorizationJudgementEvent: NSManagedObject {
     enum CodingKeys: CodingKey {
         case id
         case instigator
@@ -32,31 +32,7 @@ public class ESAuthorizationJudgementEvent: NSManagedObject, Decodable {
             resultsData = try? JSONEncoder().encode(newValue)
         }
     }
-    
-    convenience init(from message: Message) {
-        let event: AuthorizationJudgementEvent = message.event.authorization_judgement!
-        self.init()
-        self.id = event.id
-        
-        self.return_code = Int32(event.return_code)
-        self.result_count = Int32(event.result_count)
-        self.results = event.results
-        
-        if let instigator = event.instigator {
-            self.instigator = ESProcess(from: instigator, version: message.version)
-            if let instigator_token = event.instigator_token {
-                self.instigator_token = ESAuditToken(from: instigator_token)
-            }
-        }
-        
-        if let petitioner = event.petitioner {
-            self.petitioner = ESProcess(from: petitioner, version: message.version)
-            if let petitioner_token = event.petitioner_token {
-                self.petitioner_token = ESAuditToken(from: petitioner_token)
-            }
-        }
-    }
-    
+
     convenience init(from message: Message, insertIntoManagedObjectContext context: NSManagedObjectContext!) {
         let event: AuthorizationJudgementEvent = message.event.authorization_judgement!
         let description = NSEntityDescription.entity(forEntityName: "ESAuthorizationJudgementEvent", in: context)!
@@ -80,23 +56,6 @@ public class ESAuthorizationJudgementEvent: NSManagedObject, Decodable {
                 self.petitioner_token = ESAuditToken(from: petitioner_token, insertIntoManagedObjectContext: context)
             }
         }
-    }
-    
-    
-    required convenience public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.init()
-        
-        try id = container.decode(UUID.self, forKey: .id)
-        try return_code = container.decode(Int32.self, forKey: .return_code)
-        try result_count = container.decode(Int32.self, forKey: .result_count)
-        try results = container.decode([ESAuthorizationResult].self, forKey: .results)
-        
-        try instigator = container.decodeIfPresent(ESProcess.self, forKey: .instigator)
-        try petitioner = container.decodeIfPresent(ESProcess.self, forKey: .petitioner)
-        
-        try instigator_token = container.decodeIfPresent(ESAuditToken.self, forKey: .instigator_token)
-        try petitioner_token = container.decodeIfPresent(ESAuditToken.self, forKey: .petitioner_token)
     }
 }
 

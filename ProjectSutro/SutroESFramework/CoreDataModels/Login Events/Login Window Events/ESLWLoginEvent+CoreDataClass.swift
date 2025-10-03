@@ -10,19 +10,9 @@ import Foundation
 import CoreData
 
 @objc(ESLWLoginEvent)
-public class ESLWLoginEvent: NSManagedObject, Decodable {
+public class ESLWLoginEvent: NSManagedObject {
     enum CodingKeys: CodingKey {
         case id, username, graphical_session_id
-    }
-    
-    // MARK: - Custom initilizer for ESLWLoginEvent during heavy flows
-    convenience init(from message: Message) {
-        let lwLoginEvent: LWLoginEvent = message.event.lw_session_login!
-        self.init()
-        
-        self.id = lwLoginEvent.id
-        self.username = lwLoginEvent.username
-        self.graphical_session_id = lwLoginEvent.graphical_session_id
     }
     
     // MARK: - Custom Core Data initilizer for ESLWLoginEvent
@@ -34,16 +24,6 @@ public class ESLWLoginEvent: NSManagedObject, Decodable {
         self.id = lwLoginEvent.id
         self.username = lwLoginEvent.username
         self.graphical_session_id = lwLoginEvent.graphical_session_id
-    }
-    
-    // MARK: - Decodable conformance
-    required convenience public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.init()
-        
-        try id = container.decode(UUID.self, forKey: .id)
-        try username = container.decode(String.self, forKey: .username)
-        try graphical_session_id = container.decode(Int32.self, forKey: .graphical_session_id)
     }
 }
 

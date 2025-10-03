@@ -28,10 +28,11 @@ struct SystemLoginLoginMetadataView: View {
                         Label("**Username:**", systemImage: "person.fill")
                             .padding([.leading], 5.0)
                         GroupBox {
-                            if event.uid != -1 {
-                                Text("`\(event.username!) (\(event.uid))`")
+                            if let uid = event.uid {
+                                Text("`\(event.username!) (\(uid))`")
+                            } else {
+                                Text("`\(event.username!)`")
                             }
-                            Text("`\(event.username!)`")
                         }
                     }.frame(maxWidth: .infinity, alignment: .leading)
                     
