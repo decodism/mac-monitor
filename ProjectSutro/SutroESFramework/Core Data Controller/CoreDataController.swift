@@ -387,21 +387,25 @@ public class CoreDataController {
         let request = NSFetchRequest<NSFetchRequestResult>(entityName: "ESMessage")
         request.returnsObjectsAsFaults = false
         
-        // Use the private context for a large background fetch.
         privateMOC.perform {
-            do {
-                let result = try self.privateMOC.fetch(request) as! [ESMessage]
-                let json = result.map { jsonl ? ProcessHelpers.eventToJSON(value: $0) : ProcessHelpers.eventToPrettyJSON(value: $0) }.joined(separator: "\n")
+            guard let result = try? self.privateMOC.fetch(request) as? [ESMessage] else { return }
+            
+            let objectIDs = result.map { $0.objectID }
+            
+            DispatchQueue.main.async {
+                var jsonLines: [String] = []
+                jsonLines.reserveCapacity(objectIDs.count)
                 
-                do {
-                    try json.write(to: telemetryFile, atomically: true, encoding: .utf8)
-                } catch {
-                    // Switch back to main thread for logging UI-related errors if needed, but logger is fine.
-                    CoreDataController.logger.error("Failed to write telemetry file")
+                for objectID in objectIDs {
+                    guard let message = try? self.privateMOC.existingObject(with: objectID) as? ESMessage else { continue }
+                    let jsonString = jsonl ?
+                        ProcessHelpers.eventToJSON(value: message) :
+                        ProcessHelpers.eventToPrettyJSON(value: message)
+                    jsonLines.append(jsonString)
                 }
                 
-            } catch {
-                CoreDataController.logger.error("Could not fetch system events to export!")
+                let json = jsonLines.joined(separator: "\n")
+                try? json.write(to: telemetryFile, atomically: true, encoding: .utf8)
             }
         }
     }
@@ -417,34 +421,27 @@ public class CoreDataController {
     ///
     public func exportSelectedEvents(eventIDs: [UUID], jsonl: Bool = false) {
         guard let telemetryFile = showSavePanel(numberOfEvents: eventIDs.count) else { return }
-        var fetchedEvents: [ESMessage?] = Array(
-            repeating: nil,
-            count: eventIDs.count
-        )
+        
+        var fetchedEvents: [ESMessage?] = Array(repeating: nil, count: eventIDs.count)
         let dispatchGroup = DispatchGroup()
+        
         for (index, id) in eventIDs.enumerated() {
             dispatchGroup.enter()
             DispatchQueue.global(qos: .userInitiated).async { [self] in
-                let event = self.getEntityByID(id: id)
-                fetchedEvents[index] = event
+                fetchedEvents[index] = self.getEntityByID(id: id)
                 dispatchGroup.leave()
             }
         }
         
-        // 2. After fetching sort, serialize, and write
         dispatchGroup.notify(queue: .main) {
             let sortedEvents = fetchedEvents.compactMap { $0 }.sorted { $0.mach_time < $1.mach_time }
             let jsonStrings = sortedEvents.map { event in
                 jsonl ? ProcessHelpers.eventToJSON(value: event) : ProcessHelpers.eventToPrettyJSON(value: event)
             }
             let finalJSON = jsonStrings.joined(separator: "\n")
-            if !finalJSON.isEmpty {
-                do {
-                    try finalJSON.write(to: telemetryFile, atomically: true, encoding: .utf8)
-                } catch {
-                    CoreDataController.logger.error("Error writing sorted system track to disk: \(error.localizedDescription)")
-                }
-            }
+            
+            guard !finalJSON.isEmpty else { return }
+            try? finalJSON.write(to: telemetryFile, atomically: true, encoding: .utf8)
         }
     }
     

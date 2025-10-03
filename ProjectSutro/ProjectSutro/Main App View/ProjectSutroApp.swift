@@ -237,13 +237,14 @@ struct ProjectSutroApp: App {
                         systemExtensionManager.stopRecordingEvents()
                         systemExtensionManager.coreDataContainer.exportFullTrace(jsonl: true)
                     }
+                    .keyboardShortcut("s", modifiers: .command)
                     
                     Button("Selected events \(eventSelection.count > 0 ? ": \(eventSelection.count)" : "")") {
                         recordingEvents = false
                         systemExtensionManager.stopRecordingEvents()
                         systemExtensionManager.coreDataContainer.exportSelectedEvents(eventIDs: Array(eventSelection), jsonl: true)
-                        
-                    }.disabled(eventSelection.isEmpty)
+                    }
+                    .disabled(eventSelection.isEmpty)
                 }
             }
         }

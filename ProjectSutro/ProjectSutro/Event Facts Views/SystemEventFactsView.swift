@@ -78,20 +78,29 @@ struct SystemEventFactsView : View {
         procGroup.count + procSessionGroup.count
     }
     
+    private var groupToShow: Groups {
+        !procGroup.isEmpty ? Groups.process : Groups.session
+    }
+    
     var body: some View {
         TabView {
             // MARK: Event Facts tab view metadata view
             VStack(alignment: .leading) {
                 SystemEventDetailsView(selectedMessage: selectedMessage)
-            }.padding(.bottom).tabItem{ Text("Metadata") }.tag(EventTabs.metadata)
+            }
+            .padding(.bottom)
+            .tabItem{ Text("Metadata") }
+            .tag(EventTabs.metadata)
             
             // MARK: Display full property list for BTM events
-            if let btm_launch_item_add = selectedMessage.event.btm_launch_item_add,
-               let plist = btm_launch_item_add.item.plist_contents {
+            if let event = selectedMessage.event.btm_launch_item_add,
+               let plist = event.item.plist_contents {
                 if !plist.isEmpty {
                     VStack(alignment: .leading) {
                         PropertyListView(selectedRCEvent: selectedMessage)
-                    }.tabItem{ Text("PLIST") }.tag(EventTabs.plist)
+                    }
+                    .tabItem{ Text("PLIST") }
+                    .tag(EventTabs.plist)
                 }
             }
             
@@ -101,11 +110,13 @@ struct SystemEventFactsView : View {
                     SystemEnrichedEventView(allFilters: $allFilters, selectedMessage: selectedMessage)
                         .environmentObject(systemExtensionManager)
                         .environmentObject(userPrefs)
-                }.tabItem{ Text("Correlation") }.tag(EventTabs.enrichment)
+                }
+                .tabItem{ Text("Correlation") }
+                .tag(EventTabs.enrichment)
             }
             
             // MARK: Process Groups
-            if procSessionGroup.count > 1 || procGroup.count > 1 {
+            if !procSessionGroup.isEmpty || !procGroup.isEmpty {
                 VStack(alignment: .leading) {
                     SystemEventGroupTableViews(
                         allFilters: $allFilters,
@@ -113,19 +124,25 @@ struct SystemEventFactsView : View {
                         processGroup: procGroup,
                         sessionGroup: procSessionGroup
                     )
-                }.tabItem{ Text("Groups") }.tag(EventTabs.enrichment)
+                }
+                .tabItem{ Text("Groups") }
+                .tag(EventTabs.enrichment)
             }
             
             // MARK: Initating process view
             VStack(alignment: .leading) {
                 SystemInitiatingProcessView(selectedMessage: selectedMessage)
                     .textSelection(.enabled)
-            }.tabItem{ Text("Parent") }.tag(EventTabs.initiating)
+            }
+            .tabItem{ Text("Parent") }
+            .tag(EventTabs.initiating)
             
             // MARK: JSON view
             VStack(alignment: .leading) {
                 SystemEventJSONView(selectedMessage: selectedMessage)
-            }.tabItem{ Text("JSON") }.tag(EventTabs.telemetry)
+            }
+            .tabItem{ Text("JSON") }
+            .tag(EventTabs.telemetry)
         }.padding(.all)
     }
 }
