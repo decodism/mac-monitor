@@ -139,7 +139,7 @@ extension ESProcess: Encodable {
         
         try container.encode(codesigning_flags, forKey: .codesigning_flags)
         try container.encodeIfPresent(signing_id, forKey: .signing_id)
-        try container.encodeIfPresent(team_id, forKey: .team_id)
+        try container.encode(team_id, forKey: .team_id)
         try container.encodeIfPresent(cdhash, forKey: .cdhash)
         try container.encode(is_adhoc_signed, forKey: .is_adhoc_signed)
         
