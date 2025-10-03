@@ -150,6 +150,17 @@ struct FilterView: View {
         return Set(allFilters.events.map { $0 })
     }
     
+    private var eventFilterSearch: [String] {
+        return Array(eventFilters).filter({
+            if !searchText.isEmpty {
+                return $0
+                    .lowercased()
+                    .contains(searchText.lowercased())
+            }
+            return true
+        })
+    }
+    
     private var userIDs: [String] {
         allFilters.userIDs
     }
@@ -413,13 +424,7 @@ struct FilterView: View {
                             
                             GroupBox {
                                 VStack(alignment: .leading, spacing: 8) {
-                                    ForEach(
-                                        Array(eventFilters).sorted().filter({
-                                            if !searchText.isEmpty { return $0.lowercased().contains(searchText.lowercased()) }
-                                            return true
-                                        }),
-                                        id: \.self
-                                    ) { event in
+                                    ForEach(eventFilterSearch, id: \.self) { event in
                                         GroupBox {
                                             HStack {
                                                 Image(systemName: eventStringToImage(from: event))
@@ -441,9 +446,6 @@ struct FilterView: View {
                         Divider()
                     }
                     
-                    
-                    
-                    
                 }.padding(.all)
             }
         }
@@ -454,11 +456,6 @@ struct FilterView: View {
         Button("Close", action: {
             filteredTelemetryShown.toggle()
         }).buttonStyle(.borderedProminent).tint(.pink).frame(alignment: .center).padding(.all)
-    }
-    
-    
-    func delete(at offsets: IndexSet) {
-        
     }
 }
 
