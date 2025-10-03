@@ -31,8 +31,6 @@ public struct NewPath: Identifiable, Codable, Equatable, Hashable {
     public init(from rename: es_event_rename_t) {
         self.dir = File(from: rename.destination.new_path.dir.pointee)
         
-        self.filename = String(
-            cString: rename.destination.new_path.filename.data
-        )
+        self.filename = rename.destination.new_path.filename.toString() ?? ""
     }
 }

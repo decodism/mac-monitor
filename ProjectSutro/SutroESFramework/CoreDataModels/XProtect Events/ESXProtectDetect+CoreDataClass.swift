@@ -10,7 +10,7 @@ import Foundation
 import CoreData
 
 @objc(ESXProtectDetect)
-public class ESXProtectDetect: NSManagedObject, Decodable {
+public class ESXProtectDetect: NSManagedObject {
     enum CodingKeys: CodingKey {
         case id
         case signature_version
@@ -18,20 +18,6 @@ public class ESXProtectDetect: NSManagedObject, Decodable {
         case incident_identifier
         case detected_path
         case detected_executable
-    }
-
-    // MARK: - Custom initilizer for ESXProtectDetect during heavy flows
-    convenience init(from message: Message) {
-        let xprotectDetectItem: XProtectDetectEvent = message.event.xp_malware_detected!
-        self.init()
-        self.id = xprotectDetectItem.id
-        
-        self.signature_version = xprotectDetectItem.signature_version
-        self.malware_identifier = xprotectDetectItem.malware_identifier
-        self.incident_identifier = xprotectDetectItem.incident_identifier
-        self.detected_path = xprotectDetectItem.detected_path
-        
-        self.detected_executable = xprotectDetectItem.detected_executable
     }
     
     // MARK: - Custom Core Data initilizer for ESXProtectDetect
@@ -47,20 +33,6 @@ public class ESXProtectDetect: NSManagedObject, Decodable {
         self.detected_path = xprotectDetectItem.detected_path
         
         self.detected_executable = xprotectDetectItem.detected_executable
-    }
-    
-    // MARK: - Decodable conformance
-    required convenience public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.init()
-        
-        try id = container.decode(UUID.self, forKey: .id)
-        try signature_version = container.decode(String.self, forKey: .signature_version)
-        try malware_identifier = container.decode(String.self, forKey: .malware_identifier)
-        try incident_identifier = container.decode(String.self, forKey: .incident_identifier)
-        try detected_path = container.decode(String.self, forKey: .detected_path)
-        
-        try detected_executable = container.decodeIfPresent(String.self, forKey: .detected_executable)
     }
 }
 

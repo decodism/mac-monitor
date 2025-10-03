@@ -10,26 +10,12 @@ import Foundation
 import CoreData
 
 @objc(ESProcessSocketEvent)
-public class ESProcessSocketEvent: NSManagedObject, Decodable {
+public class ESProcessSocketEvent: NSManagedObject {
     enum CodingKeys: CodingKey {
         case id
         case type
         case type_string
         case target
-    }
-    
-    
-    convenience init(from message: Message) {
-        let processSocketEvent: ProcessSocketEvent = message.event.proc_suspend_resume!
-        self.init()
-        
-        self.id = processSocketEvent.id
-        self.type_string = processSocketEvent.type_string
-        self.type = processSocketEvent.type
-        
-        if let target = processSocketEvent.target {
-            self.target = ESProcess(from: target, version: message.version)
-        }
     }
     
     // MARK: - Custom Core Data initilizer for ESProcessSocketEvent
@@ -45,17 +31,6 @@ public class ESProcessSocketEvent: NSManagedObject, Decodable {
         if let target = processSocketEvent.target {
             self.target = ESProcess(from: target, version: message.version, insertIntoManagedObjectContext: context)
         }
-    }
-    
-    // MARK: - Decodable conformance
-    required convenience public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.init()
-        
-        try id = container.decode(UUID.self, forKey: .id)
-        try type_string = container.decode(String.self, forKey: .type_string)
-        
-        try target = container.decodeIfPresent(ESProcess.self, forKey: .target)
     }
 }
 

@@ -10,19 +10,9 @@ import Foundation
 import CoreData
 
 @objc(ESOpenSSHLogoutEvent)
-public class ESOpenSSHLogoutEvent: NSManagedObject, Decodable {
+public class ESOpenSSHLogoutEvent: NSManagedObject {
     enum CodingKeys: CodingKey {
         case id, result_type, source_address, source_address_type, success, username
-    }
-    
-    // MARK: - Custom initilizer for ESOpenSSHLogoutEvent during heavy flows
-    convenience init(from message: Message) {
-        let sshLogoutEvent: SSHLogoutEvent = message.event.openssh_logout!
-        self.init()
-        self.id = sshLogoutEvent.id
-        self.source_address = sshLogoutEvent.source_address
-        self.source_address_type = sshLogoutEvent.source_address_type
-        self.username = sshLogoutEvent.username
     }
     
     // MARK: - Custom Core Data initilizer for ESOpenSSHLogoutEvent
@@ -34,17 +24,6 @@ public class ESOpenSSHLogoutEvent: NSManagedObject, Decodable {
         self.source_address = sshLogoutEvent.source_address
         self.source_address_type = sshLogoutEvent.source_address_type
         self.username = sshLogoutEvent.username
-    }
-    
-    // MARK: - Decodable conformance
-    required convenience public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.init()
-        
-        try id = container.decode(UUID.self, forKey: .id)
-        try source_address = container.decode(String.self, forKey: .source_address)
-        try source_address_type = container.decode(String.self, forKey: .source_address_type)
-        try username = container.decode(String.self, forKey: .username)
     }
 }
 

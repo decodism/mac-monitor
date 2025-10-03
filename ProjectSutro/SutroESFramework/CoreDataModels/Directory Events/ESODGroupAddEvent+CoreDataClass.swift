@@ -11,27 +11,9 @@ import CoreData
 
 
 @objc(ESODGroupAddEvent)
-public class ESODGroupAddEvent: NSManagedObject, Decodable {
+public class ESODGroupAddEvent: NSManagedObject {
     enum CodingKeys: CodingKey {
         case id, instigator_process_name, instigator_process_path, instigator_process_audit_token, instigator_process_signing_id, error_code, group_name, member, node_name, db_path, error_code_human
-    }
-    
-    convenience init(from message: Message) {
-        let odAddGroupEvent: OpenDirectoryGroupAddEvent = message.event.od_group_add!
-        self.init()
-        
-        self.id = odAddGroupEvent.id
-        self.instigator_process_name = odAddGroupEvent.instigator_process_name
-        self.instigator_process_path = odAddGroupEvent.instigator_process_path
-        self.instigator_process_audit_token = odAddGroupEvent.instigator_process_audit_token
-        self.instigator_process_signing_id = odAddGroupEvent.instigator_process_signing_id
-        
-        self.error_code = Int32(odAddGroupEvent.error_code)
-        self.group_name = odAddGroupEvent.group_name
-        self.member = odAddGroupEvent.member
-        self.node_name = odAddGroupEvent.node_name
-        self.db_path = odAddGroupEvent.db_path
-        self.error_code_human = odAddGroupEvent.error_code_human
     }
     
     convenience init(from message: Message, insertIntoManagedObjectContext context: NSManagedObjectContext!) {
@@ -51,24 +33,6 @@ public class ESODGroupAddEvent: NSManagedObject, Decodable {
         self.node_name = odAddGroupEvent.node_name
         self.db_path = odAddGroupEvent.db_path
         self.error_code_human = odAddGroupEvent.error_code_human
-    }
-    
-    required convenience public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.init()
-        
-        try id = container.decode(UUID.self, forKey: .id)
-        try instigator_process_name = container.decode(String.self, forKey: .instigator_process_name)
-        try instigator_process_path = container.decode(String.self, forKey: .instigator_process_path)
-        try instigator_process_audit_token = container.decode(String.self, forKey: .instigator_process_audit_token)
-        try instigator_process_signing_id = container.decode(String.self, forKey: .instigator_process_signing_id)
-        
-        try error_code = container.decode(Int32.self, forKey: .error_code)
-        try group_name = container.decode(String.self, forKey: .group_name)
-        try member = container.decode(String.self, forKey: .member)
-        try node_name = container.decode(String.self, forKey: .node_name)
-        try db_path = container.decode(String.self, forKey: .db_path)
-        try error_code_human = container.decode(String.self, forKey: .error_code_human)
     }
 }
 

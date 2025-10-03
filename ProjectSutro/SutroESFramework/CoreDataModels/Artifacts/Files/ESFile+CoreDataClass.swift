@@ -12,19 +12,9 @@ import CoreData
 
 
 @objc(ESFile)
-public class ESFile: NSManagedObject, Decodable {
+public class ESFile: NSManagedObject {
     enum CodingKeys: CodingKey {
         case id, path, path_truncated, stat, name
-    }
-    
-    // MARK: - Custom initilizer for File
-    convenience init(from file: File) {
-        self.init()
-        self.id = file.id
-        self.path = file.path
-        self.name = file.name
-        self.path_truncated = file.path_truncated
-        self.stat = ESStat(from: file.stat)
     }
     
     // MARK: - Custom Core Data initilizer for File
@@ -43,19 +33,6 @@ public class ESFile: NSManagedObject, Decodable {
             insertIntoManagedObjectContext: context
         )
     }
-    
-    // MARK: - Decodable conformance
-    required convenience public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.init()
-        
-        try id = container.decode(UUID.self, forKey: .id)
-        try path = container.decode(String.self, forKey: .path)
-        try path = container.decode(String.self, forKey: .name)
-        try stat = container.decode(ESStat.self, forKey: .stat)
-        try path_truncated = container.decode(Bool.self, forKey: .path_truncated)
-    }
-
 }
 
 // MARK: - Encodable conformance

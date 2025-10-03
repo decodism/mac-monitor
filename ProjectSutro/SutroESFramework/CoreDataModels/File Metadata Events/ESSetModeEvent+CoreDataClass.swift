@@ -11,20 +11,11 @@ import CoreData
 
 
 @objc(ESSetModeEvent)
-public class ESSetModeEvent: NSManagedObject, Decodable {
+public class ESSetModeEvent: NSManagedObject {
     enum CodingKeys: CodingKey {
         case id
         case mode
         case target
-    }
-    
-    // MARK: - Custom initilizer for ESSetModeEvent during heavy flows
-    convenience init(from message: Message) {
-        let event: SetModeEvent = message.event.setmode!
-        self.init()
-        self.id = event.id
-        self.mode = event.mode
-        self.target = ESFile(from: event.target)
     }
     
     // MARK: - Custom Core Data initilizer for ESSetModeEvent
@@ -35,16 +26,6 @@ public class ESSetModeEvent: NSManagedObject, Decodable {
         self.id = event.id
         self.mode = event.mode
         self.target = ESFile(from: event.target, insertIntoManagedObjectContext: context)
-    }
-    
-    // MARK: - Decodable conformance
-    required convenience public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.init()
-        
-        try id = container.decode(UUID.self, forKey: .id)
-        try mode = container.decode(Int32.self, forKey: .mode)
-        try target = container.decode(ESFile.self, forKey: .target)
     }
 }
 

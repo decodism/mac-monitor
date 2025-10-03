@@ -10,24 +10,9 @@ import Foundation
 import CoreData
 
 @objc(ESAuditToken)
-public class ESAuditToken: NSManagedObject, Decodable {
+public class ESAuditToken: NSManagedObject {
     enum CodingKeys: CodingKey {
         case id, pid, euid, ruid, rgid, egid, asid, auid, pidversion
-    }
-    
-    // MARK: - Custom initilizer for ESAuditToken
-    convenience init(from token: AuditToken) {
-        self.init()
-        self.id = token.id
-        
-        self.pid = token.pid
-        self.euid = token.euid
-        self.ruid = token.ruid
-        self.rgid = token.rgid
-        self.egid = token.egid
-        self.asid = token.asid
-        self.auid = token.auid
-        self.pidversion = token.pidversion
     }
     
     // MARK: - Custom Core Data initilizer for ESAuditToken
@@ -48,23 +33,6 @@ public class ESAuditToken: NSManagedObject, Decodable {
         self.auid = token.auid
         self.pidversion = token.pidversion
     }
-    
-    // MARK: - Decodable conformance
-    required convenience public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.init()
-        
-        try id = container.decode(UUID.self, forKey: .id)
-        try pid = container.decode(Int32.self, forKey: .pid)
-        try euid = container.decode(Int64.self, forKey: .euid)
-        try ruid = container.decode(Int64.self, forKey: .ruid)
-        try rgid = container.decode(Int64.self, forKey: .rgid)
-        try egid = container.decode(Int64.self, forKey: .egid)
-        try asid = container.decode(Int32.self, forKey: .asid)
-        try auid = container.decode(Int64.self, forKey: .auid)
-        try pidversion = container.decode(Int32.self, forKey: .pidversion)
-    }
-
 }
 
 // MARK: - Encodable conformance and helper

@@ -11,7 +11,7 @@ import CoreData
 import OSLog
 
 @objc(ESProcessExecEvent)
-public class ESProcessExecEvent: NSManagedObject, Decodable {
+public class ESProcessExecEvent: NSManagedObject {
     enum CodingKeys: String, CodingKey {
         case id, pid, target_proc_audit_token_string, target_proc_parent_audit_token_string, target_proc_responsible_audit_token_string, allow_jit, command_line, get_task_allow, is_adhoc_signed, is_es_client, is_platform_binary, process_name, process_path, rootless, signing_id, skip_lv, team_id, start_time, cdhash, certificate_chain, ruid, euid, ruid_human, euid_human, file_quarantine_type, cs_type, group_id, target, dyld_exec_path, script, cwd, last_fd, image_cputype, image_cpusubtype, fds, args, env
     }
@@ -57,44 +57,6 @@ public class ESProcessExecEvent: NSManagedObject, Decodable {
         }
     }
     
-    // MARK: - Custom initilizer for ESProcessExecEvent during heavy flows
-    convenience init(from message: Message) {
-        let execEvent: ProcessExecEvent = message.event.exec!
-        self.init()
-        self.id = execEvent.id
-        
-        // MARK: - Conform to ESLogger
-        self.dyld_exec_path = execEvent.dyld_exec_path // macOS 13.3+
-        self.target = ESProcess(from: execEvent.target, version: message.version)
-        
-        self.fds = execEvent.fds
-        
-        if let script = execEvent.script {
-            self.script = ESFile(from: script)
-        }
-        
-        if let cwd = execEvent.cwd {
-            self.cwd = ESFile(from: cwd)
-        }
-        
-        if let last_fd = execEvent.last_fd {
-            self.last_fd = Int64(last_fd)
-        }
-        
-        if let image_cputype = execEvent.image_cputype {
-            self.image_cputype = Int64(image_cputype)
-        }
-        if let image_cpusubtype = execEvent.image_cpusubtype {
-            self.image_cpusubtype = Int64(image_cpusubtype)
-        }
-        
-        self.args = execEvent.args
-        self.env = execEvent.env
-        self.command_line = execEvent.command_line ?? ""
-        self.certificate_chain = execEvent.certificate_chain
-    }
-    
-    
     // MARK: - Custom Core Data initilizer for ESProcessExecEvent
     convenience init(from message: Message, insertIntoManagedObjectContext context: NSManagedObjectContext!) {
         let execEvent: ProcessExecEvent = message.event.exec!
@@ -135,35 +97,6 @@ public class ESProcessExecEvent: NSManagedObject, Decodable {
 
         self.command_line = execEvent.command_line ?? ""
         self.certificate_chain = execEvent.certificate_chain
-    }
-    
-    // MARK: - Decodable conformance
-    required convenience public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.init()
-        
-        try id = container.decode(UUID.self, forKey: .id)
-        
-        // MARK: - Conform to ESLogger
-        try dyld_exec_path = container.decode(String.self, forKey: .dyld_exec_path) // macOS 13.3+
-        try target = container.decode(ESProcess.self, forKey: .target)
-        try script = container.decode(ESFile.self, forKey: .script)
-        try cwd = container.decode(ESFile.self, forKey: .cwd)
-        
-        let fdsArray = try container.decode([FileDescriptor].self, forKey: .fds)
-        self.fds = fdsArray
-        
-        self.args = try container.decode([String].self, forKey: .args)
-        self.env = try container.decode([String].self, forKey: .env)
-
-        try last_fd = container.decode(Int64.self, forKey: .last_fd)
-        try image_cputype = container.decode(Int64.self, forKey: .image_cputype)
-        try image_cpusubtype = container.decode(Int64.self, forKey: .image_cpusubtype)
-
-        try command_line = container.decode(String.self, forKey: .command_line)
-        
-        let certArray = try container.decode([X509Cert].self, forKey: .fds)
-        self.certificate_chain = certArray
     }
 }
 

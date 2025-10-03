@@ -10,7 +10,7 @@ import Foundation
 import CoreData
 
 @objc(ESAuthorizationPetitionEvent)
-public class ESAuthorizationPetitionEvent: NSManagedObject, Decodable {
+public class ESAuthorizationPetitionEvent: NSManagedObject {
     enum CodingKeys: CodingKey {
         case id
         case instigator
@@ -42,36 +42,6 @@ public class ESAuthorizationPetitionEvent: NSManagedObject, Decodable {
         set {
             rightsData = try? JSONEncoder().encode(newValue)
         }
-    }
-    
-    convenience init(from message: Message) {
-        let event: AuthorizationPetitionEvent = message.event.authorization_petition!
-        self.init()
-        self.id = event.id
-        
-        if let instigator = event.instigator,
-           let instigator_token = event.instigator_token {
-            self.instigator = ESProcess(
-                from: instigator,
-                version: message.version
-            )
-            
-            self.instigator_token = ESAuditToken(from: instigator_token)
-        }
-        
-        if let petitioner = event.petitioner,
-           let petitioner_token = event.petitioner_token {
-            self.petitioner = ESProcess(
-                from: petitioner,
-                version: message.version
-            )
-            
-            self.petitioner_token = ESAuditToken(from: petitioner_token)
-        }
-        
-        self.flags = event.flags
-        self.flags_array = event.flags_array
-        self.rights = event.rights
     }
     
     convenience init(from message: Message, insertIntoManagedObjectContext context: NSManagedObjectContext!) {
@@ -111,23 +81,6 @@ public class ESAuthorizationPetitionEvent: NSManagedObject, Decodable {
         self.flags = event.flags
         self.flags_array = event.flags_array
         self.rights = event.rights
-    }
-    
-    required convenience public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.init()
-        
-        try id = container.decode(UUID.self, forKey: .id)
-        try instigator = container.decode(ESProcess.self, forKey: .instigator)
-        try petitioner = container.decode(ESProcess.self, forKey: .petitioner)
-        try flags = container.decode(Int64.self, forKey: .flags)
-        try flags_array = container.decode([String].self, forKey: .flags_array)
-        try right_count = container.decode(Int32.self, forKey: .right_count)
-        try rights = container.decode([String].self, forKey: .rights)
-        try instigator_token = container
-            .decode(ESAuditToken.self, forKey: .instigator_token)
-        try petitioner_token = container
-            .decode(ESAuditToken.self, forKey: .petitioner_token)
     }
 }
 

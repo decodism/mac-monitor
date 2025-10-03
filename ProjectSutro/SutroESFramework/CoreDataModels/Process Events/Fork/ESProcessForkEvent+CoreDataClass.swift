@@ -10,19 +10,10 @@ import Foundation
 import CoreData
 
 @objc(ESProcessForkEvent)
-public class ESProcessForkEvent: NSManagedObject, Decodable {
+public class ESProcessForkEvent: NSManagedObject {
     
     enum CodingKeys: CodingKey {
         case id, child
-    }
-    
-    // MARK: - Custom initilizer for ESProcessForkEvent during heavy flows
-    convenience init(from message: Message) {
-        let forkEvent: ProcessForkEvent = message.event.fork!
-        self.init()
-        self.id = forkEvent.id
-        
-        self.child = ESProcess(from: forkEvent.child, version: message.version)
     }
     
     // MARK: - Custom Core Data initilizer for ESProcessForkEvent
@@ -33,15 +24,6 @@ public class ESProcessForkEvent: NSManagedObject, Decodable {
         self.id = forkEvent.id
         
         self.child = ESProcess(from: forkEvent.child, version: message.version, insertIntoManagedObjectContext: context)
-    }
-    
-    // MARK: - Decodable conformance
-    required convenience public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.init()
-        
-        try id = container.decode(UUID.self, forKey: .id)
-        try child = container.decode(ESProcess.self, forKey: .child)
     }
 }
 

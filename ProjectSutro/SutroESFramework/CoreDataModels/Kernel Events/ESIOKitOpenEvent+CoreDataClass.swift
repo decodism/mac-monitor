@@ -10,26 +10,13 @@ import Foundation
 import CoreData
 
 @objc(ESIOKitOpenEvent)
-public class ESIOKitOpenEvent: NSManagedObject, Decodable {
+public class ESIOKitOpenEvent: NSManagedObject {
     enum CodingKeys: CodingKey {
         case id
         case user_client_class
         case user_client_type
         case parent_registry_id
         case parent_path
-    }
-    
-    // MARK: - Custom initilizer for ESIOKitOpenEvent during heavy flows
-    convenience init(from message: Message) {
-        let iokitEvent: IOKitOpenEvent = message.event.iokit_open!
-        self.init()
-        
-        self.id = iokitEvent.id
-        self.user_client_class = iokitEvent.user_client_class
-        self.user_client_type = iokitEvent.user_client_type
-        
-        self.parent_registry_id = iokitEvent.parent_registry_id
-        self.parent_path = iokitEvent.parent_path
     }
     
     // MARK: - Custom Core Data initilizer for ESIOKitOpenEvent
@@ -44,19 +31,6 @@ public class ESIOKitOpenEvent: NSManagedObject, Decodable {
         
         self.parent_registry_id = iokitEvent.parent_registry_id
         self.parent_path = iokitEvent.parent_path
-    }
-    
-    // MARK: - Decodable conformance
-    required convenience public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.init()
-        
-        try id = container.decode(UUID.self, forKey: .id)
-        try user_client_type = container.decode(Int64.self, forKey: .user_client_type)
-        try user_client_class = container.decode(String.self, forKey: .user_client_class)
-        
-        try parent_registry_id = container.decode(Int64.self, forKey: .parent_registry_id)
-        try parent_path = container.decodeIfPresent(String.self, forKey: .parent_path)
     }
 }
 

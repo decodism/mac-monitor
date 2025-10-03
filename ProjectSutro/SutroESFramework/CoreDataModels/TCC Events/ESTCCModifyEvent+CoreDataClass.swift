@@ -11,7 +11,7 @@ import CoreData
 
 
 @objc(ESTCCModifyEvent)
-public class ESTCCModifyEvent: NSManagedObject, Decodable {
+public class ESTCCModifyEvent: NSManagedObject {
     enum CodingKeys: CodingKey {
         case id
         
@@ -29,36 +29,6 @@ public class ESTCCModifyEvent: NSManagedObject, Decodable {
         case right_string
         case reason
         case reason_string
-    }
-
-    // MARK: - Custom initilizer for ESTCCModifyEvent during heavy flows
-    convenience init(from message: Message) {
-        let tccModifyEvent: TCCModifyEvent = message.event.tcc_modify!
-        self.init()
-        self.id = tccModifyEvent.id
-        
-        self.service = tccModifyEvent.service
-        self.identity = tccModifyEvent.identity
-        self.identity_type = Int32(tccModifyEvent.identity_type)
-        self.identity_type_string = tccModifyEvent.identity_type_string
-        self.update_type = Int32(tccModifyEvent.update_type)
-        self.update_type_string = tccModifyEvent.update_type_string
-        
-        self.instigator_token = ESAuditToken(from: tccModifyEvent.instigator_token)
-        if let instigator = tccModifyEvent.instigator {
-            self.instigator = ESProcess(from: instigator, version: message.version)
-        }
-        
-        if let responsibleToken = tccModifyEvent.responsible_token,
-           let responsible = tccModifyEvent.responsible {
-            self.responsible_token = ESAuditToken(from: responsibleToken)
-            self.responsible = ESProcess(from: responsible, version: message.version)
-        }
-        
-        self.right = Int32(tccModifyEvent.right)
-        self.right_string = tccModifyEvent.right_string
-        self.reason = Int32(tccModifyEvent.reason)
-        self.reason_string = tccModifyEvent.reason_string
     }
     
     // MARK: - Custom Core Data initilizer for ESTCCModifyEvent
@@ -104,30 +74,6 @@ public class ESTCCModifyEvent: NSManagedObject, Decodable {
         self.right_string = tccModifyEvent.right_string
         self.reason = Int32(tccModifyEvent.reason)
         self.reason_string = tccModifyEvent.reason_string
-    }
-    
-    // MARK: - Decodable conformance
-    required convenience public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.init()
-        
-        try id = container.decode(UUID.self, forKey: .id)
-        try service = container.decode(String.self, forKey: .service)
-        try identity = container.decode(String.self, forKey: .identity)
-        try identity_type = container.decode(Int32.self, forKey: .identity_type)
-        try identity_type_string = container.decode(String.self, forKey: .identity_type_string)
-        try update_type = container.decode(Int32.self, forKey: .update_type)
-        try update_type_string = container.decode(String.self, forKey: .update_type_string)
-        
-        try instigator_token = container.decodeIfPresent(ESAuditToken.self, forKey: .instigator_token)
-        try instigator = container.decodeIfPresent(ESProcess.self, forKey: .instigator)
-        try responsible_token = container.decodeIfPresent(ESAuditToken.self, forKey: .responsible_token)
-        try responsible = container.decodeIfPresent(ESProcess.self, forKey: .responsible)
-        
-        try right = container.decode(Int32.self, forKey: .right)
-        try right_string = container.decode(String.self, forKey: .right_string)
-        try reason = container.decode(Int32.self, forKey: .reason)
-        try reason_string = container.decode(String.self, forKey: .reason_string)
     }
 }
 

@@ -10,18 +10,9 @@ import Foundation
 import CoreData
 
 @objc(ESXPCConnectEvent)
-public class ESXPCConnectEvent: NSManagedObject, Decodable {
+public class ESXPCConnectEvent: NSManagedObject {
     enum CodingKeys: CodingKey {
         case id, service_name, service_domain_type
-    }
-    
-    convenience init(from message: Message) {
-        let xpcConnectEvent: XPCConnectEvent = message.event.xpc_connect!
-        self.init()
-        
-        self.id = xpcConnectEvent.id
-        self.service_name = xpcConnectEvent.service_name
-        self.service_domain_type = xpcConnectEvent.service_domain_type
     }
     
     convenience init(from message: Message, insertIntoManagedObjectContext context: NSManagedObjectContext!) {
@@ -32,15 +23,6 @@ public class ESXPCConnectEvent: NSManagedObject, Decodable {
         self.id = xpcConnectEvent.id
         self.service_name = xpcConnectEvent.service_name
         self.service_domain_type = xpcConnectEvent.service_domain_type
-    }
-    
-    required convenience public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.init()
-        
-        try id = container.decode(UUID.self, forKey: .id)
-        try service_name = container.decode(String.self, forKey: .service_name)
-        try service_domain_type = container.decode(String.self, forKey: .service_domain_type)
     }
 }
 

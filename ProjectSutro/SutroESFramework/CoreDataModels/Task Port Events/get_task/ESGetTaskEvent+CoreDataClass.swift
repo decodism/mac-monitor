@@ -10,24 +10,13 @@ import Foundation
 import CoreData
 
 @objc(ESGetTaskEvent)
-public class ESGetTaskEvent: NSManagedObject, Decodable {
+public class ESGetTaskEvent: NSManagedObject {
     
     enum CodingKeys: CodingKey {
         case id
         case target
         case type
         case type_string
-    }
-    
-    // MARK: - Custom initilizer for ESGetTaskEvent during heavy flows
-    convenience init(from message: Message) {
-        let event: GetTaskEvent = message.event.get_task!
-        self.init()
-        self.id = event.id
-
-        self.target = ESProcess(from: event.target, version: message.version)
-        self.type = event.type
-        self.type_string = event.type_string
     }
     
     // MARK: - Custom Core Data initilizer for ESGetTaskEvent
@@ -44,17 +33,6 @@ public class ESGetTaskEvent: NSManagedObject, Decodable {
         )
         self.type = event.type
         self.type_string = event.type_string
-    }
-    
-    // MARK: - Decodable conformance
-    required convenience public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.init()
-        
-        try id = container.decode(UUID.self, forKey: .id)
-        try target = container.decode(ESProcess.self, forKey: .target)
-        try type = container.decode(Int16.self, forKey: .type)
-        try type_string = container.decode(String.self, forKey: .type_string)
     }
 }
 
