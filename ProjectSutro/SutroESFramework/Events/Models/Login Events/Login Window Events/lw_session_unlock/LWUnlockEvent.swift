@@ -16,16 +16,11 @@ public struct LWUnlockEvent: Identifiable, Codable, Hashable {
     public var graphical_session_id: Int32
     
     public func hash(into hasher: inout Hasher) {
-        hasher.combine(username)
         hasher.combine(id)
     }
     
     public static func == (lhs: LWUnlockEvent, rhs: LWUnlockEvent) -> Bool {
-        if lhs.graphical_session_id == rhs.graphical_session_id && lhs.id == rhs.id && lhs.username == rhs.username {
-            return true
-        }
-        
-        return false
+        return lhs.id == rhs.id
     }
     
     init(from rawMessage: UnsafePointer<es_message_t>) {

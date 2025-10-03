@@ -18,18 +18,11 @@ public struct SSHLogoutEvent: Identifiable, Codable, Hashable {
     public var username: String = "Unknown"
     
     public func hash(into hasher: inout Hasher) {
-        hasher.combine(source_address)
-        hasher.combine(source_address_type)
-        hasher.combine(username)
         hasher.combine(id)
     }
     
     public static func == (lhs: SSHLogoutEvent, rhs: SSHLogoutEvent) -> Bool {
-        if lhs.source_address == rhs.source_address && lhs.username == rhs.username && lhs.source_address_type == rhs.source_address_type {
-            return true
-        }
-        
-        return false
+        return lhs.id == rhs.id
     }
     
     init(from rawMessage: UnsafePointer<es_message_t>) {

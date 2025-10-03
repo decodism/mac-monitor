@@ -143,7 +143,7 @@ extension ESProcess: Encodable {
         try container.encodeIfPresent(cdhash, forKey: .cdhash)
         try container.encode(is_adhoc_signed, forKey: .is_adhoc_signed)
         
-        if #available(macOS 14.0, *) { // Adjust for actual availability if different
+        if #available(macOS 14.0, *) {
             try container.encode(cs_validation_category, forKey: .cs_validation_category)
             try container.encodeIfPresent(cs_validation_category_string, forKey: .cs_validation_category_string)
         }
@@ -155,7 +155,7 @@ extension ESProcess: Encodable {
         try container.encodeIfPresent(file_quarantine_type, forKey: .file_quarantine_type)
         try container.encodeIfPresent(codesigning_type, forKey: .codesigning_type)
         
-        try container.encodeIfPresent(tty, forKey: .tty)
+        try container.encode(tty, forKey: .tty)
         
         try container.encode(euid, forKey: .euid)
         try container.encode(ruid, forKey: .ruid)
