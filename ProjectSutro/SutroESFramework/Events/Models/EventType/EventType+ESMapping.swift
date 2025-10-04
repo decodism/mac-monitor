@@ -318,10 +318,11 @@ extension EventType {
             // MARK: OpenSSH events
         case ES_EVENT_TYPE_NOTIFY_OPENSSH_LOGIN:
             let event = SSHLoginEvent(from: rawMessage)
+            let context = "[\(event.success ? "Success" : "Fail")] \(event.source_address) → \(event.username)"
             return (
                 .openssh_login(event),
                 "ES_EVENT_TYPE_NOTIFY_OPENSSH_LOGIN",
-                event.source_address,
+                context,
                 nil // @note: `target_path` does not make sense in this context.
             )
         case ES_EVENT_TYPE_NOTIFY_OPENSSH_LOGOUT:

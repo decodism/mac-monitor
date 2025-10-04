@@ -1299,6 +1299,22 @@
 			path = Events;
 			sourceTree = "<group>";
 		};
+		282633A32E918954006FFF83 /* tcc_modify */ = {
+			isa = PBXGroup;
+			children = (
+				CAE9E44C2E4FE2D7001143C2 /* TCCModifyEvent.swift */,
+			);
+			path = tcc_modify;
+			sourceTree = "<group>";
+		};
+		282633A42E91895D006FFF83 /* gatekeeper_user_override */ = {
+			isa = PBXGroup;
+			children = (
+				CA4CE59D2E53DB6C00C057EB /* GatekeeperUserOverrideEvent.swift */,
+			);
+			path = gatekeeper_user_override;
+			sourceTree = "<group>";
+		};
 		2829D4192E7B472800B7E977 /* Filter View */ = {
 			isa = PBXGroup;
 			children = (
@@ -2318,7 +2334,7 @@
 		CA4CE59C2E53DB5F00C057EB /* Gatekeeper */ = {
 			isa = PBXGroup;
 			children = (
-				CA4CE59D2E53DB6C00C057EB /* GatekeeperUserOverrideEvent.swift */,
+				282633A42E91895D006FFF83 /* gatekeeper_user_override */,
 			);
 			path = Gatekeeper;
 			sourceTree = "<group>";
@@ -2889,7 +2905,7 @@
 		CAE9E44B2E4FE28B001143C2 /* TCC Events */ = {
 			isa = PBXGroup;
 			children = (
-				CAE9E44C2E4FE2D7001143C2 /* TCCModifyEvent.swift */,
+				282633A32E918954006FFF83 /* tcc_modify */,
 			);
 			path = "TCC Events";
 			sourceTree = "<group>";
