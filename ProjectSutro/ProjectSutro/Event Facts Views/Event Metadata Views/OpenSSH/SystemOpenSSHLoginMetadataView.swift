@@ -19,7 +19,7 @@ struct SystemOpenSSHLoginMetadataView: View {
     var body: some View {
         VStack(alignment: .leading) {
             // MARK: Event label
-            OpenSSHLoginEventLabelView(message: esSystemEvent)
+            OpenSSHLabelView(message: esSystemEvent)
                 .font(.title2)
             
             GroupBox {

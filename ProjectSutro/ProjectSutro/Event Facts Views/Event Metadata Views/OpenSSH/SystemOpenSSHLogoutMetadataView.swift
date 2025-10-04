@@ -19,27 +19,32 @@ struct SystemOpenSSHLogoutMetadataView: View {
     var body: some View {
         VStack(alignment: .leading) {
             // MARK: Event label
-            OpenSSHLoginEventLabelView(message: esSystemEvent)
+            OpenSSHLabelView(message: esSystemEvent)
                 .font(.title2)
             
             GroupBox {
                 VStack(alignment: .leading) {
                     HStack {
-                        Label("**Username:**", systemImage: "person.fill")
+                        Label("Username:", systemImage: "person.fill")
+                            .bold()
                         GroupBox {
-                            Text("`\(event.username ?? "Unknown")`")
+                            Text(event.username)
+                                .monospaced()
                         }
                     }
                     
                     HStack {
-                        Text("\u{2022} **Source Address:**")
+                        Text("\u{2022} Source Address:")
+                            .bold()
                         VStack(alignment: .leading) {
                             GroupBox {
-                                Text("`\(event.source_address_type ?? "Unknown")`")
+                                Text("\(event.source_address_type_string) (\(event.source_address_type))")
+                                    .monospaced()
                             }
                             
                             GroupBox {
-                                Text("`\(event.source_address ?? "Unknown")`")
+                                Text(event.source_address)
+                                    .monospaced()
                             }
                         }
                         

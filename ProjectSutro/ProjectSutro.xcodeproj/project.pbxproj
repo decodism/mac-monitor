@@ -1371,6 +1371,24 @@
 			path = attribute_value_add;
 			sourceTree = "<group>";
 		};
+		282633AE2E919EE9006FFF83 /* openssh_login */ = {
+			isa = PBXGroup;
+			children = (
+				2881CE13294AFFC700F97F99 /* ESOpenSSHLoginEvent+CoreDataClass.swift */,
+				2881CE14294AFFC700F97F99 /* ESOpenSSHLoginEvent+CoreDataProperties.swift */,
+			);
+			path = openssh_login;
+			sourceTree = "<group>";
+		};
+		282633AF2E919EEF006FFF83 /* openssh_logout */ = {
+			isa = PBXGroup;
+			children = (
+				2820DD18297228290053CB48 /* ESOpenSSHLogoutEvent+CoreDataClass.swift */,
+				2820DD19297228290053CB48 /* ESOpenSSHLogoutEvent+CoreDataProperties.swift */,
+			);
+			path = openssh_logout;
+			sourceTree = "<group>";
+		};
 		2829D4192E7B472800B7E977 /* Filter View */ = {
 			isa = PBXGroup;
 			children = (
@@ -1702,10 +1720,8 @@
 		28B343772D862F3D004127E8 /* OpenSSH Events */ = {
 			isa = PBXGroup;
 			children = (
-				2881CE13294AFFC700F97F99 /* ESOpenSSHLoginEvent+CoreDataClass.swift */,
-				2881CE14294AFFC700F97F99 /* ESOpenSSHLoginEvent+CoreDataProperties.swift */,
-				2820DD18297228290053CB48 /* ESOpenSSHLogoutEvent+CoreDataClass.swift */,
-				2820DD19297228290053CB48 /* ESOpenSSHLogoutEvent+CoreDataProperties.swift */,
+				282633AF2E919EEF006FFF83 /* openssh_logout */,
+				282633AE2E919EE9006FFF83 /* openssh_login */,
 			);
 			path = "OpenSSH Events";
 			sourceTree = "<group>";

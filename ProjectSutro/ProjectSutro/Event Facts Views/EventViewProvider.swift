@@ -142,11 +142,11 @@ struct EventSpecificViewsProvider {
 
         // MARK: OpenSSH events
         case _ where message.event.openssh_login != nil:
-            self.labelView = AnyView(OpenSSHLoginEventLabelView(message: message))
+            self.labelView = AnyView(OpenSSHLabelView(message: message))
             self.metadataView = AnyView(SystemOpenSSHLoginMetadataView(esSystemEvent: message))
 
         case _ where message.event.openssh_logout != nil:
-            self.labelView = AnyView(OpenSSHLoginEventLabelView(message: message))
+            self.labelView = AnyView(OpenSSHLabelView(message: message))
             self.metadataView = AnyView(SystemOpenSSHLogoutMetadataView(esSystemEvent: message))
 
             
