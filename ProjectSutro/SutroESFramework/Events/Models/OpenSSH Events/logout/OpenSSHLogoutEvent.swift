@@ -26,20 +26,20 @@ public struct SSHLogoutEvent: Identifiable, Codable, Hashable {
     }
     
     init(from rawMessage: UnsafePointer<es_message_t>) {
-        let sshLogoutEvent: UnsafeMutablePointer<es_event_openssh_logout_t> = rawMessage.pointee.event.openssh_logout
+        let event: es_event_openssh_logout_t = rawMessage.pointee.event.openssh_logout.pointee
         
         // MARK: Logout username
-        if sshLogoutEvent.pointee.username.length > 0 {
-            self.username = String(cString: sshLogoutEvent.pointee.username.data)
+        if event.pointee.username.length > 0 {
+            self.username = String(cString: event.pointee.username.data)
         }
         
         // MARK: Source address of the OpenSSH connection
-        if sshLogoutEvent.pointee.source_address.length > 0 {
-            self.source_address = String(cString: sshLogoutEvent.pointee.source_address.data)
+        if event.pointee.source_address.length > 0 {
+            self.source_address = String(cString: event.pointee.source_address.data)
         }
         
         // MARK: Determine the source address type of the OpenSSH logout event
-        switch(sshLogoutEvent.pointee.source_address_type) {
+        switch(event.pointee.source_address_type) {
         case ES_ADDRESS_TYPE_NONE:
             self.source_address_type = "ES_ADDRESS_TYPE_NONE"
             break

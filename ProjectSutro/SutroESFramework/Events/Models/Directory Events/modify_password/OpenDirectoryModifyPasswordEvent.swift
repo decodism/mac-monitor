@@ -22,16 +22,10 @@ public struct OpenDirectoryModifyPasswordEvent: Identifiable, Codable, Hashable 
     
     public func hash(into hasher: inout Hasher) {
         hasher.combine(id)
-        hasher.combine(account_type)
-        hasher.combine(account_name)
     }
     
     public static func == (lhs: OpenDirectoryModifyPasswordEvent, rhs: OpenDirectoryModifyPasswordEvent) -> Bool {
-        if lhs.id == rhs.id && lhs.account_type == rhs.account_type && lhs.account_name == rhs.account_name {
-            return true
-        }
-        
-        return false
+        return lhs.id == rhs.id
     }
     
     init(from rawMessage: UnsafePointer<es_message_t>) {

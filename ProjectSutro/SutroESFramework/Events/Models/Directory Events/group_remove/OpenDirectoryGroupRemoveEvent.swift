@@ -1,17 +1,16 @@
 //
-//  OpenDirectoryCreateGroupEvent.swift
+//  OpenDirectoryRemoveGroupEvent.swift
 //  SutroESFramework
 //
-//  Created by Brandon Dalton on 6/28/23.
+//  Created by Brandon Dalton on 6/13/23.
 //
-// ES documentation: `es_event_od_create_group_t`
+// MARK: ES documentation reference `es_event_od_group_remove_t`
 /**
- * @brief Notification that a group was created.
+ * @brief Notification that a member was removed from a group.
  *
  * @field instigator   Process that instigated operation (XPC caller).
- * @field error_code   0 indicates the operation succeeded.
- *                     Values inidicating specific failure reasons are defined in odconstants.h.
- * @field user_name    The name of the group that was created.
+ * @field group_name   The group from which the member was removed.
+ * @field member       The identity of the member removed.
  * @field node_name    OD node being mutated.
  *                     Typically one of "/Local/Default", "/LDAPv3/<server>" or
  *                     "/Active Directory/<domain>".
@@ -20,15 +19,18 @@
  *                     authenticating.
  *
  * @note This event type does not support caching (notify-only).
+ * @note This event does not indicate that a member was actually removed.
+ *       For example when removing a user from a group they are not a member of.
  */
 
 import Foundation
 
 
-public struct OpenDirectoryCreateGroupEvent: Identifiable, Codable, Hashable {
+public struct OpenDirectoryGroupRemoveEvent: Identifiable, Codable, Hashable {
     public var id: UUID = UUID()
     public var instigator_process_name, instigator_process_path, instigator_process_audit_token, instigator_process_signing_id: String?
     public var group_name: String?
+    public var member: String?
     public var node_name: String?
     public var db_path: String?
     /// Error codes defined in: `odconstants.h`. An error code of 0 indicates success.
@@ -38,21 +40,15 @@ public struct OpenDirectoryCreateGroupEvent: Identifiable, Codable, Hashable {
     
     public func hash(into hasher: inout Hasher) {
         hasher.combine(id)
-        hasher.combine(node_name)
-        hasher.combine(group_name)
     }
     
-    public static func == (lhs: OpenDirectoryCreateGroupEvent, rhs: OpenDirectoryCreateGroupEvent) -> Bool {
-        if lhs.id == rhs.id && lhs.node_name == rhs.node_name && lhs.group_name == rhs.group_name {
-            return true
-        }
-        
-        return false
+    public static func == (lhs: OpenDirectoryGroupRemoveEvent, rhs: OpenDirectoryGroupRemoveEvent) -> Bool {
+        return lhs.id == rhs.id
     }
     
     init(from rawMessage: UnsafePointer<es_message_t>) {
-        let odGroupCreatedEvent: es_event_od_create_group_t = rawMessage.pointee.event.od_create_group.pointee
-        let instigatorProcess: es_process_t = odGroupCreatedEvent.instigator!.pointee
+        let odGroupRemoveEvent: es_event_od_group_remove_t = rawMessage.pointee.event.od_group_remove.pointee
+        let instigatorProcess: es_process_t = odGroupRemoveEvent.instigator!.pointee
         
         self.instigator_process_name = ""
         if instigatorProcess.executable.pointee.path.length > 0 {
@@ -73,22 +69,37 @@ public struct OpenDirectoryCreateGroupEvent: Identifiable, Codable, Hashable {
         self.instigator_process_audit_token = instigatorProcess.audit_token
             .toString()
         
-        self.error_code = Int(odGroupCreatedEvent.error_code)
+        self.error_code = Int(odGroupRemoveEvent.error_code)
         self.error_code_human = decodeODErrorCode(self.error_code)
     
         self.group_name = ""
-        if odGroupCreatedEvent.group_name.length > 0 {
-            self.group_name = String(cString: odGroupCreatedEvent.group_name.data)
+        if odGroupRemoveEvent.group_name.length > 0 {
+            self.group_name = String(cString: odGroupRemoveEvent.group_name.data)
+        }
+        
+        self.member = ""
+        switch odGroupRemoveEvent.member.pointee.member_type {
+        case ES_OD_MEMBER_TYPE_USER_NAME:
+            self.member = "ES_OD_MEMBER_TYPE_USER_NAME"
+            break
+        case ES_OD_MEMBER_TYPE_USER_UUID:
+            self.member = "ES_OD_MEMBER_TYPE_USER_UUID"
+            break
+        case ES_OD_MEMBER_TYPE_GROUP_UUID:
+            self.member = "ES_OD_MEMBER_TYPE_GROUP_UUID"
+            break
+        default:
+            self.member = "UNKNOWN"
         }
         
         self.node_name = ""
-        if odGroupCreatedEvent.node_name.length > 0 {
-            self.node_name = String(cString: odGroupCreatedEvent.node_name.data)
+        if odGroupRemoveEvent.node_name.length > 0 {
+            self.node_name = String(cString: odGroupRemoveEvent.node_name.data)
         }
         
         self.db_path = ""
-        if odGroupCreatedEvent.db_path.length > 0 {
-            self.db_path = String(cString: odGroupCreatedEvent.db_path.data)
+        if odGroupRemoveEvent.db_path.length > 0 {
+            self.db_path = String(cString: odGroupRemoveEvent.db_path.data)
         }
     }
 }

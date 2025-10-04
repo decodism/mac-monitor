@@ -45,12 +45,10 @@ public struct OpenDirectoryAttributeValueAddEvent: Identifiable, Codable, Hashab
     
     public func hash(into hasher: inout Hasher) {
         hasher.combine(id)
-        hasher.combine(record_type)
-        hasher.combine(record_name)
     }
     
     public static func == (lhs: OpenDirectoryAttributeValueAddEvent, rhs: OpenDirectoryAttributeValueAddEvent) -> Bool {
-        return lhs.id == rhs.id && lhs.record_type == rhs.record_type && lhs.record_name == rhs.record_name
+        return lhs.id == rhs.id
     }
     
     init(from rawMessage: UnsafePointer<es_message_t>) {

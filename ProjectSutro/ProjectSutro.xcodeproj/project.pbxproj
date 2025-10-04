@@ -1315,6 +1315,62 @@
 			path = gatekeeper_user_override;
 			sourceTree = "<group>";
 		};
+		282633A72E9196F6006FFF83 /* Directory */ = {
+			isa = PBXGroup;
+			children = (
+				284BAEDA2A4DE047007F1193 /* ODHelpers.swift */,
+			);
+			path = Directory;
+			sourceTree = "<group>";
+		};
+		282633A82E919708006FFF83 /* create_user */ = {
+			isa = PBXGroup;
+			children = (
+				28B865D72A31266C00F06441 /* OpenDirectoryCreateUserEvent.swift */,
+			);
+			path = create_user;
+			sourceTree = "<group>";
+		};
+		282633A92E91972E006FFF83 /* modify_password */ = {
+			isa = PBXGroup;
+			children = (
+				28B865DD2A313E1800F06441 /* OpenDirectoryModifyPasswordEvent.swift */,
+			);
+			path = modify_password;
+			sourceTree = "<group>";
+		};
+		282633AA2E919741006FFF83 /* group_add */ = {
+			isa = PBXGroup;
+			children = (
+				281BBE772A391754009B94F8 /* OpenDirectoryGroupAddEvent.swift */,
+			);
+			path = group_add;
+			sourceTree = "<group>";
+		};
+		282633AB2E919751006FFF83 /* group_remove */ = {
+			isa = PBXGroup;
+			children = (
+				281BBE7D2A391D2F009B94F8 /* OpenDirectoryGroupRemoveEvent.swift */,
+			);
+			path = group_remove;
+			sourceTree = "<group>";
+		};
+		282633AC2E91975C006FFF83 /* create_group */ = {
+			isa = PBXGroup;
+			children = (
+				284BAECA2A4CCD8E007F1193 /* OpenDirectoryCreateGroupEvent.swift */,
+			);
+			path = create_group;
+			sourceTree = "<group>";
+		};
+		282633AD2E919765006FFF83 /* attribute_value_add */ = {
+			isa = PBXGroup;
+			children = (
+				284BAED22A4CE6E5007F1193 /* OpenDirectoryAttributeValueAddEvent.swift */,
+			);
+			path = attribute_value_add;
+			sourceTree = "<group>";
+		};
 		2829D4192E7B472800B7E977 /* Filter View */ = {
 			isa = PBXGroup;
 			children = (
@@ -1465,6 +1521,7 @@
 		28A169CE2DA4E56600CA630B /* Artifacts */ = {
 			isa = PBXGroup;
 			children = (
+				282633A72E9196F6006FFF83 /* Directory */,
 				CADD9D8E2E8F0675009EC919 /* MDM */,
 				280C78CD2E8DE20C00B172E5 /* Socket */,
 				CA5936452E8873A5008A115D /* Service Management */,
@@ -1949,13 +2006,12 @@
 		28B3439A2D863CAD004127E8 /* Directory Events */ = {
 			isa = PBXGroup;
 			children = (
-				284BAEDA2A4DE047007F1193 /* ODHelpers.swift */,
-				28B865D72A31266C00F06441 /* OpenDirectoryCreateUserEvent.swift */,
-				28B865DD2A313E1800F06441 /* OpenDirectoryModifyPasswordEvent.swift */,
-				281BBE772A391754009B94F8 /* OpenDirectoryGroupAddEvent.swift */,
-				281BBE7D2A391D2F009B94F8 /* OpenDirectoryGroupRemoveEvent.swift */,
-				284BAECA2A4CCD8E007F1193 /* OpenDirectoryCreateGroupEvent.swift */,
-				284BAED22A4CE6E5007F1193 /* OpenDirectoryAttributeValueAddEvent.swift */,
+				282633AD2E919765006FFF83 /* attribute_value_add */,
+				282633AC2E91975C006FFF83 /* create_group */,
+				282633AB2E919751006FFF83 /* group_remove */,
+				282633AA2E919741006FFF83 /* group_add */,
+				282633A92E91972E006FFF83 /* modify_password */,
+				282633A82E919708006FFF83 /* create_user */,
 			);
 			path = "Directory Events";
 			sourceTree = "<group>";
