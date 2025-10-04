@@ -16,12 +16,20 @@ extension ESOpenSSHLoginEvent {
         return NSFetchRequest<ESOpenSSHLoginEvent>(entityName: "ESOpenSSHLoginEvent")
     }
 
-    @NSManaged public var id: UUID?
-    @NSManaged public var result_type: String?
-    @NSManaged public var source_address: String?
-    @NSManaged public var source_address_type: String?
+    @NSManaged public var id: UUID
+    
     @NSManaged public var success: Bool
-    @NSManaged public var user_name: String?
+    @NSManaged public var result_type: Int32
+    @NSManaged public var result_type_string: String
+    
+    @NSManaged public var source_address_type: Int32
+    @NSManaged public var source_address_type_string: String
+    
+    @NSManaged public var source_address: String
+    @NSManaged public var username: String
+    
+    @NSManaged public var has_uid: Bool
+    @NSManaged public var uid: Int32
 
 }
 

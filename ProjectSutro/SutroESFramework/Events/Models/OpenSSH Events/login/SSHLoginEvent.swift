@@ -13,11 +13,19 @@ import OSLog
 // MARK: - OpenSSH Login event model: https://developer.apple.com/documentation/endpointsecurity/3228936-es_events_t/3930481-openssh_login
 public struct SSHLoginEvent: Identifiable, Codable, Hashable {
     public var id: UUID = UUID()
-    public var result_type: String
-    public var source_address: String = "Unknown"
-    public var source_address_type: String = "Unknown"
+    
     public var success: Bool
-    public var user_name: String = "Unknown"
+    public var result_type: Int32
+    public var result_type_string: String
+    
+    public var source_address_type: Int32
+    public var source_address_type_string: String
+    public var source_address: String
+    
+    public var username: String
+    
+    public var has_uid: Bool
+    public var uid: Int32?
     
     public func hash(into hasher: inout Hasher) {
         hasher.combine(id)
@@ -28,74 +36,73 @@ public struct SSHLoginEvent: Identifiable, Codable, Hashable {
     }
     
     init(from rawMessage: UnsafePointer<es_message_t>) {
-        let sshLoginEvent: UnsafeMutablePointer<es_event_openssh_login_t> = rawMessage.pointee.event.openssh_login
-        // MARK: OpenSSH login success?
-        self.success = sshLoginEvent.pointee.success
+        let event: es_event_openssh_login_t = rawMessage.pointee.event.openssh_login.pointee
         
-        // MARK: Login username
-        if sshLoginEvent.pointee.username.length > 0 {
-            self.user_name = String(cString: sshLoginEvent.pointee.username.data)
-        }
+        success = event.success
+        result_type = Int32(event.result_type.rawValue)
         
-        // MARK: Source address of the OpenSSH connection
-        if sshLoginEvent.pointee.source_address.length > 0 {
-            self.source_address = String(cString: sshLoginEvent.pointee.source_address.data)
-        }
-        
-        // MARK: Determine the source address type of the OpenSSH login event
-        switch(sshLoginEvent.pointee.source_address_type) {
-        case ES_ADDRESS_TYPE_NONE:
-            self.source_address_type = "ES_ADDRESS_TYPE_NONE"
-            break
-        case ES_ADDRESS_TYPE_IPV4:
-            self.source_address_type = "ES_ADDRESS_TYPE_IPV4"
-            break
-        case ES_ADDRESS_TYPE_IPV6:
-            self.source_address_type = "ES_ADDRESS_TYPE_IPV6"
-            break
-        case ES_ADDRESS_TYPE_NAMED_SOCKET:
-            self.source_address_type = "ES_ADDRESS_TYPE_NAMED_SOCKET"
-            break
-        default:
-            self.source_address_type = "Unknown"
-            break
-        }
-        
-        // MARK: Determine the result of the OpenSSH login event
-        switch(sshLoginEvent.pointee.result_type) {
+        switch(event.result_type) {
         case ES_OPENSSH_AUTH_SUCCESS:
-            self.result_type = "ES_OPENSSH_AUTH_SUCCESS"
+            result_type_string = "ES_OPENSSH_AUTH_SUCCESS"
             break
         case ES_OPENSSH_LOGIN_EXCEED_MAXTRIES:
-            self.result_type = "ES_OPENSSH_LOGIN_EXCEED_MAXTRIES"
+            result_type_string = "ES_OPENSSH_LOGIN_EXCEED_MAXTRIES"
             break
         case ES_OPENSSH_INVALID_USER:
-            self.result_type = "ES_OPENSSH_INVALID_USER"
+            result_type_string = "ES_OPENSSH_INVALID_USER"
             break
         case ES_OPENSSH_AUTH_FAIL_NONE:
-            self.result_type = "ES_OPENSSH_AUTH_FAIL_NONE"
+            result_type_string = "ES_OPENSSH_AUTH_FAIL_NONE"
             break
         case ES_OPENSSH_AUTH_FAIL_GSSAPI:
-            self.result_type = "ES_OPENSSH_AUTH_FAIL_GSSAPI"
+            result_type_string = "ES_OPENSSH_AUTH_FAIL_GSSAPI"
             break
         case ES_OPENSSH_AUTH_FAIL_KBDINT:
-            self.result_type = "ES_OPENSSH_AUTH_FAIL_KBDINT"
+            result_type_string = "ES_OPENSSH_AUTH_FAIL_KBDINT"
             break
         case ES_OPENSSH_AUTH_FAIL_PASSWD:
-            self.result_type = "ES_OPENSSH_AUTH_FAIL_PASSWD"
+            result_type_string = "ES_OPENSSH_AUTH_FAIL_PASSWD"
             break
         case ES_OPENSSH_AUTH_FAIL_PUBKEY:
-            self.result_type = "ES_OPENSSH_AUTH_FAIL_PUBKEY"
+            result_type_string = "ES_OPENSSH_AUTH_FAIL_PUBKEY"
             break
         case ES_OPENSSH_LOGIN_ROOT_DENIED:
-            self.result_type = "ES_OPENSSH_LOGIN_ROOT_DENIED"
+            result_type_string = "ES_OPENSSH_LOGIN_ROOT_DENIED"
             break
         case ES_OPENSSH_AUTH_FAIL_HOSTBASED:
-            self.result_type = "ES_OPENSSH_AUTH_FAIL_HOSTBASED"
+            result_type_string = "ES_OPENSSH_AUTH_FAIL_HOSTBASED"
             break
         default:
-            self.result_type = "Unknown"
+            result_type_string = "UNKNOWN"
             break
+        }
+        
+        source_address_type = Int32(event.source_address_type.rawValue)
+        switch(event.source_address_type) {
+        case ES_ADDRESS_TYPE_NONE:
+            source_address_type_string = "ES_ADDRESS_TYPE_NONE"
+            break
+        case ES_ADDRESS_TYPE_IPV4:
+            source_address_type_string = "ES_ADDRESS_TYPE_IPV4"
+            break
+        case ES_ADDRESS_TYPE_IPV6:
+            source_address_type_string = "ES_ADDRESS_TYPE_IPV6"
+            break
+        case ES_ADDRESS_TYPE_NAMED_SOCKET:
+            source_address_type_string = "ES_ADDRESS_TYPE_NAMED_SOCKET"
+            break
+        default:
+            source_address_type_string = "UNKNOWN"
+            break
+        }
+        
+        source_address = event.source_address.toString() ?? ""
+        
+        username = event.username.toString() ?? ""
+        
+        has_uid = event.has_uid
+        if event.has_uid {
+            uid = Int32(event.uid.uid)
         }
     }
 }
