@@ -194,7 +194,7 @@ struct BTMLaunchItemRemoveEventLabelView: View {
 }
 
 
-struct OpenSSHLoginEventLabelView: View {
+struct OpenSSHLabelView: View {
     var message: ESMessage
     
     var body: some View {
@@ -626,7 +626,7 @@ struct SystemEventTypeLabel: View {
             BTMLaunchItemRemoveEventLabelView(message: message)
             
         case _ where message.event.openssh_login != nil || message.event.openssh_logout != nil:
-            OpenSSHLoginEventLabelView(message: message)
+            OpenSSHLabelView(message: message)
             
         case _ where message.event.xp_malware_detected != nil:
             XProtectMalwareDetectedEventLabelView(message: message)

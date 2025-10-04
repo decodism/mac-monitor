@@ -16,10 +16,14 @@ extension ESOpenSSHLogoutEvent {
         return NSFetchRequest<ESOpenSSHLogoutEvent>(entityName: "ESOpenSSHLogoutEvent")
     }
 
-    @NSManaged public var id: UUID?
-    @NSManaged public var source_address_type: String?
-    @NSManaged public var source_address: String?
-    @NSManaged public var username: String?
+    @NSManaged public var id: UUID
+    
+    @NSManaged public var source_address_type: Int32
+    @NSManaged public var source_address_type_string: String
+    @NSManaged public var source_address: String
+    @NSManaged public var username: String
+    
+    @NSManaged public var uid: Int32
 
 }
 

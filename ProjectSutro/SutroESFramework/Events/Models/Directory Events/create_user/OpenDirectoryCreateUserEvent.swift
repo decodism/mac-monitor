@@ -34,16 +34,10 @@ public struct OpenDirectoryCreateUserEvent: Identifiable, Codable, Hashable {
     
     public func hash(into hasher: inout Hasher) {
         hasher.combine(id)
-        hasher.combine(node_name)
-        hasher.combine(user_name)
     }
     
     public static func == (lhs: OpenDirectoryCreateUserEvent, rhs: OpenDirectoryCreateUserEvent) -> Bool {
-        if lhs.id == rhs.id && lhs.node_name == rhs.node_name && lhs.user_name == rhs.user_name {
-            return true
-        }
-        
-        return false
+        return lhs.id == rhs.id
     }
     
     init(from rawMessage: UnsafePointer<es_message_t>) {

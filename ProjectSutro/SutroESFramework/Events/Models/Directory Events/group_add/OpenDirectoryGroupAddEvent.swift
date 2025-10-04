@@ -1,16 +1,16 @@
 //
-//  OpenDirectoryRemoveGroupEvent.swift
+//  OpenDirectoryAddGroupEvent.swift
 //  SutroESFramework
 //
 //  Created by Brandon Dalton on 6/13/23.
 //
-// MARK: ES documentation reference `es_event_od_group_remove_t`
+// MARK: ES Documentation Reference `es_event_od_group_add_t`
 /**
- * @brief Notification that a member was removed from a group.
+ * @brief Notification that a member was added to a group.
  *
  * @field instigator   Process that instigated operation (XPC caller).
- * @field group_name   The group from which the member was removed.
- * @field member       The identity of the member removed.
+ * @field group_name   The group to which the member was added.
+ * @field member       The identity of the member added.
  * @field node_name    OD node being mutated.
  *                     Typically one of "/Local/Default", "/LDAPv3/<server>" or
  *                     "/Active Directory/<domain>".
@@ -19,14 +19,14 @@
  *                     authenticating.
  *
  * @note This event type does not support caching (notify-only).
- * @note This event does not indicate that a member was actually removed.
- *       For example when removing a user from a group they are not a member of.
+ * @note This event does not indicate that a member was actually added.
+ *       For example when adding a user to a group they are already a member of.
  */
 
 import Foundation
 
 
-public struct OpenDirectoryGroupRemoveEvent: Identifiable, Codable, Hashable {
+public struct OpenDirectoryGroupAddEvent: Identifiable, Codable, Hashable {
     public var id: UUID = UUID()
     public var instigator_process_name, instigator_process_path, instigator_process_audit_token, instigator_process_signing_id: String?
     public var group_name: String?
@@ -40,22 +40,15 @@ public struct OpenDirectoryGroupRemoveEvent: Identifiable, Codable, Hashable {
     
     public func hash(into hasher: inout Hasher) {
         hasher.combine(id)
-        hasher.combine(node_name)
-        hasher.combine(group_name)
-        hasher.combine(member)
     }
     
-    public static func == (lhs: OpenDirectoryGroupRemoveEvent, rhs: OpenDirectoryGroupRemoveEvent) -> Bool {
-        if lhs.id == rhs.id && lhs.node_name == rhs.node_name && lhs.group_name == rhs.group_name && lhs.member == rhs.member {
-            return true
-        }
-        
-        return false
+    public static func == (lhs: OpenDirectoryGroupAddEvent, rhs: OpenDirectoryGroupAddEvent) -> Bool {
+        return lhs.id == rhs.id
     }
     
     init(from rawMessage: UnsafePointer<es_message_t>) {
-        let odGroupRemoveEvent: es_event_od_group_remove_t = rawMessage.pointee.event.od_group_remove.pointee
-        let instigatorProcess: es_process_t = odGroupRemoveEvent.instigator!.pointee
+        let odGroupAddEvent: es_event_od_group_add_t = rawMessage.pointee.event.od_group_add.pointee
+        let instigatorProcess: es_process_t = odGroupAddEvent.instigator!.pointee
         
         self.instigator_process_name = ""
         if instigatorProcess.executable.pointee.path.length > 0 {
@@ -73,19 +66,19 @@ public struct OpenDirectoryGroupRemoveEvent: Identifiable, Codable, Hashable {
         }
         
         self.instigator_process_audit_token = ""
-        self.instigator_process_audit_token = instigatorProcess.audit_token
+        self.instigator_process_audit_token =  instigatorProcess.audit_token
             .toString()
         
-        self.error_code = Int(odGroupRemoveEvent.error_code)
+        self.error_code = Int(odGroupAddEvent.error_code)
         self.error_code_human = decodeODErrorCode(self.error_code)
     
         self.group_name = ""
-        if odGroupRemoveEvent.group_name.length > 0 {
-            self.group_name = String(cString: odGroupRemoveEvent.group_name.data)
+        if odGroupAddEvent.group_name.length > 0 {
+            self.group_name = String(cString: odGroupAddEvent.group_name.data)
         }
         
         self.member = ""
-        switch odGroupRemoveEvent.member.pointee.member_type {
+        switch odGroupAddEvent.member.pointee.member_type {
         case ES_OD_MEMBER_TYPE_USER_NAME:
             self.member = "ES_OD_MEMBER_TYPE_USER_NAME"
             break
@@ -100,13 +93,13 @@ public struct OpenDirectoryGroupRemoveEvent: Identifiable, Codable, Hashable {
         }
         
         self.node_name = ""
-        if odGroupRemoveEvent.node_name.length > 0 {
-            self.node_name = String(cString: odGroupRemoveEvent.node_name.data)
+        if odGroupAddEvent.node_name.length > 0 {
+            self.node_name = String(cString: odGroupAddEvent.node_name.data)
         }
         
         self.db_path = ""
-        if odGroupRemoveEvent.db_path.length > 0 {
-            self.db_path = String(cString: odGroupRemoveEvent.db_path.data)
+        if odGroupAddEvent.db_path.length > 0 {
+            self.db_path = String(cString: odGroupAddEvent.db_path.data)
         }
     }
 }
