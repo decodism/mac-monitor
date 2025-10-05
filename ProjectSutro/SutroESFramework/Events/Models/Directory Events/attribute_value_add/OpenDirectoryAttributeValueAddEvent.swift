@@ -34,8 +34,11 @@ import Foundation
 public struct OpenDirectoryAttributeValueAddEvent: Identifiable, Codable, Hashable {
     public var id: UUID = UUID()
     public var instigator_process_name, instigator_process_path, instigator_process_audit_token, instigator_process_signing_id: String?
-    public var error_code: Int
-    public var record_type: String
+    
+    public var error_code: Int64
+    public var record_type: Int16
+    public var record_type_string: String
+    
     public var record_name: String?
     public var attribute_name: String?
     public var attribute_value: String?
