@@ -424,7 +424,10 @@ struct FilterView: View {
                             
                             GroupBox {
                                 VStack(alignment: .leading, spacing: 8) {
-                                    ForEach(eventFilterSearch, id: \.self) { event in
+                                    ForEach(
+                                        eventFilterSearch.sorted(),
+                                        id: \.self
+                                    ) { event in
                                         GroupBox {
                                             HStack {
                                                 Image(systemName: eventStringToImage(from: event))
