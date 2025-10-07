@@ -79,7 +79,7 @@ struct TableNonExecContextMenus: View {
             }) {
                 HStack {
                     Text(
-                        "Include: \"`\(procName)`\""
+                        "→ Only: \"`\(procName)`\" events"
                     )
                 }
             }
@@ -90,7 +90,7 @@ struct TableNonExecContextMenus: View {
             }) {
                 HStack {
                     Text(
-                        "Include: \"`\(procName)`\" and subtrees"
+                        "↕ Full tree: \"`\(procName)`\" events"
                     )
                 }
             }

@@ -22,11 +22,12 @@ public struct Filters {
     
     
     public func totalFilters() -> Int {
+        var sum: Int = initiatingPaths.count + targetPaths.count + events.count + userIDs.count
         if rootIncludedInitiatingProcessPath != nil || rootIncludedTargetProcessPath != nil {
-            return 1
-        } else {
-            return initiatingPaths.count + targetPaths.count + events.count + userIDs.count
+            sum += 1
         }
+        
+        return sum
     }
 }
 
@@ -37,88 +38,91 @@ public func isEventFiltered(
     filterText: String,
     allFilters: Filters,
     systemExtensionManager: EndpointSecurityManager,
-    lineageResolver: ProcessLineageResolver
+    initiatingLineageSet: Set<String>?,
+    targetLineageSet: Set<String>?
 ) -> Bool {
-    // --- STAGE 1: INCLUSION FILTERING ---
-    
     let inclusionFilterActive = allFilters.rootIncludedInitiatingProcessPath != nil ||
                                 allFilters.rootIncludedTargetProcessPath != nil
     
     if inclusionFilterActive {
         var matchesAnInclusionFilter = false
         
-        // Check initiating process inclusion filter
-        if let includePath = allFilters.rootIncludedInitiatingProcessPath,
-           let eventProcessPath = event.process.executable?.path {
-            if eventProcessPath == includePath {
+        let initiatingToken = event.process.audit_token_string
+        let initiatingPath = event.process.executable?.path
+        
+        // Check initiating process
+        if let path = allFilters.rootIncludedInitiatingProcessPath {
+            if allFilters.shouldIncludeProcessSubTrees {
+                if initiatingLineageSet?.contains(initiatingToken) == true {
+                    matchesAnInclusionFilter = true
+                }
+            } else if initiatingPath == path {
                 matchesAnInclusionFilter = true
             }
-            // If it doesn't match directly, check its lineage IF the subtree option is enabled.
-            else if allFilters.shouldIncludeProcessSubTrees {
-                if lineageResolver.lineageMatches(event: event, includedPath: includePath) {
+        }
+        
+        if !matchesAnInclusionFilter, let path = allFilters.rootIncludedTargetProcessPath {
+            if allFilters.shouldIncludeProcessSubTrees {
+                if targetLineageSet?.contains(initiatingToken) == true {
+                    matchesAnInclusionFilter = true
+                }
+            } else if initiatingPath == path {
+                matchesAnInclusionFilter = true
+            }
+        }
+        
+        // Check exec target
+        if !matchesAnInclusionFilter, let execEvent = event.event.exec {
+            let targetToken = execEvent.target.audit_token_string
+            let targetPath = execEvent.target.executable?.path
+            
+            if let path = allFilters.rootIncludedInitiatingProcessPath {
+                if allFilters.shouldIncludeProcessSubTrees {
+                    if initiatingLineageSet?.contains(targetToken) == true {
+                        matchesAnInclusionFilter = true
+                    }
+                } else if targetPath == path {
+                    matchesAnInclusionFilter = true
+                }
+            }
+            
+            if !matchesAnInclusionFilter, let path = allFilters.rootIncludedTargetProcessPath {
+                if allFilters.shouldIncludeProcessSubTrees {
+                    if targetLineageSet?.contains(targetToken) == true {
+                        matchesAnInclusionFilter = true
+                    }
+                } else if targetPath == path {
                     matchesAnInclusionFilter = true
                 }
             }
         }
         
-        // Check target process inclusion filter
-        if !matchesAnInclusionFilter {
-            if let includePath = allFilters.rootIncludedTargetProcessPath {
-               if let execEvent = event.event.exec,
-                  execEvent.target.executable?.path == includePath {
-                    matchesAnInclusionFilter = true
-               }
-                // If it doesn't match directly, check its lineage IF the subtree option is enabled.
-                else if allFilters.shouldIncludeProcessSubTrees {
-                    if lineageResolver.lineageMatches(event: event, includedPath: includePath) {
-                        matchesAnInclusionFilter = true
-                    }
-                } else {
-                    if let includePath = allFilters.rootIncludedTargetProcessPath,
-                       event.process.executable?.path == includePath {
-                        matchesAnInclusionFilter = true
-                    }
-                }
-            }
-        }
-        
-        // If no inclusion filter was matched, the event is filtered out immediately.
         if !matchesAnInclusionFilter { return false }
     }
     
-    // --- STAGE 2: EXCLUSION FILTERING ---
-
-    // Filter by event time
+    // MARK: Non-lineage filters:
     if filteringLongRunningProcs,
        let messageTime = event.message_darwin_time,
        messageTime.timeIntervalSince1970 < systemExtensionManager.clientConnectDT.timeIntervalSince1970 {
         return false
     }
     
-    // By event type
     if allFilters.events.contains(event.es_event_type ?? "") { return false }
-    
-    // By effective user ID
     if allFilters.userIDs.contains(event.process.euid_human ?? "") { return false }
-    
-    // By initiating process path
     if allFilters.initiatingPaths.contains(event.process.executable?.path ?? "") { return false }
     
-    // By target path
     let targetPath = event.target_path ?? ""
     if allFilters.targetPaths.contains(targetPath) ||
         !allFilters.targetPaths.filter({ targetPath.contains($0) }).isEmpty {
         return false
     }
     
-    // Filter text on target / "context"
     if !filterText.isEmpty,
        let target = event.context,
        !target.lowercased().contains(filterText) {
         return false
     }
     
-    // If the event has survived all applicable filters, keep it.
     return true
 }
 
@@ -245,11 +249,11 @@ struct FilterView: View {
                                 if allFilters.shouldIncludeProcessSubTrees {
                                     Capsule()
                                         .fill(Color.green)
+                                        .opacity(0.8)
                                         .overlay(
-                                            Text("Including subtrees")
+                                            Text("Including full tree")
                                                 .bold()
                                         )
-                                        .opacity(0.8)
                                         .frame(maxWidth: 150)
                                 }
                             }
@@ -290,8 +294,9 @@ struct FilterView: View {
                                 if allFilters.shouldIncludeProcessSubTrees {
                                     Capsule()
                                         .fill(Color.green)
+                                        .opacity(0.8)
                                         .overlay(
-                                            Text("Including subtrees")
+                                            Text("Including full tree")
                                                 .bold()
                                         )
                                         .frame(maxWidth: 150)

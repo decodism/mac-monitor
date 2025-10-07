@@ -103,7 +103,7 @@ struct TableExecEventContextMenu: View {
             }) {
                 HStack {
                     Text(
-                        "Include: \"`\(tgtProcName)`\""
+                        "→ Only: \"`\(tgtProcName)`\" events"
                     )
                 }
             }
@@ -114,7 +114,7 @@ struct TableExecEventContextMenu: View {
             }) {
                 HStack {
                     Text(
-                        "Include: \"`\(tgtProcName)`\" and subtrees"
+                        "↕ Full tree: \"`\(tgtProcName)`\" events"
                     )
                 }
             }
