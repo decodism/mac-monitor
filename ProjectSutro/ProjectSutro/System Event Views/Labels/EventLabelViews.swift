@@ -223,7 +223,7 @@ struct XProtectMalwareRemediatedEventLabelView: View {
     var body: some View {
         HStack {
             Image(systemName: "exclamationmark.triangle.fill").symbolRenderingMode(.palette).foregroundStyle(.black, .purple)
-            Label("**`\(message.es_event_type!)`**", systemImage: "checkmark.shield").symbolRenderingMode(.palette).foregroundStyle(.green)
+            Label("**`\(message.es_event_type!)`**", systemImage: "checkmark.shield").symbolRenderingMode(.palette).foregroundStyle(.purple)
         }.frame(alignment: .leading)
     }
 }
