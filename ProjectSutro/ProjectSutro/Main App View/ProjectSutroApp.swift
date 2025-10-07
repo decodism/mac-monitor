@@ -244,6 +244,7 @@ struct ProjectSutroApp: App {
                         systemExtensionManager.stopRecordingEvents()
                         systemExtensionManager.coreDataContainer.exportSelectedEvents(eventIDs: Array(eventSelection), jsonl: true)
                     }
+                    .keyboardShortcut("s", modifiers: [.command, .shift])
                     .disabled(eventSelection.isEmpty)
                 }
             }

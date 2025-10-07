@@ -16,12 +16,12 @@ import SutroESFramework
 /// handling the nuance that exec events with the same PID represent process replacement rather than
 /// new child processes.
 ///
-/// ## Performance Characteristics
+/// ## Performance
 /// - Initialization: O(n) where n is the number of events
 /// - Lineage computation: O(m) where m is the size of the resulting tree
 /// - Filtering checks: O(1) after pre-computing lineage sets
 ///
-/// ## Implementation Notes
+/// ## Implementation
 /// - Exec events with matching PIDs are treated as process replacement, inheriting the parent
 /// - Fork events create true parent-child relationships
 /// - Cycle detection prevents infinite loops in malformed process trees

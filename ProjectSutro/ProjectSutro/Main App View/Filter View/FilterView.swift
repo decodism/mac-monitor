@@ -249,11 +249,11 @@ struct FilterView: View {
                                 if allFilters.shouldIncludeProcessSubTrees {
                                     Capsule()
                                         .fill(Color.green)
+                                        .opacity(0.8)
                                         .overlay(
-                                            Text("Including subtrees")
+                                            Text("Including full tree")
                                                 .bold()
                                         )
-                                        .opacity(0.8)
                                         .frame(maxWidth: 150)
                                 }
                             }
@@ -294,8 +294,9 @@ struct FilterView: View {
                                 if allFilters.shouldIncludeProcessSubTrees {
                                     Capsule()
                                         .fill(Color.green)
+                                        .opacity(0.8)
                                         .overlay(
-                                            Text("Including subtrees")
+                                            Text("Including full tree")
                                                 .bold()
                                         )
                                         .frame(maxWidth: 150)
