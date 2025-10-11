@@ -30,10 +30,7 @@ public class CoreDataController {
     /// Designed for asyncronous operations like batch inserting.
     private let privateMOC: NSManagedObjectContext
     
-    /// Merge coalescing properties
-    private var pendingMerge: Notification?
-    private var mergeWorkItem: DispatchWorkItem?
-    private let mergeQueue = DispatchQueue(label: "com.swiftlydetecting.mergeQueue", qos: .utility)
+
 
     /// Set up the in-memory Core Data PSC named: `SystemEvents`
     init() {
@@ -45,37 +42,13 @@ public class CoreDataController {
             }
         })
         
-        // Disable automatic merging to prevent UI blocking
-        container.viewContext.automaticallyMergesChangesFromParent = false
+        container.viewContext.automaticallyMergesChangesFromParent = true
         
         // New background context to handle off-main thread tasks
         privateMOC = container.newBackgroundContext()
         privateMOC.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
-        
-        // Retain a strong reference to registered objects to prevent premature deallocation during intense background processing.
         privateMOC.retainsRegisteredObjects = true
         
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(backgroundContextDidSave(_:)),
-            name: .NSManagedObjectContextDidSave,
-            object: privateMOC
-        )
-    }
-    
-    @objc private func backgroundContextDidSave(_ notification: Notification) {
-        mergeWorkItem?.cancel()
-        pendingMerge = notification
-        mergeWorkItem = DispatchWorkItem { [weak self] in
-            guard let self = self,
-                  let notification = self.pendingMerge else { return }
-            
-            DispatchQueue.main.async {
-                self.container.viewContext.mergeChanges(fromContextDidSave: notification)
-                self.pendingMerge = nil
-            }
-        }
-        mergeQueue.asyncAfter(deadline: .now() + 0.1, execute: mergeWorkItem!)
     }
     
     // MARK: - Mutators
