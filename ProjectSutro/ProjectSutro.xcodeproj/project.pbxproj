@@ -2857,7 +2857,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"ProjectSutro/Preview Content\"";
 				DEVELOPMENT_TEAM = "";
@@ -2880,7 +2880,7 @@
 					"$(SDKROOT)/usr/lib/system",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 13.1;
-				MARKETING_VERSION = 1.9.0;
+				MARKETING_VERSION = 1.9.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.swiftlydetecting.agent;
 				PRODUCT_NAME = "Mac Monitor";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -2903,7 +2903,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"ProjectSutro/Preview Content\"";
 				DEVELOPMENT_TEAM = "";
@@ -2926,7 +2926,7 @@
 					"$(SDKROOT)/usr/lib/system",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 13.1;
-				MARKETING_VERSION = 1.9.0;
+				MARKETING_VERSION = 1.9.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.swiftlydetecting.agent;
 				PRODUCT_NAME = "Mac Monitor";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -2948,7 +2948,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = SecurityExtension/Assets.xcassets;
 				DEVELOPMENT_TEAM = UA6JCQGF3F;
@@ -2966,7 +2966,7 @@
 					"@executable_path/../../../../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 13.1;
-				MARKETING_VERSION = 1.9.0;
+				MARKETING_VERSION = 1.9.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.swiftlydetecting.agent.securityextension;
 				PRODUCT_NAME = "$(inherited)";
 				PROVISIONING_PROFILE_SPECIFIER = "RC Release SE w/Ent";
@@ -2988,7 +2988,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = SecurityExtension/Assets.xcassets;
 				DEVELOPMENT_TEAM = UA6JCQGF3F;
@@ -3006,7 +3006,7 @@
 					"@executable_path/../../../../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 13.1;
-				MARKETING_VERSION = 1.9.0;
+				MARKETING_VERSION = 1.9.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.swiftlydetecting.agent.securityextension;
 				PRODUCT_NAME = "$(inherited)";
 				PROVISIONING_PROFILE_SPECIFIER = "RC Release SE w/Ent";
