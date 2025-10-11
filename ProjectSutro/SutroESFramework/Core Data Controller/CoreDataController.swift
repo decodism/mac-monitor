@@ -30,10 +30,7 @@ public class CoreDataController {
     /// Designed for asyncronous operations like batch inserting.
     private let privateMOC: NSManagedObjectContext
     
-    /// Merge coalescing properties
-    private var pendingMerge: Notification?
-    private var mergeWorkItem: DispatchWorkItem?
-    private let mergeQueue = DispatchQueue(label: "com.swiftlydetecting.mergeQueue", qos: .utility)
+
 
     /// Set up the in-memory Core Data PSC named: `SystemEvents`
     init() {
@@ -45,33 +42,13 @@ public class CoreDataController {
             }
         })
         
-        // Disable automatic merging to prevent UI blocking
-        container.viewContext.automaticallyMergesChangesFromParent = false
+        container.viewContext.automaticallyMergesChangesFromParent = true
         
         // New background context to handle off-main thread tasks
         privateMOC = container.newBackgroundContext()
         privateMOC.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(backgroundContextDidSave(_:)),
-            name: .NSManagedObjectContextDidSave,
-            object: privateMOC
-        )
-    }
-    
-    @objc private func backgroundContextDidSave(_ notification: Notification) {
-        mergeWorkItem?.cancel()
-        pendingMerge = notification
-        mergeWorkItem = DispatchWorkItem { [weak self] in
-            guard let self = self,
-                  let notification = self.pendingMerge else { return }
-            
-            DispatchQueue.main.async {
-                self.container.viewContext.mergeChanges(fromContextDidSave: notification)
-                self.pendingMerge = nil
-            }
-        }
-        mergeQueue.asyncAfter(deadline: .now() + 0.1, execute: mergeWorkItem!)
+        privateMOC.retainsRegisteredObjects = true
+        
     }
     
     // MARK: - Mutators
@@ -146,25 +123,17 @@ public class CoreDataController {
                 if let parent = newParentLookup[parentToken] ?? persistentParentLookup[parentToken] {
                     // Avoid self-correlation
                     if parent.objectID != esMessage.objectID {
-                         parent.addToCorrelated_events(esMessage)
+                        parent.addToCorrelated_events(esMessage)
                     }
                 }
             }
             
-            // 5. Save strategy: incremental saves for very large batches
+            // 5. Save the context once after all modifications are complete.
             if context.hasChanges {
                 do {
-                    // For large batches, save incrementally to reduce memory pressure
-                    if newMessages.count > 5000 {
-                        let chunkSize = 1000
-                        for _ in stride(from: 0, to: newMessages.count, by: chunkSize) {
-                            try context.save()
-                        }
-                    } else {
-                        try context.save()
-                    }
+                    try context.save()
                 } catch {
-                    CoreDataController.logger.error("Error saving context after batch insert: \(error)")
+                    CoreDataController.logger.error("Error saving context after batch insert: \(error.localizedDescription)")
                 }
             }
         }
@@ -213,19 +182,16 @@ public class CoreDataController {
     /// - Returns: The object representation of the entity: `ESMessage?`
     ///
     public func getEntityByID(id: UUID) -> ESMessage? {
-        let request = NSFetchRequest<NSFetchRequestResult>(entityName: "ESMessage")
+        let request = NSFetchRequest<ESMessage>(entityName: "ESMessage")
         request.predicate = NSPredicate(format: "id == %@", id as CVarArg)
         request.returnsObjectsAsFaults = false
         request.fetchLimit = 1
         
         do {
             // This fetch is for user-facing actions (like export), so fetching
-            // from the viewContext is acceptable here.
-            let result = try self.container.viewContext.fetch(request) as! [ESMessage]
-            if !result.isEmpty {
-                let matchingSystemEvent = result.first!
-                return matchingSystemEvent
-            }
+            // from the viewContext is acceptable here. This must be called from the main thread.
+            let result = try self.container.viewContext.fetch(request)
+            return result.first
         } catch {
             CoreDataController.logger.error("Could not find the Core Data record by UUID of: \(id)")
         }
@@ -240,7 +206,7 @@ public class CoreDataController {
     /// - Returns: `[ESMessage]` the list of `EXEC` events in the same process group.
     ///
     public func getProcGroup(message: ESMessage) -> [ESMessage] {
-        let groupFetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "ESMessage")
+        let groupFetchRequest = NSFetchRequest<ESMessage>(entityName: "ESMessage")
         let event = message.event
         var gid: Int = Int(message.process.group_id)
         if let exec = event.exec {
@@ -251,12 +217,8 @@ public class CoreDataController {
         groupFetchRequest.returnsObjectsAsFaults = false
         
         do {
-            let result = try self.container.viewContext.fetch(groupFetchRequest) as! [ESMessage]
-            if !result.isEmpty {
-                return result.sorted(by: {$0.mach_time > $1.mach_time})
-            } else {
-                return []
-            }
+            let result = try self.container.viewContext.fetch(groupFetchRequest)
+            return result.sorted(by: {$0.mach_time > $1.mach_time})
         } catch {
             CoreDataController.logger
                 .error(
@@ -274,7 +236,7 @@ public class CoreDataController {
     /// - Returns: `[ESMessage]` the list of `EXEC` events in the same process session.
     ///
     public func getProcSessionGroup(message: ESMessage) -> [ESMessage] {
-        let groupFetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "ESMessage")
+        let groupFetchRequest = NSFetchRequest<ESMessage>(entityName: "ESMessage")
         let event = message.event
         var session_id: Int = Int(message.process.session_id)
         if let exec = event.exec {
@@ -285,12 +247,8 @@ public class CoreDataController {
         groupFetchRequest.returnsObjectsAsFaults = false
         
         do {
-            let result = try self.container.viewContext.fetch(groupFetchRequest) as! [ESMessage]
-            if !result.isEmpty {
-                return result.sorted(by: {$0.mach_time > $1.mach_time})
-            } else {
-                return []
-            }
+            let result = try self.container.viewContext.fetch(groupFetchRequest)
+            return result.sorted(by: {$0.mach_time > $1.mach_time})
         } catch {
             CoreDataController.logger
                 .error(
@@ -339,11 +297,11 @@ public class CoreDataController {
         
         // First try looking through the exec events
         let audit_token: String = message.process.audit_token_string
-        let execFetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "ESMessage")
+        let execFetchRequest = NSFetchRequest<ESMessage>(entityName: "ESMessage")
         execFetchRequest.predicate = NSPredicate(format: "event.exec != NULL AND event.exec.target.audit_token_string == %@", audit_token)
         execFetchRequest.returnsObjectsAsFaults = false
         do {
-            let results = try self.container.viewContext.fetch(execFetchRequest) as! [ESMessage]
+            let results = try self.container.viewContext.fetch(execFetchRequest)
             if !results.isEmpty {
                 return results.first
             }
@@ -356,11 +314,11 @@ public class CoreDataController {
         
         // Next try looking through the fork events
         // @note similar for fork events
-        let forkFetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "ESMessage")
+        let forkFetchRequest = NSFetchRequest<ESMessage>(entityName: "ESMessage")
         forkFetchRequest.predicate = NSPredicate(format: "event.fork != NULL AND event.fork.child.audit_token_string == %@", audit_token)
         forkFetchRequest.returnsObjectsAsFaults = false
         do {
-            let result = try self.container.viewContext.fetch(forkFetchRequest) as! [ESMessage]
+            let result = try self.container.viewContext.fetch(forkFetchRequest)
             if !result.isEmpty {
                 return result.first
             }
@@ -377,73 +335,76 @@ public class CoreDataController {
     /// Export all system events to a file
     ///
     /// We can export all system events from the in-memory store to either JSON or JSONL format.
+    /// This operation is performed safely on the background context.
     ///
     /// - Parameters:
     ///   - jsonl: Should we export the events line-by-line (one JSON object per line)?
     ///
     public func exportFullTrace(jsonl: Bool = false) {
+        // UI work must be on the main thread.
         guard let telemetryFile = showSavePanel() else { return }
         
-        let request = NSFetchRequest<NSFetchRequestResult>(entityName: "ESMessage")
-        request.returnsObjectsAsFaults = false
-        
-        // Use the private context for a large background fetch.
         privateMOC.perform {
+            let request = NSFetchRequest<ESMessage>(entityName: "ESMessage")
+            request.returnsObjectsAsFaults = false
+            
             do {
-                let result = try self.privateMOC.fetch(request) as! [ESMessage]
-                let json = result.map { jsonl ? ProcessHelpers.eventToJSON(value: $0) : ProcessHelpers.eventToPrettyJSON(value: $0) }.joined(separator: "\n")
-                
-                do {
-                    try json.write(to: telemetryFile, atomically: true, encoding: .utf8)
-                } catch {
-                    // Switch back to main thread for logging UI-related errors if needed, but logger is fine.
-                    CoreDataController.logger.error("Failed to write telemetry file")
+                // 1. Fetch and process all data within the background context's queue.
+                let messages = try self.privateMOC.fetch(request)
+                let jsonLines = messages.map { message in
+                    jsonl ? ProcessHelpers.eventToJSON(value: message) : ProcessHelpers.eventToPrettyJSON(value: message)
                 }
                 
+                // 2. Pass the prepared data (not managed objects) to the main thread for file writing.
+                DispatchQueue.main.async {
+                    let finalJSON = jsonLines.joined(separator: "\n")
+                    do {
+                        try finalJSON.write(to: telemetryFile, atomically: true, encoding: .utf8)
+                    } catch {
+                        CoreDataController.logger.error("Failed to write exported trace to file: \(error)")
+                    }
+                }
             } catch {
-                CoreDataController.logger.error("Could not fetch system events to export!")
+                CoreDataController.logger.error("Failed to fetch events for export: \(error)")
             }
         }
     }
     
     /// Export specified system events to a file, sorted by `mach_time`.
     ///
-    /// We can export the specified system events from the in-memory store to either JSON or JSONL format.
-    /// The events are fetched concurrently and then sorted by their `mach_time` before being written to the file.
+    /// This operation is performed safely on the main thread, as it reads from the viewContext.
     ///
     /// - Parameters:
     ///   - eventIDs: A listing of the event `UUID`s we want to export.
     ///   - jsonl: Should we export the events line-by-line (one JSON object per line)?
     ///
     public func exportSelectedEvents(eventIDs: [UUID], jsonl: Bool = false) {
+        // UI work must be on the main thread.
         guard let telemetryFile = showSavePanel(numberOfEvents: eventIDs.count) else { return }
-        var fetchedEvents: [ESMessage?] = Array(
-            repeating: nil,
-            count: eventIDs.count
-        )
-        let dispatchGroup = DispatchGroup()
-        for (index, id) in eventIDs.enumerated() {
-            dispatchGroup.enter()
-            DispatchQueue.global(qos: .userInitiated).async { [self] in
-                let event = self.getEntityByID(id: id)
-                fetchedEvents[index] = event
-                dispatchGroup.leave()
-            }
-        }
         
-        // 2. After fetching sort, serialize, and write
-        dispatchGroup.notify(queue: .main) {
-            let sortedEvents = fetchedEvents.compactMap { $0 }.sorted { $0.mach_time < $1.mach_time }
+        // All viewContext access and file writing will be on the main thread.
+        DispatchQueue.main.async {
+            var events: [ESMessage] = []
+            events.reserveCapacity(eventIDs.count)
+            
+            for id in eventIDs {
+                // self.getEntityByID safely uses the main `viewContext`
+                if let event = self.getEntityByID(id: id) {
+                    events.append(event)
+                }
+            }
+            
+            let sortedEvents = events.sorted { $0.mach_time < $1.mach_time }
             let jsonStrings = sortedEvents.map { event in
                 jsonl ? ProcessHelpers.eventToJSON(value: event) : ProcessHelpers.eventToPrettyJSON(value: event)
             }
             let finalJSON = jsonStrings.joined(separator: "\n")
-            if !finalJSON.isEmpty {
-                do {
-                    try finalJSON.write(to: telemetryFile, atomically: true, encoding: .utf8)
-                } catch {
-                    CoreDataController.logger.error("Error writing sorted system track to disk: \(error.localizedDescription)")
-                }
+            
+            guard !finalJSON.isEmpty else { return }
+            do {
+                try finalJSON.write(to: telemetryFile, atomically: true, encoding: .utf8)
+            } catch {
+                CoreDataController.logger.error("Failed to write selected events to file: \(error)")
             }
         }
     }
@@ -471,12 +432,3 @@ public class CoreDataController {
     }
 }
 
-// MARK: - Helper Extensions
-
-extension Array {
-    func chunked(into size: Int) -> [[Element]] {
-        return stride(from: 0, to: count, by: size).map {
-            Array(self[$0..<Swift.min($0 + size, count)])
-        }
-    }
-}
