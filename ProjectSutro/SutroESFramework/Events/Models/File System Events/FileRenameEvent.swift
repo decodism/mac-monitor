@@ -70,13 +70,18 @@ public struct FileRenameEvent: Identifiable, Codable, Hashable {
         if fileRenameEvent.destination_type == ES_DESTINATION_TYPE_EXISTING_FILE {
             self.type = "EXISTING_FILE"
             self.destination_path = String(cString: fileRenameEvent.destination.existing_file.pointee.path.data)
-            self.file_name = NSURL(fileURLWithPath: String(cString: fileRenameEvent.destination.existing_file.pointee.path.data)).lastPathComponent
-            self.is_quarantined = Int16(ProcessHelpers.isFileQuarantined(filePath: String(cString: fileRenameEvent.destination.existing_file.pointee.path.data)))
+            self.file_name = NSURL(fileURLWithPath: self.destination_path!).lastPathComponent
+            self.is_quarantined = Int16(ProcessHelpers.isFileQuarantined(filePath: self.destination_path!))
         } else {
             self.type = "NEW_PATH"
-            self.destination_path = String(cString: fileRenameEvent.destination.new_path.dir.pointee.path.data)
-            self.file_name = String(cString: fileRenameEvent.destination.new_path.filename.data)
-            self.is_quarantined = Int16(ProcessHelpers.isFileQuarantined(filePath: "\(String(cString: fileRenameEvent.destination.existing_file.pointee.path.data))/\(String(cString: fileRenameEvent.destination.new_path.filename.data))"))
+            let dirPath = String(cString: fileRenameEvent.destination.new_path.dir.pointee.path.data)
+            let fileName = String(cString: fileRenameEvent.destination.new_path.filename.data)
+            
+            self.destination_path = dirPath
+            self.file_name = fileName
+            
+            let fullPath = "\(dirPath)/\(fileName)"
+            self.is_quarantined = Int16(ProcessHelpers.isFileQuarantined(filePath: fullPath))
         }
         
         
@@ -85,25 +90,26 @@ public struct FileRenameEvent: Identifiable, Codable, Hashable {
         // @note check if the top level is quarantined. If so the rest should be as well.
         let homeDir: String = String(FileManager.default.consoleUserHome!.absoluteString.trimmingPrefix("file://"))
         let libHomeDir: String = String(FileManager.default.consoleUserHome!.appending(path: "Library").absoluteString.trimmingPrefix("file://"))
-        if destination_path!.hasPrefix(homeDir) && !destination_path!.hasPrefix(libHomeDir) {
-            // Check if the source path came from `com.apple.desktopservices.ArchiveService` meanining the rename was likely the result of an unarchive operation.
-            if source_path!.contains("com.apple.desktopservices.ArchiveService") {
-                let topLevel: URL = URL(filePath: self.destination_path!).appending(path: self.file_name!)
-                if topLevel.isDirectory {
-                    if self.is_quarantined == 1 {
-                        //                os_log("[DOWNLOAD DIRECTORY] IS Quarantined!")
-                        for file in deepSearch(directoryPath: self.destination_path!.appending("/\(self.file_name!)")) {
-                            //                    os_log("Checking file............. \(file)")
-                            // Check if file is quarantined.
-                            if ProcessHelpers.isFileQuarantined(filePath: String(file.trimmingPrefix("file://"))) == 0 {
-                                //                        os_log("[DETECTION] File Quarantine violation! ===> \(file)")
-                                fullUnQuarantinedPaths.append(file)
+        if let destPath = destination_path, let srcPath = source_path, let fName = file_name {
+            if destPath.hasPrefix(homeDir) && !destPath.hasPrefix(libHomeDir) {
+                // Check if the source path came from `com.apple.desktopservices.ArchiveService` meanining the rename was likely the result of an unarchive operation.
+                if srcPath.contains("com.apple.desktopservices.ArchiveService") {
+                    let topLevel: URL = URL(filePath: destPath).appending(path: fName)
+                    if topLevel.isDirectory {
+                        if self.is_quarantined == 1 {
+                            //                os_log("[DOWNLOAD DIRECTORY] IS Quarantined!")
+                            for file in deepSearch(directoryPath: "\(destPath)/\(fName)") {
+                                //                    os_log("Checking file............. \(file)")
+                                // Check if file is quarantined.
+                                if ProcessHelpers.isFileQuarantined(filePath: String(file.trimmingPrefix("file://"))) == 0 {
+                                    //                        os_log("[DETECTION] File Quarantine violation! ===> \(file)")
+                                    fullUnQuarantinedPaths.append(file)
+                                }
                             }
                         }
                     }
                 }
             }
-            
         }
         
         self.archive_files_not_quarantined = fullUnQuarantinedPaths.joined(separator: "[::]")

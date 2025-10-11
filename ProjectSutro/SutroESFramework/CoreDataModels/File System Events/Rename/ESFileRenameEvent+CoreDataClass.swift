@@ -21,11 +21,11 @@ public class ESFileRenameEvent: NSManagedObject, Decodable {
         let fileRenameEvent: FileRenameEvent = message.event.rename!
         self.init()
         self.id = fileRenameEvent.id
-        self.file_name = fileRenameEvent.file_name!
-        self.destination_path = fileRenameEvent.destination_path!
-        self.source_path = fileRenameEvent.source_path!
-        self.type = fileRenameEvent.type!
-        self.archive_files_not_quarantined = fileRenameEvent.archive_files_not_quarantined!
+        self.file_name = fileRenameEvent.file_name ?? "UNKNOWN"
+        self.destination_path = fileRenameEvent.destination_path ?? "UNKNOWN"
+        self.source_path = fileRenameEvent.source_path ?? "UNKNOWN"
+        self.type = fileRenameEvent.type ?? "UNKNOWN"
+        self.archive_files_not_quarantined = fileRenameEvent.archive_files_not_quarantined ?? ""
         self.is_quarantined = fileRenameEvent.is_quarantined
     }
     
@@ -35,10 +35,10 @@ public class ESFileRenameEvent: NSManagedObject, Decodable {
         let description = NSEntityDescription.entity(forEntityName: "ESFileRenameEvent", in: context)!
         self.init(entity: description, insertInto: context)
         self.id = fileRenameEvent.id
-        self.file_name = fileRenameEvent.file_name!
-        self.destination_path = fileRenameEvent.destination_path!
+        self.file_name = fileRenameEvent.file_name ?? "UNKNOWN"
+        self.destination_path = fileRenameEvent.destination_path ?? "UNKNOWN"
         self.source_path = fileRenameEvent.source_path ?? "UNKNOWN"
-        self.type = fileRenameEvent.type!
+        self.type = fileRenameEvent.type ?? "UNKNOWN"
         self.archive_files_not_quarantined = fileRenameEvent.archive_files_not_quarantined ?? ""
         self.is_quarantined = fileRenameEvent.is_quarantined
     }
@@ -67,8 +67,8 @@ extension ESFileRenameEvent: Encodable {
         try container.encode(file_name, forKey: .file_name)
         try container.encode(type, forKey: .type)
         try container.encode(source_path, forKey: .source_path)
-        if !self.archive_files_not_quarantined!.isEmpty {
-            try container.encode(archive_files_not_quarantined, forKey: .archive_files_not_quarantined)
+        if let archiveFiles = self.archive_files_not_quarantined, !archiveFiles.isEmpty {
+            try container.encode(archiveFiles, forKey: .archive_files_not_quarantined)
         }
         try container.encode(is_quarantined, forKey: .is_quarantined)
         
