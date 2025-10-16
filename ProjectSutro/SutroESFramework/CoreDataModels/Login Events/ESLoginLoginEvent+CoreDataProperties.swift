@@ -16,12 +16,13 @@ extension ESLoginLoginEvent {
         return NSFetchRequest<ESLoginLoginEvent>(entityName: "ESLoginLoginEvent")
     }
 
-    @NSManaged public var id: UUID?
+    @NSManaged public var id: UUID
     @NSManaged public var success: Bool
     @NSManaged public var failure_message: String?
     @NSManaged public var username: String?
-    @NSManaged public var uid: Int64
+    @NSManaged public var uid: NSNumber?
     @NSManaged public var uid_human: String?
+    @NSManaged public var has_uid: Bool
 
 }
 

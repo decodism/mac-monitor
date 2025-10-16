@@ -26,42 +26,18 @@ struct SystemGetTaskMetadataView: View {
             GroupBox {
                 VStack(alignment: .leading) {
                     HStack {
-                        Text("\u{2022} **Type:**")
+                        Text("\u{2022} Type:")
+                            .bold()
                             .padding([.leading], 5.0)
                         GroupBox {
-                            Text("`\(event.type!)`")
+                            Text("\(event.type_string) (\(event.type))")
+                                .monospaced()
                                 .frame(alignment: .leading)
                         }
                     }.frame(maxWidth: .infinity, alignment: .leading)
                     
-                    HStack{
-                        Text("\u{2022} **Process name:**")
-                            .padding([.leading], 5.0)
-                        GroupBox {
-                            Text("`\(event.process_name ?? "")`")
-                                .frame(alignment: .leading)
-                        }
-                    }.frame(maxWidth: .infinity, alignment: .leading)
+                    ProcessView(message: esSystemEvent, process: event.target)
                     
-                    VStack(alignment: .leading) {
-                        Text("\u{2022} **Process path:**")
-                            .padding([.leading], 5.0)
-                        GroupBox {
-                            Text("`\(event.process_path ?? "")`")
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                        }
-                    }.frame(maxWidth: .infinity, alignment: .leading)
-                    
-                    if let procSigningId = event.process_signing_id {
-                        HStack {
-                            Text("\u{2022} **Signing ID:**")
-                                .padding([.leading], 5.0)
-                            GroupBox {
-                                Text("`\(procSigningId)`")
-                                    .frame(alignment: .leading)
-                            }
-                        }.frame(maxWidth: .infinity, alignment: .leading)
-                    }
                 }.frame(maxWidth: .infinity, alignment: .leading)
             }
             
@@ -88,7 +64,7 @@ struct SystemGetTaskMetadataView: View {
                 showAuditTokens.toggle()
             }.buttonStyle(.borderedProminent).tint(.pink).opacity(0.8).padding(.trailing).padding(.bottom)
         }.sheet(isPresented: $showTargetAuditTokens) {
-            AuditTokenView(audit_token: event.process_audit_token!)
+            AuditTokenView(audit_token: event.target.audit_token_string)
             Button("**Dismiss**") {
                 showTargetAuditTokens.toggle()
             }.buttonStyle(.borderedProminent).tint(.pink).opacity(0.8).padding(.trailing).padding(.bottom)

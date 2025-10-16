@@ -25,20 +25,18 @@ struct SystemFileRenameEventTableView: View {
             Table(of: ESMessage.self, selection: $eventSelection) {
                 
                 TableColumn("Destination name") { message in
-                    if let rename = message.event.rename {
+                    if let rename = message.event.rename,
+                       let fileName = URL(string: rename.destination_path)?.lastPathComponent {
                         HStack {
-                            if !rename.archive_files_not_quarantined!.isEmpty || rename.is_quarantined == 0 {
-                                Image(systemName: "exclamationmark.triangle.fill").symbolRenderingMode(.palette).foregroundStyle(.black, .orange)
-                            }
-                            Text(rename.file_name!)
+                            Text(fileName)
                         }
                     }
                     
                 }.width(min: 100, ideal: 150, max: 400)
                 
-                TableColumn("Destination path", value: \.event.rename!.destination_path!)
+                TableColumn("Destination path", value: \.event.rename!.destination_path)
                 
-                TableColumn("Source path", value: \.event.rename!.source_path!)
+                TableColumn("Source path", value: \.event.rename!.source.path!)
                 
 //                TableColumn("Is quarantined", value: \.file_rename_event!.is_quarantined.description)
                 TableColumn("Is quarantined") { message in

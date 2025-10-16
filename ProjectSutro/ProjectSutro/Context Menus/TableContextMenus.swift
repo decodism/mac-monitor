@@ -22,7 +22,7 @@ struct TableNonExecContextMenus: View {
     
     var body: some View {
         Group {
-            // MARK: Secondary click "Event Facts"
+            // MARK: - Secondary click "Event Facts"
             // @note non-optional
             Button(action: {
                 openEventJSON(value: message.id)
@@ -45,7 +45,7 @@ struct TableNonExecContextMenus: View {
             }
         }
         
-        // MARK: Filter ES event
+        // MARK: - Filter ES event
         // @note non-optional
         Button(action: {
             allFilters.events.append(message.es_event_type!)
@@ -69,8 +69,40 @@ struct TableNonExecContextMenus: View {
         }
         
         Divider()
-
-        // MARK: Advanced menu
+        // MARK: - Select Process
+        
+        Text("**Select**")
+        if let procName = message.process.executable?.name,
+           let procPath = message.process.executable?.path {
+            Button(action: {
+                allFilters.rootIncludedInitiatingProcessPath = procPath
+            }) {
+                HStack {
+                    Text(
+                        "→ Only: \"`\(procName)`\" events"
+                    )
+                }
+            }
+            
+            Button(action: {
+                allFilters.rootIncludedInitiatingProcessPath = procPath
+                allFilters.shouldIncludeProcessSubTrees = true
+            }) {
+                HStack {
+                    Text(
+                        "↕ Full tree: \"`\(procName)`\" events"
+                    )
+                }
+            }
+        }
+        
+        
+        
+        
+        
+        Divider()
+        // MARK: - Advanced
+        
         Text("**Advanced**")
         AdvancedNonExecContextMenu(allFilters: $allFilters, event: message)
             .environmentObject(userPrefs)

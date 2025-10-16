@@ -10,22 +10,11 @@ public import CoreData
 
 
 @objc(ESFilePathUnion)
-public class ESFilePathUnion: NSManagedObject, Decodable {
+public class ESFilePathUnion: NSManagedObject {
     enum CodingKeys: CodingKey {
         case id
         case file_path
         case file
-    }
-    
-    // MARK: - Custom initilizer for ESFilePathUnion
-    convenience init(from filePathUnion: FilePathUnion) {
-        self.init()
-        self.id = UUID()
-        
-        self.file_path = filePathUnion.file_path
-        if let file = filePathUnion.file {
-            self.file = ESFile(from: file)
-        }
     }
     
     // MARK: - Custom Core Data initilizer for FilePathUnion
@@ -44,16 +33,6 @@ public class ESFilePathUnion: NSManagedObject, Decodable {
                 insertIntoManagedObjectContext: context
             )
         }
-    }
-    
-    // MARK: - Decodable conformance
-    required convenience public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.init()
-        
-        try id = container.decode(UUID.self, forKey: .id)
-        try file_path = container.decodeIfPresent(String.self, forKey: .file_path)
-        try file = container.decodeIfPresent(ESFile.self, forKey: .file)
     }
 }
 

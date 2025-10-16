@@ -16,10 +16,8 @@ extension ESFDDuplicateEvent {
         return NSFetchRequest<ESFDDuplicateEvent>(entityName: "ESFDDuplicateEvent")
     }
 
-    @NSManaged public var id: UUID?
-    @NSManaged public var file_path: String?
-    @NSManaged public var file_name: String?
-//    @NSManaged public var is_quarantined: Bool
+    @NSManaged public var id: UUID
+    @NSManaged public var target: ESFile
 
 }
 

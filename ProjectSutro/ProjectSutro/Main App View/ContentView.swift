@@ -122,35 +122,82 @@ struct EventView: View {
     @State private var filterPlatform: Bool = false
     
     /// Should events be displayed in ascending order?
-    // TODO: Fix sorting events
     @State private var ascending: Bool = false
     
     /// This more *rare* alert will be displayed when the the user launches the app.
     ///
     /// Usually what we'll do is check on app-launch and disable the start button.
-    // TODO: Refactor TCC alerting
     @State private var tccAlert: Bool = false
     
     
-    /// The filtered System Events to be made avalible to the primary app tables
+    /// Returns the filtered collection of Endpoint Security events for display in the application UI.
+    ///
+    /// This computed property performs a multi-stage filtering operation on Core Data events,
+    /// applying both inclusion filters (process tree selection) and exclusion filters (event types,
+    /// user IDs, paths, etc.). The filtering is optimized for performance through pre-computation
+    /// of process lineage sets and lazy evaluation.
+    ///
+    /// 1. **Lineage Pre-computation**: If subtree filtering is enabled, computes the complete set
+    ///    of audit tokens in the selected process trees (O(m) where m is tree size)
+    /// 2. **Inclusion Filtering**: Events must match the selected process trees if specified
+    /// 3. **Exclusion Filtering**: Events matching blocked event types, paths, or users are removed
+    /// 4. **Text Filtering**: Events must contain the filter text in their context
+    ///
+    /// ## Performance
+    /// - Pre-computation: O(n + m) where n is total events, m is tree size
+    /// - Per-event filtering: O(1) for lineage checks (set lookup), O(k) for other filters
+    /// - Lazy evaluation: Only materializes filtered results when accessed
+    ///
+    /// ## Triggers
+    /// This property recomputes whenever any of its dependencies change:
+    /// - `coreDataEvents` (new events arrive)
+    /// - `allFilters` (user changes filter settings)
+    /// - `filterText` (user types in search)
+    /// - `filteringLongRunningProcs` (toggle changes)
+    ///
     private var filteredCoreDataEvents: [ESMessage] {
+        let lineageResolver = ProcessLineageResolver(events: Array(coreDataEvents))
+        let lineageSubTreesIncludeAnsestors: Bool = true
+        
+        // Pre-compute lineage sets once
+        let initiatingLineageSet = allFilters.rootIncludedInitiatingProcessPath.flatMap { path in
+            allFilters.shouldIncludeProcessSubTrees ?
+                lineageResolver.computeLineageSet(includedPath: path, includeAncestors: lineageSubTreesIncludeAnsestors) : nil
+        }
+        
+        let targetLineageSet = allFilters.rootIncludedTargetProcessPath.flatMap { path in
+            allFilters.shouldIncludeProcessSubTrees ?
+                lineageResolver.computeLineageSet(includedPath: path, includeAncestors: lineageSubTreesIncludeAnsestors) : nil
+        }
+        
         return coreDataEvents.lazy.filter { event in
             return isEventFiltered(
                 event: event,
+                filteringLongRunningProcs: filteringLongRunningProcs,
                 filterText: filterText.lowercased(),
                 allFilters: allFilters,
-                systemExtensionManager: systemExtensionManager
+                systemExtensionManager: systemExtensionManager,
+                initiatingLineageSet: initiatingLineageSet,
+                targetLineageSet: targetLineageSet
             )
         }
     }
     
     /// The string displaying the number of System Events collected over the course of the trace
-    private var eventCountString: AttributedString  {
-        if allFilters.totalFilters() + (filteringLongRunningProcs ? 1 : 0) == 0 {
+    private var eventCountString: AttributedString {
+        let hasActiveFilters = allFilters.totalFilters() + (filteringLongRunningProcs ? 1 : 0) > 0
+        
+        if !hasActiveFilters {
             return try! AttributedString(markdown: "**Events** `\(coreDataEvents.count)`")
-        } else {
-            return try! AttributedString(markdown: "**Events** `\(filteredCoreDataEvents.count)` (`\(String(format: "%.2f", Double(filteredCoreDataEvents.count)/Double(!coreDataEvents.isEmpty ? coreDataEvents.count : 1)*100.0))%`)")
         }
+        
+        let totalCount = coreDataEvents.count
+        let filteredCount = filteredCoreDataEvents.count
+        let percentage = totalCount > 0 ? Double(filteredCount) / Double(totalCount) * 100.0 : 0.0
+        
+        return try! AttributedString(
+            markdown: "**Events** `\(filteredCount)` (`\(String(format: "%.2f", percentage))%`)"
+        )
     }
     
     /// Request that events be cleared from the PSC and reset the UI

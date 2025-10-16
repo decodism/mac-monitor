@@ -121,6 +121,18 @@ extension EventType {
         return nil
     }
     
+    var setmode: SetModeEvent? {
+        if case .setmode(let e) = self { return e }
+        return nil
+    }
+    
+    
+    // MARK: Pseudoterminal events
+    var pty_grant: PTYGrantEvent? {
+        if case .pty_grant(let e) = self { return e }
+        return nil
+    }
+    
     
     // MARK: Service Management events
     var btm_launch_item_add: LaunchItemAddEvent? {
@@ -250,6 +262,18 @@ extension EventType {
     // MARK: XPC events
     var xpc_connect: XPCConnectEvent? {
         if case .xpc_connect(let e) = self { return e }
+        return nil
+    }
+    
+    
+    // MARK: Socket events
+    var uipc_connect: UIPCConnectEvent? {
+        if case .uipc_connect(let e) = self { return e }
+        return nil
+    }
+    
+    var uipc_bind: UIPCBindEvent? {
+        if case .uipc_bind(let e) = self { return e }
         return nil
     }
     

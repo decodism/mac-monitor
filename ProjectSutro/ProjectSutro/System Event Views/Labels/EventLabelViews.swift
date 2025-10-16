@@ -149,16 +149,15 @@ struct DeleteXattrEventLabelView: View {
     }
     
     var body: some View {
-        if let xattr = event.xattr {
-            // MARK: Quarantine Xattr Delete
-            if xattr.hasSuffix("apple.quarantine") {
-                HStack {
-                    Image(systemName: "exclamationmark.triangle.fill").symbolRenderingMode(.palette).foregroundStyle(.black, .yellow).help("Quarantine extended attribute deleted")
-                    Label("**`\(message.es_event_type!)`**", systemImage: "lock.slash").symbolRenderingMode(.palette).foregroundStyle(.red)
-                }
-            } else {
-                Label("**`\(message.es_event_type!)`**", systemImage: eventStringToImage(from: message.es_event_type!)).foregroundStyle(.orange)
+        let xattr = event.extattr
+        // MARK: Quarantine Xattr Delete
+        if xattr.hasSuffix("apple.quarantine") {
+            HStack {
+                Image(systemName: "exclamationmark.triangle.fill").symbolRenderingMode(.palette).foregroundStyle(.black, .yellow).help("Quarantine extended attribute deleted")
+                Label("**`\(message.es_event_type!)`**", systemImage: "lock.slash").symbolRenderingMode(.palette).foregroundStyle(.red)
             }
+        } else {
+            Label("**`\(message.es_event_type!)`**", systemImage: eventStringToImage(from: message.es_event_type!)).foregroundStyle(.orange)
         }
     }
 }
@@ -195,7 +194,7 @@ struct BTMLaunchItemRemoveEventLabelView: View {
 }
 
 
-struct OpenSSHLoginEventLabelView: View {
+struct OpenSSHLabelView: View {
     var message: ESMessage
     
     var body: some View {
@@ -224,7 +223,7 @@ struct XProtectMalwareRemediatedEventLabelView: View {
     var body: some View {
         HStack {
             Image(systemName: "exclamationmark.triangle.fill").symbolRenderingMode(.palette).foregroundStyle(.black, .purple)
-            Label("**`\(message.es_event_type!)`**", systemImage: "checkmark.shield").symbolRenderingMode(.palette).foregroundStyle(.green)
+            Label("**`\(message.es_event_type!)`**", systemImage: "checkmark.shield").symbolRenderingMode(.palette).foregroundStyle(.purple)
         }.frame(alignment: .leading)
     }
 }
@@ -292,18 +291,15 @@ struct FileRenameEventLabelView: View {
     }
     
     private func configuration(for event: ESFileRenameEvent) -> (icon: Image?, iconStyle: Color, iconHelp: String, labelStyle: Color, labelIcon: String) {
-        // MARK: Inflated non-quarantined file
-        if !(event.archive_files_not_quarantined?.isEmpty ?? true) {
-            return (Image(systemName: "bolt.trianglebadge.exclamationmark.fill"), .purple, "Inflated files not quarantined!", .purple, "filemenu.and.cursorarrow")
-        } else if event.is_quarantined == 1 {
+        if event.is_quarantined == 1 {
             // MARK: Quarantined inflated file
             return (Image(systemName: "lock.shield"), .primary, "File is quarantined", .primary, "filemenu.and.cursorarrow")
-        } else if event.file_name?.hasSuffix(".app") ?? false {
+        } else if event.is_quarantined == 0 && event.destination_path.hasSuffix(".app") {
             // MARK: Unquarantined app bundle
             return (Image(systemName: "hand.raised.app"), .red, "Unquarantined application bundle", .red, "filemenu.and.cursorarrow")
-        } else if event.destination_path?.contains("com.apple.backgroundtaskmanagement") ?? false {
-            // MARK: Login Item Added
-            return (Image(systemName: "exclamationmark.triangle.fill"), .yellow, "Potential Login Item added", .orange, "lock.doc")
+        } else if event.destination_path.contains("com.apple.backgroundtaskmanagement") {
+            // MARK: BTM modification
+            return (Image(systemName: "exclamationmark.triangle.fill"), .yellow, "Service management database modified.", .orange, "lock.doc")
         } else {
             return (nil, .primary, "", .primary, "filemenu.and.cursorarrow")
         }
@@ -341,14 +337,20 @@ struct FileWriteEventLabelView: View {
     
     var body: some View {
         HStack {
-            if event.file_path!.contains("backgroundtaskmanagementd") {
+            if let path = event.target.path,
+               path.contains("backgroundtaskmanagementd") {
                 // MARK: Login Item
-                Image(systemName: "exclamationmark.triangle.fill").symbolRenderingMode(.palette).foregroundStyle(.black, .yellow).help("A Login Item was potentially added")
-                Label("**`\(eventType)`**", systemImage: eventStringToImage(from: eventType)).foregroundStyle(.orange)
+                Image(systemName: "exclamationmark.triangle.fill")
+                    .symbolRenderingMode(.palette)
+                    .foregroundStyle(.black, .yellow)
+                    .help("A Login Item was potentially added")
+                Label("**`\(eventType)`**", systemImage: eventStringToImage(from: eventType))
+                    .foregroundStyle(.orange)
             } else {
                 Label("**`\(eventType)`**", systemImage: eventStringToImage(from: eventType))
             }
         }
+        
     }
 }
 
@@ -391,7 +393,7 @@ struct IOKitOpenEventLabelView: View {
     var body: some View {
         HStack {
             // MARK: HID Device
-            if event.user_client_class!.contains("IOHIDLibUserClient") {
+            if event.user_client_class.contains("IOHIDLibUserClient") {
                 Image(systemName: "exclamationmark.triangle.fill").symbolRenderingMode(.palette).foregroundStyle(.black, .yellow).help("Human Interface Device (HID) attached!")
                 Label("**`\(eventType)`**", systemImage: eventStringToImage(from: eventType)).foregroundStyle(.orange)
             } else {
@@ -445,7 +447,7 @@ struct SetXattrEventLabelView: View {
     }
     
     var body: some View {
-        if event.xattr! == "com.apple.quarantine" {
+        if event.extattr == "com.apple.quarantine" {
             Label("**`\(eventType)`**", systemImage: eventStringToImage(from: eventType)).symbolRenderingMode(.palette).foregroundStyle(.green)
         } else {
             Label("**`\(eventType)`**", systemImage: eventStringToImage(from: eventType))
@@ -595,7 +597,7 @@ struct IntelligentEventLabelView: View {
 // MARK: Hard coded labels
 struct SystemEventTypeLabel: View {
     var message: ESMessage
-
+    
     @ViewBuilder
     var body: some View {
         switch message {
@@ -624,7 +626,7 @@ struct SystemEventTypeLabel: View {
             BTMLaunchItemRemoveEventLabelView(message: message)
             
         case _ where message.event.openssh_login != nil || message.event.openssh_logout != nil:
-            OpenSSHLoginEventLabelView(message: message)
+            OpenSSHLabelView(message: message)
             
         case _ where message.event.xp_malware_detected != nil:
             XProtectMalwareDetectedEventLabelView(message: message)
@@ -702,16 +704,16 @@ struct SystemEventTypeLabel: View {
             OpenDirectoryModifyPasswordEventLabelView(message: message)
             
         case _ where message.event.od_group_add != nil ||
-                          message.event.od_group_remove != nil ||
-                          message.event.od_create_group != nil ||
-                          message.event.od_attribute_value_add != nil ||
-                          message.event.authorization_petition != nil ||
-                          message.event.authorization_judgement != nil:
+            message.event.od_group_remove != nil ||
+            message.event.od_create_group != nil ||
+            message.event.od_attribute_value_add != nil ||
+            message.event.authorization_petition != nil ||
+            message.event.authorization_judgement != nil:
             IntelligentEventLabelView(message: message, criticality: .medium)
             
         case _ where message.event.tcc_modify != nil:
             IntelligentEventLabelView(message: message, criticality: .medium)
-        
+            
         case _ where message.event.gatekeeper_user_override != nil:
             IntelligentEventLabelView(message: message, criticality: .medium)
             

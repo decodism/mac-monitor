@@ -17,8 +17,10 @@ extension ESIOKitOpenEvent {
     }
 
     @NSManaged public var id: UUID
-    @NSManaged public var user_client_class: String?
-    @NSManaged public var user_client_type: Int32
+    @NSManaged public var user_client_class: String
+    @NSManaged public var user_client_type: Int64
+    @NSManaged public var parent_registry_id: Int64
+    @NSManaged public var parent_path: String?
 
 }
 

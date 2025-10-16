@@ -10,22 +10,12 @@ public import CoreData
 
 
 @objc(ESSignedFileInfo)
-public class ESSignedFileInfo: NSManagedObject, Decodable {
+public class ESSignedFileInfo: NSManagedObject {
     enum CodingKeys: CodingKey {
         case id
         case cdhash
         case signing_id
         case team_id
-    }
-    
-    // MARK: - Custom initilizer for ESSignedFileInfo
-    convenience init(from singingInfo: SignedFileInfo) {
-        self.init()
-        self.id = UUID()
-        
-        cdhash = singingInfo.cdhash
-        signing_id = singingInfo.signing_id
-        team_id = singingInfo.team_id
     }
     
     // MARK: - Custom Core Data initilizer for ESSignedFileInfo
@@ -40,17 +30,6 @@ public class ESSignedFileInfo: NSManagedObject, Decodable {
         cdhash = singingInfo.cdhash
         signing_id = singingInfo.signing_id
         team_id = singingInfo.team_id
-    }
-    
-    // MARK: - Decodable conformance
-    required convenience public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.init()
-        
-        try id = container.decode(UUID.self, forKey: .id)
-        try cdhash = container.decode(String.self, forKey: .cdhash)
-        try signing_id = container.decode(String.self, forKey: .signing_id)
-        try team_id = container.decode(String.self, forKey: .team_id)
     }
 }
 

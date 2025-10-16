@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="24299" systemVersion="25A354" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="24299" systemVersion="25A362" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="ESActionResult" representedClassName="ESActionResult" syncable="YES">
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="result_type" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
@@ -19,31 +19,24 @@
     </entity>
     <entity name="ESAuthorizationJudgementEvent" representedClassName="ESAuthorizationJudgementEvent" syncable="YES">
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
-        <attribute name="instigator_process_audit_token" optional="YES" attributeType="String"/>
-        <attribute name="instigator_process_name" optional="YES" attributeType="String"/>
-        <attribute name="instigator_process_path" optional="YES" attributeType="String"/>
-        <attribute name="instigator_process_signing_id" optional="YES" attributeType="String"/>
-        <attribute name="petitioner_process_audit_token" optional="YES" attributeType="String"/>
-        <attribute name="petitioner_process_name" optional="YES" attributeType="String"/>
-        <attribute name="petitioner_process_path" optional="YES" attributeType="String"/>
-        <attribute name="petitioner_process_signing_id" optional="YES" attributeType="String"/>
         <attribute name="result_count" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
-        <attribute name="results" optional="YES" attributeType="String"/>
+        <attribute name="resultsData" optional="YES" attributeType="Binary"/>
         <attribute name="return_code" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <relationship name="instigator" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ESProcess"/>
+        <relationship name="instigator_token" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ESAuditToken"/>
+        <relationship name="petitioner" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ESProcess"/>
+        <relationship name="petitioner_token" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ESAuditToken"/>
     </entity>
     <entity name="ESAuthorizationPetitionEvent" representedClassName="ESAuthorizationPetitionEvent" syncable="YES">
-        <attribute name="flags" optional="YES" attributeType="String"/>
+        <attribute name="flags" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="flagsData" optional="YES" attributeType="Binary"/>
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
-        <attribute name="instigator_process_audit_token" optional="YES" attributeType="String"/>
-        <attribute name="instigator_process_name" optional="YES" attributeType="String"/>
-        <attribute name="instigator_process_path" optional="YES" attributeType="String"/>
-        <attribute name="instigator_process_signing_id" optional="YES" attributeType="String"/>
-        <attribute name="petitioner_process_audit_token" optional="YES" attributeType="String"/>
-        <attribute name="petitioner_process_name" optional="YES" attributeType="String"/>
-        <attribute name="petitioner_process_path" optional="YES" attributeType="String"/>
-        <attribute name="petitioner_process_signing_id" optional="YES" attributeType="String"/>
         <attribute name="right_count" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
-        <attribute name="rights" optional="YES" attributeType="String"/>
+        <attribute name="rightsData" optional="YES" attributeType="Binary"/>
+        <relationship name="instigator" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ESProcess"/>
+        <relationship name="instigator_token" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ESAuditToken"/>
+        <relationship name="petitioner" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ESProcess"/>
+        <relationship name="petitioner_token" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ESAuditToken"/>
     </entity>
     <entity name="ESAuthResult" representedClassName="ESAuthResult" syncable="YES">
         <attribute name="auth" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
@@ -89,12 +82,16 @@
         <relationship name="proc_check" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ESProcessCheckEvent"/>
         <relationship name="proc_suspend_resume" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ESProcessSocketEvent"/>
         <relationship name="profile_add" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ESProfileAddEvent"/>
+        <relationship name="pty_grant" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ESPTYGrantEvent"/>
         <relationship name="remote_thread_create" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ESRemoteThreadCreateEvent"/>
         <relationship name="rename" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ESFileRenameEvent"/>
         <relationship name="setextattr" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ESXattrSetEvent"/>
+        <relationship name="setmode" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ESSetModeEvent"/>
         <relationship name="signal" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ESProcessSignalEvent"/>
         <relationship name="tcc_modify" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ESTCCModifyEvent"/>
         <relationship name="trace" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ESProcessTraceEvent"/>
+        <relationship name="uipc_bind" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ESUIPCBindEvent"/>
+        <relationship name="uipc_connect" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ESUIPCConnectEvent"/>
         <relationship name="unlink" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ESFileDeleteEvent"/>
         <relationship name="write" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ESFileWriteEvent"/>
         <relationship name="xp_malware_detected" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ESXProtectDetect"/>
@@ -102,9 +99,8 @@
         <relationship name="xpc_connect" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ESXPCConnectEvent"/>
     </entity>
     <entity name="ESFDDuplicateEvent" representedClassName="ESFDDuplicateEvent" syncable="YES">
-        <attribute name="file_name" optional="YES" attributeType="String"/>
-        <attribute name="file_path" optional="YES" attributeType="String"/>
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <relationship name="target" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ESFile"/>
     </entity>
     <entity name="ESFile" representedClassName="ESFile" syncable="YES">
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
@@ -114,9 +110,10 @@
         <relationship name="stat" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ESStat"/>
     </entity>
     <entity name="ESFileCloseEvent" representedClassName="ESFileCloseEvent" syncable="YES">
-        <attribute name="file_name" optional="YES" attributeType="String"/>
-        <attribute name="file_path" optional="YES" attributeType="String"/>
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="modified" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="was_mapped_writable" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <relationship name="target" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ESFile"/>
     </entity>
     <entity name="ESFileCreateEvent" representedClassName="ESFileCreateEvent" syncable="YES">
         <attribute name="acl" optional="YES" attributeType="String"/>
@@ -127,10 +124,9 @@
         <relationship name="destination" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ESFileDestination"/>
     </entity>
     <entity name="ESFileDeleteEvent" representedClassName="ESFileDeleteEvent" syncable="YES">
-        <attribute name="file_name" optional="YES" attributeType="String"/>
-        <attribute name="file_path" optional="YES" attributeType="String"/>
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
-        <attribute name="parent_directory" optional="YES" attributeType="String"/>
+        <relationship name="parent_dir" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ESFile"/>
+        <relationship name="target" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ESFile"/>
     </entity>
     <entity name="ESFileDestination" representedClassName="ESFileDestination" syncable="YES">
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
@@ -138,9 +134,9 @@
         <relationship name="new_path" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ESNewPath"/>
     </entity>
     <entity name="ESFileOpenEvent" representedClassName="ESFileOpenEvent" syncable="YES">
-        <attribute name="file_name" optional="YES" attributeType="String"/>
-        <attribute name="file_path" optional="YES" attributeType="String"/>
+        <attribute name="fflag" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <relationship name="file" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ESFile"/>
     </entity>
     <entity name="ESFilePathUnion" representedClassName="ESFilePathUnion" syncable="YES">
         <attribute name="file_path" optional="YES" attributeType="String"/>
@@ -148,18 +144,17 @@
         <relationship name="file" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ESFile"/>
     </entity>
     <entity name="ESFileRenameEvent" representedClassName="ESFileRenameEvent" syncable="YES">
-        <attribute name="archive_files_not_quarantined" optional="YES" attributeType="String"/>
         <attribute name="destination_path" optional="YES" attributeType="String"/>
-        <attribute name="file_name" optional="YES" attributeType="String"/>
+        <attribute name="destination_type" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="destination_type_string" optional="YES" attributeType="String"/>
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="is_quarantined" optional="YES" attributeType="Integer 16" usesScalarValueType="YES"/>
-        <attribute name="source_path" optional="YES" attributeType="String"/>
-        <attribute name="type" optional="YES" attributeType="String"/>
+        <relationship name="destination" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ESFileDestination"/>
+        <relationship name="source" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ESFile"/>
     </entity>
     <entity name="ESFileWriteEvent" representedClassName="ESFileWriteEvent" syncable="YES">
-        <attribute name="file_name" optional="YES" attributeType="String"/>
-        <attribute name="file_path" optional="YES" attributeType="String"/>
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <relationship name="target" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ESFile"/>
     </entity>
     <entity name="ESGatekeeperUserOverrideEvent" representedClassName="ESGatekeeperUserOverrideEvent" syncable="YES">
         <attribute name="file_path" optional="YES" attributeType="String"/>
@@ -172,57 +167,57 @@
     </entity>
     <entity name="ESGetTaskEvent" representedClassName="ESGetTaskEvent" syncable="YES">
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
-        <attribute name="process_audit_token" optional="YES" attributeType="String"/>
-        <attribute name="process_name" optional="YES" attributeType="String"/>
-        <attribute name="process_path" optional="YES" attributeType="String"/>
-        <attribute name="process_signing_id" optional="YES" attributeType="String"/>
-        <attribute name="type" optional="YES" attributeType="String"/>
+        <attribute name="type" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="type_string" optional="YES" attributeType="String"/>
+        <relationship name="target" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ESProcess"/>
     </entity>
     <entity name="ESIOKitOpenEvent" representedClassName="ESIOKitOpenEvent" syncable="YES">
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="parent_path" optional="YES" attributeType="String"/>
+        <attribute name="parent_registry_id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="user_client_class" optional="YES" attributeType="String"/>
-        <attribute name="user_client_type" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="user_client_type" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
     </entity>
-    <entity name="ESLaunchItemAddEvent" representedClassName="ESLaunchItemAddEvent" syncable="YES">
-        <attribute name="app_process_path" optional="YES" attributeType="String"/>
-        <attribute name="app_process_signing_id" optional="YES" attributeType="String"/>
-        <attribute name="app_process_team_id" optional="YES" attributeType="String"/>
-        <attribute name="file_name" optional="YES" attributeType="String"/>
-        <attribute name="file_path" optional="YES" attributeType="String"/>
+    <entity name="ESLaunchItem" representedClassName="ESLaunchItem" syncable="YES">
+        <attribute name="app_path" optional="YES" attributeType="String"/>
+        <attribute name="app_url" optional="YES" attributeType="String"/>
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
-        <attribute name="instigating_process_path" optional="YES" attributeType="String"/>
-        <attribute name="instigating_process_signing_id" optional="YES" attributeType="String"/>
-        <attribute name="instigating_process_team_id" optional="YES" attributeType="String"/>
-        <attribute name="is_legacy" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
-        <attribute name="is_managed" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="item_path" optional="YES" attributeType="String"/>
+        <attribute name="item_type" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="item_type_string" optional="YES" attributeType="String"/>
+        <attribute name="item_url" optional="YES" attributeType="String"/>
+        <attribute name="legacy" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="managed" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="plist_contents" optional="YES" attributeType="String"/>
-        <attribute name="type" optional="YES" attributeType="String"/>
         <attribute name="uid" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="uid_human" optional="YES" attributeType="String"/>
     </entity>
-    <entity name="ESLaunchItemRemoveEvent" representedClassName="ESLaunchItemRemoveEvent" syncable="YES">
-        <attribute name="app_process_path" optional="YES" attributeType="String"/>
-        <attribute name="app_process_signing_id" optional="YES" attributeType="String"/>
-        <attribute name="app_process_team_id" optional="YES" attributeType="String"/>
-        <attribute name="file_name" optional="YES" attributeType="String"/>
-        <attribute name="file_path" optional="YES" attributeType="String"/>
+    <entity name="ESLaunchItemAddEvent" representedClassName="ESLaunchItemAddEvent" syncable="YES">
+        <attribute name="executable_path" optional="YES" attributeType="String"/>
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
-        <attribute name="instigating_process_path" optional="YES" attributeType="String"/>
-        <attribute name="instigating_process_signing_id" optional="YES" attributeType="String"/>
-        <attribute name="instigating_process_team_id" optional="YES" attributeType="String"/>
-        <attribute name="is_legacy" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
-        <attribute name="is_managed" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
-        <attribute name="type" optional="YES" attributeType="String"/>
+        <relationship name="app" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ESProcess"/>
+        <relationship name="app_token" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ESAuditToken"/>
+        <relationship name="instigator" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ESProcess"/>
+        <relationship name="instigator_token" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ESAuditToken"/>
+        <relationship name="item" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ESLaunchItem"/>
+    </entity>
+    <entity name="ESLaunchItemRemoveEvent" representedClassName="ESLaunchItemRemoveEvent" syncable="YES">
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <relationship name="app" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ESProcess"/>
+        <relationship name="app_token" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ESAuditToken"/>
+        <relationship name="instigator" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ESProcess"/>
+        <relationship name="instigator_token" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ESAuditToken"/>
+        <relationship name="item" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ESLaunchItem"/>
     </entity>
     <entity name="ESLinkEvent" representedClassName="ESLinkEvent" syncable="YES">
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
-        <attribute name="source_file_name" optional="YES" attributeType="String"/>
-        <attribute name="source_file_path" optional="YES" attributeType="String"/>
-        <attribute name="target_file_name" optional="YES" attributeType="String"/>
-        <attribute name="target_file_path" optional="YES" attributeType="String"/>
+        <attribute name="target_filename" optional="YES" attributeType="String"/>
+        <relationship name="source" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ESFile"/>
+        <relationship name="target_dir" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ESFile"/>
     </entity>
     <entity name="ESLoginLoginEvent" representedClassName="ESLoginLoginEvent" syncable="YES">
         <attribute name="failure_message" optional="YES" attributeType="String"/>
+        <attribute name="has_uid" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="success" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="uid" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
@@ -279,15 +274,10 @@
         <relationship name="source" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ESFile"/>
     </entity>
     <entity name="ESMountEvent" representedClassName="ESMountEvent" syncable="YES">
-        <attribute name="fs_id" optional="YES" attributeType="String"/>
+        <attribute name="disposition" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="disposition_string" optional="YES" attributeType="String"/>
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
-        <attribute name="mount_directory" optional="YES" attributeType="String"/>
-        <attribute name="mount_flags" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
-        <attribute name="owner_uid" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
-        <attribute name="owner_uid_human" optional="YES" attributeType="String"/>
-        <attribute name="source_name" optional="YES" attributeType="String"/>
-        <attribute name="total_files" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
-        <attribute name="type_name" optional="YES" attributeType="String"/>
+        <attribute name="statfsData" optional="YES" attributeType="Binary"/>
     </entity>
     <entity name="ESNewPath" representedClassName="ESNewPath" syncable="YES">
         <attribute name="filename" optional="YES" attributeType="String"/>
@@ -374,17 +364,23 @@
         <attribute name="node_name" optional="YES" attributeType="String"/>
     </entity>
     <entity name="ESOpenSSHLoginEvent" representedClassName="ESOpenSSHLoginEvent" syncable="YES">
+        <attribute name="has_uid" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
-        <attribute name="result_type" optional="YES" attributeType="String"/>
+        <attribute name="result_type" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="result_type_string" optional="YES" attributeType="String"/>
         <attribute name="source_address" optional="YES" attributeType="String"/>
-        <attribute name="source_address_type" optional="YES" attributeType="String"/>
+        <attribute name="source_address_type" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="source_address_type_string" optional="YES" attributeType="String"/>
         <attribute name="success" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
-        <attribute name="user_name" optional="YES" attributeType="String"/>
+        <attribute name="uid" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="username" optional="YES" attributeType="String"/>
     </entity>
     <entity name="ESOpenSSHLogoutEvent" representedClassName="ESOpenSSHLogoutEvent" syncable="YES">
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="source_address" optional="YES" attributeType="String"/>
-        <attribute name="source_address_type" optional="YES" attributeType="String"/>
+        <attribute name="source_address_type" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="source_address_type_string" optional="YES" attributeType="String"/>
+        <attribute name="uid" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="username" optional="YES" attributeType="String"/>
     </entity>
     <entity name="ESProcess" representedClassName="ESProcess" syncable="YES">
@@ -499,22 +495,24 @@
     </entity>
     <entity name="ESProfileAddEvent" representedClassName="ESProfileAddEvent" syncable="YES">
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
-        <attribute name="instigator_process_audit_token" optional="YES" attributeType="String"/>
-        <attribute name="instigator_process_name" optional="YES" attributeType="String"/>
-        <attribute name="instigator_process_path" optional="YES" attributeType="String"/>
-        <attribute name="instigator_process_signing_id" optional="YES" attributeType="String"/>
         <attribute name="is_update" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
-        <attribute name="profile_display_name" optional="YES" attributeType="String"/>
-        <attribute name="profile_identifier" optional="YES" attributeType="String"/>
-        <attribute name="profile_organization" optional="YES" attributeType="String"/>
-        <attribute name="profile_scope" optional="YES" attributeType="String"/>
-        <attribute name="profile_source_type" optional="YES" attributeType="String"/>
-        <attribute name="profile_uuid" optional="YES" attributeType="String"/>
+        <attribute name="profileData" optional="YES" attributeType="Binary"/>
+        <relationship name="instigator" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ESProcess"/>
+        <relationship name="instigator_token" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ESAuditToken"/>
+    </entity>
+    <entity name="ESPTYGrantEvent" representedClassName="ESPTYGrantEvent" syncable="YES">
+        <attribute name="dev" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
     </entity>
     <entity name="ESRemoteThreadCreateEvent" representedClassName="ESRemoteThreadCreateEvent" syncable="YES">
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="thread_state" optional="YES" attributeType="String"/>
         <relationship name="target" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ESProcess"/>
+    </entity>
+    <entity name="ESSetModeEvent" representedClassName="ESSetModeEvent" syncable="YES">
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="mode" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <relationship name="target" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ESFile"/>
     </entity>
     <entity name="ESSignedFileInfo" representedClassName="ESSignedFileInfo" syncable="YES">
         <attribute name="cdhash" optional="YES" attributeType="String"/>
@@ -572,17 +570,31 @@
         <attribute name="tv_sec" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="tv_usec" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
     </entity>
-    <entity name="ESXattrDeleteEvent" representedClassName="ESXattrDeleteEvent" syncable="YES">
-        <attribute name="file_name" optional="YES" attributeType="String"/>
-        <attribute name="file_path" optional="YES" attributeType="String"/>
+    <entity name="ESUIPCBindEvent" representedClassName="ESUIPCBindEvent" syncable="YES">
+        <attribute name="filename" optional="YES" attributeType="String"/>
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
-        <attribute name="xattr" optional="YES" attributeType="String"/>
+        <attribute name="mode" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <relationship name="dir" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ESFile"/>
+    </entity>
+    <entity name="ESUIPCConnectEvent" representedClassName="ESUIPCConnectEvent" syncable="YES">
+        <attribute name="domain" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="domain_string" optional="YES" attributeType="String"/>
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="protocol" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="protocol_string" optional="YES" attributeType="String"/>
+        <attribute name="type" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="type_string" optional="YES" attributeType="String"/>
+        <relationship name="file" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ESFile"/>
+    </entity>
+    <entity name="ESXattrDeleteEvent" representedClassName="ESXattrDeleteEvent" syncable="YES">
+        <attribute name="extattr" optional="YES" attributeType="String"/>
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <relationship name="target" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ESFile"/>
     </entity>
     <entity name="ESXattrSetEvent" representedClassName="ESXattrSetEvent" syncable="YES">
-        <attribute name="file_name" optional="YES" attributeType="String"/>
-        <attribute name="file_path" optional="YES" attributeType="String"/>
+        <attribute name="extattr" optional="YES" attributeType="String"/>
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
-        <attribute name="xattr" optional="YES" attributeType="String"/>
+        <relationship name="target" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ESFile"/>
     </entity>
     <entity name="ESXPCConnectEvent" representedClassName="ESXPCConnectEvent" syncable="YES">
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
@@ -591,6 +603,7 @@
         <attribute name="service_name" optional="YES" attributeType="String"/>
     </entity>
     <entity name="ESXProtectDetect" representedClassName="ESXProtectDetect" syncable="YES">
+        <attribute name="detected_executable" optional="YES" attributeType="String"/>
         <attribute name="detected_path" optional="YES" attributeType="String"/>
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="incident_identifier" optional="YES" attributeType="String"/>
@@ -603,9 +616,9 @@
         <attribute name="incident_identifier" optional="YES" attributeType="String"/>
         <attribute name="malware_identifier" optional="YES" attributeType="String"/>
         <attribute name="remediated_path" optional="YES" attributeType="String"/>
-        <attribute name="remediated_process_audit_token" optional="YES" attributeType="String"/>
         <attribute name="result_description" optional="YES" attributeType="String"/>
         <attribute name="signature_version" optional="YES" attributeType="String"/>
         <attribute name="success" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <relationship name="remediated_process_audit_token" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ESAuditToken"/>
     </entity>
 </model>

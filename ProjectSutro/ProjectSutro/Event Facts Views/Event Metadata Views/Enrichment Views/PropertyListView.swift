@@ -18,7 +18,19 @@ struct PropertyListView: View {
     var body: some View {
         Section("**Target property list**") {
             ScrollView {
-                Text("```\(event.plist_contents!)```").foregroundColor(.white).frame(minWidth: 0, maxWidth: .infinity, minHeight: 10.0).scrollContentBackground(.hidden).textSelection(.enabled)
+                if let plist_contents = event.item.plist_contents {
+                    Text(plist_contents)
+                        .monospaced()
+                        .foregroundColor(.white)
+                        .frame(
+                            minWidth: 0,
+                            maxWidth: .infinity,
+                            minHeight: 10.0
+                        )
+                        .scrollContentBackground(.hidden)
+                        .textSelection(.enabled)
+                }
+                
             }.background(.black)
         }
     }

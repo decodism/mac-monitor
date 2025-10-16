@@ -33,17 +33,21 @@ struct SystemXProtectEventTableView: View {
                 
                 TableColumn("Malware ID") { message in
                     if let xp_malware_detected = message.event.xp_malware_detected {
-                        Text("`\(xp_malware_detected.malware_identifier!)`")
+                        Text(xp_malware_detected.malware_identifier)
+                            .monospaced()
                     } else if let xp_malware_remediated = message.event.xp_malware_remediated {
-                        Text("`\(xp_malware_remediated.malware_identifier!)`")
+                        Text(xp_malware_remediated.malware_identifier)
+                            .monospaced()
                     }
                 }
                 
                 TableColumn("Responsible path") { message in
                     if let xp_malware_detected = message.event.xp_malware_detected {
-                        Text("`\(xp_malware_detected.detected_path!)`")
+                        Text(xp_malware_detected.detected_path)
+                            .monospaced()
                     } else if let xp_malware_remediated = message.event.xp_malware_remediated {
-                        Text("`\(xp_malware_remediated.remediated_path!)`")
+                        Text(xp_malware_remediated.remediated_path)
+                            .monospaced()
                     }
                 }
             } rows: {

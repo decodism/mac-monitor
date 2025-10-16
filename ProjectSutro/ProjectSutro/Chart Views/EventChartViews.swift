@@ -33,7 +33,7 @@ struct SystemChartEventView: View {
         "LW_LOGIN",
         "XP_MALWARE_DETECTED",
         "XP_MALWARE_REMEDIATED",
-        "DELETE",
+        "UNLINK",
         "OPEN",
         "WRITE",
         "LINK",
@@ -57,7 +57,11 @@ struct SystemChartEventView: View {
         "AUTH_PETITION",
         "AUTH_JUDGEMENT",
         "TCC_MODIFY",
-        "GATEKEEPER_USER_OVERRIDE"
+        "GATEKEEPER_USER_OVERRIDE",
+        "SETMODE",
+        "PTY_GRANT",
+        "UIPC_CONNECT",
+        "UIPC_BIND"
     ]
 
     private func eventCounts() -> [String: Int] {
@@ -105,7 +109,7 @@ struct SystemChartEventView: View {
             if message.event.xp_malware_remediated != nil {
                 counts["XP_MALWARE_REMEDIATED", default: 0] += 1
             }
-            if message.event.unlink != nil { counts["DELETE", default: 0] += 1 }
+            if message.event.unlink != nil { counts["UNLINK", default: 0] += 1 }
             if message.event.open != nil { counts["OPEN", default: 0] += 1 }
             if message.event.write != nil { counts["WRITE", default: 0] += 1 }
             if message.event.link != nil { counts["LINK", default: 0] += 1 }
@@ -163,12 +167,28 @@ struct SystemChartEventView: View {
                 counts["XPC_CONNECT", default: 0] += 1
             }
             
+            if message.event.uipc_connect != nil {
+                counts["UIPC_CONNECT", default: 0] += 1
+            }
+            
+            if message.event.uipc_bind != nil {
+                counts["UIPC_BIND", default: 0] += 1
+            }
+            
             if message.event.tcc_modify != nil {
                 counts["TCC_MODIFY", default: 0] += 1
             }
             
             if message.event.gatekeeper_user_override != nil {
                 counts["GATEKEEPER_USER_OVERRIDE", default: 0] += 1
+            }
+            
+            if message.event.setmode != nil {
+                counts["SETMODE", default: 0] += 1
+            }
+            
+            if message.event.pty_grant != nil {
+                counts["PTY_GRANT", default: 0] += 1
             }
         }
     }

@@ -16,9 +16,12 @@ extension ESFileCloseEvent {
         return NSFetchRequest<ESFileCloseEvent>(entityName: "ESFileCloseEvent")
     }
 
-    @NSManaged public var id: UUID?
-    @NSManaged public var file_path: String?
-    @NSManaged public var file_name: String?
+    @NSManaged public var id: UUID
+    @NSManaged public var target: ESFile
+    @NSManaged public var modified: Bool
+    
+    // message >= 6
+    @NSManaged public var was_mapped_writable: Bool
 
 }
 

@@ -10,7 +10,7 @@ import Foundation
 import CoreData
 
 @objc(ESProcessCheckEvent)
-public class ESProcessCheckEvent: NSManagedObject, Decodable {
+public class ESProcessCheckEvent: NSManagedObject {
     
     enum CodingKeys: CodingKey {
         case id
@@ -18,21 +18,6 @@ public class ESProcessCheckEvent: NSManagedObject, Decodable {
         case type_string
         case flavor
         case target
-    }
-    
-    // MARK: - Custom initilizer for ESProcessCheckEvent during heavy flows
-    convenience init(from message: Message) {
-        let procCheckEvent: ProcessCheckEvent = message.event.proc_check!
-        self.init()
-        self.id = procCheckEvent.id
-        
-        self.type_string = procCheckEvent.type_string
-        self.flavor = Int32(procCheckEvent.flavor)
-        self.type = procCheckEvent.type
-        
-        if let target = procCheckEvent.target {
-            self.target = ESProcess(from: target, version: message.version)
-        }
     }
     
     // MARK: - Custom Core Data initilizer for ESProcessCheckEvent
@@ -49,19 +34,6 @@ public class ESProcessCheckEvent: NSManagedObject, Decodable {
         if let target = procCheckEvent.target {
             self.target = ESProcess(from: target, version: message.version, insertIntoManagedObjectContext: context)
         }
-    }
-    
-    // MARK: - Decodable conformance
-    required convenience public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.init()
-        try id = container.decode(UUID.self, forKey: .id)
-        
-        try flavor = container.decode(Int32.self, forKey: .flavor)
-        try type = container.decode(Int32.self, forKey: .type)
-        try type_string = container.decode(String.self, forKey: .type_string)
-        
-        try target = container.decodeIfPresent(ESProcess.self, forKey: .target)
     }
 }
 

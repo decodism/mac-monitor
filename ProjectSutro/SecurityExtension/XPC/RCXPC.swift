@@ -46,6 +46,7 @@ import AppKit
     func mutePath(pathToMute: String, muteCase: es_mute_path_type_t, pathEvents: [String])
     func unmutePath(pathToUnmute: String, type: String, events: [String])
     func resetMutedPathsXPC()
+    func getAppleMuteSet(withData response: @escaping (Set<String>) -> Void)
     
     // MARK: Event subscriptions
     func getEventSubscriptions(withData response: @escaping (Set<String>) -> Void)
@@ -115,7 +116,7 @@ public class RCXPCConnection: NSObject, EventProtocol {
     /// Our shared XPC wrapper
     public static let rcXPCConnection = RCXPCConnection()
     
-    private let logger = Logger.init(subsystem: "com.redcanary.agent", category: "RCXPCConnection.EventProtocol")
+    private let logger = Logger.init(subsystem: "com.swiftlydetecting.agent", category: "RCXPCConnection.EventProtocol")
     
     /// Listen for incoming XPC connection requests
     ///
@@ -450,6 +451,35 @@ public class RCXPCConnection: NSObject, EventProtocol {
         agentXPCProxy.getMutedPaths(withData: response)
     }
     
+    // MARK: Step #2 Get Apple muted paths
+    func getAppleMuteSet(epDelegate: EventProtocol, withData response: @escaping (Set<String>) -> Void) {
+        var xpcConn = currentNSXPCConnection
+        if xpcConn == nil {
+            let bundleExtension = Bundle(url: URL(fileURLWithPath: "Contents/Library/SystemExtensions/com.swiftlydetecting.agent.securityextension.systemextension", relativeTo: Bundle.main.bundleURL))!
+            let serviceName = getServiceName(from: bundleExtension)
+            let newNSXPCConn = NSXPCConnection(machServiceName: serviceName, options: [])
+            newNSXPCConn.exportedInterface = NSXPCInterface(with: EventProtocol.self)
+            newNSXPCConn.exportedObject = epDelegate
+            newNSXPCConn.remoteObjectInterface = NSXPCInterface(with: SensorProtocol.self)
+            currentNSXPCConnection = newNSXPCConn
+            xpcConn = currentNSXPCConnection
+            newNSXPCConn.resume()
+        }
+
+        self.epDelegate = epDelegate
+
+        guard let agentXPCProxy = xpcConn!.remoteObjectProxyWithErrorHandler({ err in
+            self.logger.error("Could not get the Apple mute set! \(err.localizedDescription)")
+            self.currentNSXPCConnection = nil
+        }) as? SensorProtocol else {
+            self.logger.error("Failed to create the remote proxy to communicate with the agent!")
+            return
+        }
+
+        agentXPCProxy.getAppleMuteSet(withData: response)
+    }
+    
+    
     // MARK: Step #3 in muting paths
     // @note Suppress all events from executables that match a given path
     func mutePath(pathToMute: String, muteCase: es_mute_path_type_t, pathEvents: [String], epDelegate: EventProtocol) {
@@ -757,6 +787,15 @@ extension RCXPCConnection: SensorProtocol {
             return
         }
         MutingEngine.applyDefaultMuteSet(client: client.esClient!)
+    }
+    
+    // Apple's default mute set
+    public func getAppleMuteSet(withData response: @escaping (Set<String>) -> Void) {
+        guard let client = self.esManager else {
+            self.logger.error("We couldn't find the client to fetch the Apple mute set from!")
+            return
+        }
+        response(client.seGetAppleMuteSet())
     }
     
     public func mutePath(pathToMute: String, muteCase: es_mute_path_type_t, pathEvents: [String]) {

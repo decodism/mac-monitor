@@ -119,6 +119,16 @@ struct EventSpecificViewsProvider {
             self.labelView = AnyView(DeleteXattrEventLabelView(message: message))
             self.metadataView = AnyView(SystemDeleteXattrMetadataView(esSystemEvent: message))
             
+        case _ where message.event.setmode != nil:
+            self.labelView = AnyView(SystemEventTypeLabel(message: message))
+            self.metadataView = AnyView(SystemSetModeMetadataView(esSystemEvent: message))
+        
+            
+        // MARK: - Pseudoterminal events
+        case _ where message.event.pty_grant != nil:
+            self.labelView = AnyView(SystemEventTypeLabel(message: message))
+            self.metadataView = AnyView(SystemPTYGrantMetadataView(esSystemEvent: message))
+            
             
         // MARK: - Service Management events
         case _ where message.event.btm_launch_item_add != nil:
@@ -132,11 +142,11 @@ struct EventSpecificViewsProvider {
 
         // MARK: OpenSSH events
         case _ where message.event.openssh_login != nil:
-            self.labelView = AnyView(OpenSSHLoginEventLabelView(message: message))
+            self.labelView = AnyView(OpenSSHLabelView(message: message))
             self.metadataView = AnyView(SystemOpenSSHLoginMetadataView(esSystemEvent: message))
 
         case _ where message.event.openssh_logout != nil:
-            self.labelView = AnyView(OpenSSHLoginEventLabelView(message: message))
+            self.labelView = AnyView(OpenSSHLabelView(message: message))
             self.metadataView = AnyView(SystemOpenSSHLogoutMetadataView(esSystemEvent: message))
 
             
@@ -231,6 +241,17 @@ struct EventSpecificViewsProvider {
             self.labelView = AnyView(OrangeEventLabelView(message: message))
             self.metadataView = AnyView(SystemOpenDirectoryAttrAddMetadataView(esSystemEvent: message))
         
+            
+        // MARK: - Socket events
+        case _ where message.event.uipc_connect != nil:
+            self.labelView = AnyView(IntelligentEventLabelView(message: message))
+            self.metadataView = AnyView(SystemUIPCConnectMetadataView(message: message))
+        case _ where message.event.uipc_bind != nil:
+            self.labelView = AnyView(IntelligentEventLabelView(message: message))
+            self.metadataView = AnyView(
+                SystemUIPCBindMetadataView(message: message)
+            )
+            
             
         // MARK: - TCC events
         case _ where message.event.tcc_modify != nil:

@@ -17,11 +17,13 @@ extension ESFileRenameEvent {
     }
 
     @NSManaged public var id: UUID?
-    @NSManaged public var file_name: String?
-    @NSManaged public var destination_path: String?
-    @NSManaged public var source_path: String?
-    @NSManaged public var archive_files_not_quarantined: String?
-    @NSManaged public var type: String?
+    @NSManaged public var source: ESFile
+    @NSManaged public var destination_type: Int16
+    @NSManaged public var destination_type_string: String
+    @NSManaged public var destination: ESFileDestination
+    
+    /// @note Mac Monitor enrichment
+    @NSManaged public var destination_path: String
     @NSManaged public var is_quarantined: Int16
 
 }

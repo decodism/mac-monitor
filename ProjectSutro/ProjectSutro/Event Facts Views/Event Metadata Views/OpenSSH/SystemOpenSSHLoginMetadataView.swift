@@ -19,41 +19,50 @@ struct SystemOpenSSHLoginMetadataView: View {
     var body: some View {
         VStack(alignment: .leading) {
             // MARK: Event label
-            OpenSSHLoginEventLabelView(message: esSystemEvent)
+            OpenSSHLabelView(message: esSystemEvent)
                 .font(.title2)
             
             GroupBox {
                 VStack(alignment: .leading) {
                     HStack {
-                        Label("**Username:**", systemImage: "person.fill")
+                        Label("Username:", systemImage: "person.fill")
+                            .bold()
                         GroupBox {
-                            Text("`\(event.user_name ?? "Unknown")`")
+                            Text(event.username)
+                                .monospaced()
                         }
                     }
                     
                     HStack {
-                        Text("\u{2022} **Success:**")
+                        Text("\u{2022} Success:")
+                            .bold()
                         GroupBox {
-                            Text("`\(event.success ? "Yes" : "No")`")
+                            Text("\(event.success ? "Yes" : "No")")
+                                .monospaced()
                         }
                     }
                     
                     HStack {
-                        Text("\u{2022} **Result type:**")
+                        Text("\u{2022} Result type:")
+                            .bold()
                         GroupBox {
-                            Text("`\(event.result_type!)`")
+                            Text("\(event.result_type_string) (\(event.result_type))")
+                                .monospaced()
                         }
                     }
                     
                     HStack {
-                        Text("\u{2022} **Source Address:**")
+                        Text("\u{2022} Source Address:")
+                            .bold()
                         VStack(alignment: .leading) {
                             GroupBox {
-                                Text("`\(event.source_address_type ?? "Unknown")`")
+                                Text("\(event.source_address_type_string) (\(event.source_address_type))")
+                                    .monospaced()
                             }
                             
                             GroupBox {
-                                Text("`\(event.source_address ?? "Unknown")`")
+                                Text(event.source_address)
+                                    .monospaced()
                             }
                         }
                         

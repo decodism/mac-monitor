@@ -26,16 +26,19 @@ struct SystemXPCConnectMetadataView: View {
             GroupBox {
                 VStack(alignment: .leading) {
                     HStack {
-                        Text("\u{2022} **Service name:**")
+                        Text("\u{2022} Service name:")
+                            .bold()
                         GroupBox {
-                            Text("`\(event.service_name)`")
+                            Text(event.service_name)
+                                .monospaced()
                         }
                     }
 
                     HStack {
-                        Text("\u{2022} **Domain type:**")
+                        Text("\u{2022} Domain type:")
                         GroupBox {
-                            Text("`\(event.service_domain_type_string)` (\(event.service_domain_type))")
+                            Text(event.service_domain_type_string)
+                                .monospaced()
                         }
                     }
                 }.frame(maxWidth: .infinity, alignment: .leading)

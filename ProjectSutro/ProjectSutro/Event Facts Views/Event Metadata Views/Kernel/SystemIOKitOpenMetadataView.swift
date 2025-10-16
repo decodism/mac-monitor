@@ -42,10 +42,32 @@ struct SystemIOKitOpenMetadataView: View {
                         Text("\u{2022} **Client class:**")
                             .padding([.leading], 5.0)
                         GroupBox {
-                            Text("`\(event.user_client_class!)`")
+                            Text("`\(event.user_client_class)`")
                                 .frame(alignment: .leading)
                         }
                     }.frame(maxWidth: .infinity, alignment: .leading)
+                    
+                    if let parent_path = event.parent_path {
+                        HStack{
+                            Text("\u{2022} **Parent path:**")
+                                .padding([.leading], 5.0)
+                            GroupBox {
+                                Text(parent_path)
+                                    .monospaced()
+                                    .frame(alignment: .leading)
+                            }
+                        }.frame(maxWidth: .infinity, alignment: .leading)
+                        
+                        HStack{
+                            Text("\u{2022} **Parent registry ID:**")
+                                .padding([.leading], 5.0)
+                            GroupBox {
+                                Text("\(String(event.parent_registry_id))")
+                                    .monospaced()
+                                    .frame(alignment: .leading)
+                            }
+                        }.frame(maxWidth: .infinity, alignment: .leading)
+                    }
                 }.frame(maxWidth: .infinity, alignment: .leading)
             }
             

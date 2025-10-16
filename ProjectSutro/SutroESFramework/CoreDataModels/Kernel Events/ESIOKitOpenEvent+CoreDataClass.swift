@@ -10,19 +10,13 @@ import Foundation
 import CoreData
 
 @objc(ESIOKitOpenEvent)
-public class ESIOKitOpenEvent: NSManagedObject, Decodable {
+public class ESIOKitOpenEvent: NSManagedObject {
     enum CodingKeys: CodingKey {
-        case id, user_client_class, user_client_type
-    }
-    
-    // MARK: - Custom initilizer for ESIOKitOpenEvent during heavy flows
-    convenience init(from message: Message) {
-        let iokitEvent: IOKitOpenEvent = message.event.iokit_open!
-        self.init()
-        
-        self.id = iokitEvent.id
-        self.user_client_class = iokitEvent.user_client_class
-        self.user_client_type = Int32(iokitEvent.user_client_type!)
+        case id
+        case user_client_class
+        case user_client_type
+        case parent_registry_id
+        case parent_path
     }
     
     // MARK: - Custom Core Data initilizer for ESIOKitOpenEvent
@@ -32,18 +26,11 @@ public class ESIOKitOpenEvent: NSManagedObject, Decodable {
         self.init(entity: description, insertInto: context)
         
         self.id = iokitEvent.id
+        self.user_client_type = iokitEvent.user_client_type
         self.user_client_class = iokitEvent.user_client_class
-        self.user_client_type = Int32(iokitEvent.user_client_type!)
-    }
-    
-    // MARK: - Decodable conformance
-    required convenience public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.init()
         
-        try id = container.decode(UUID.self, forKey: .id)
-        try user_client_type = container.decode(Int32.self, forKey: .user_client_type)
-        try user_client_class = container.decode(String.self, forKey: .user_client_class)
+        self.parent_registry_id = iokitEvent.parent_registry_id
+        self.parent_path = iokitEvent.parent_path
     }
 }
 
@@ -53,5 +40,10 @@ extension ESIOKitOpenEvent: Encodable {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(user_client_type, forKey: .user_client_type)
         try container.encode(user_client_class, forKey: .user_client_class)
+        
+        try container.encodeIfPresent(parent_path, forKey: .parent_path)
+        if let _ = parent_path {
+            try container.encode(parent_registry_id, forKey: .parent_registry_id)
+        }
     }
 }
